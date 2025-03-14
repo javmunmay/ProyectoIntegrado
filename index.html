@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rally Fotográfico</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Estilos personalizados -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #2a3d74 !important;
+        }
+        .nav-link {
+            color: #2a3d74 !important;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            color: #1E3A5F !important;
+        }
+        .card {
+            transition: transform 0.2s;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .btn-like, .btn-dislike {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 5px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .btn-like {
+            color: #28a745; /* Verde */
+        }
+        .btn-dislike {
+            color: #dc3545; /* Rojo */
+        }
+        .btn-like:hover {
+            color: #218838; /* Verde más oscuro */
+            
+        }
+        .btn-dislike:hover {
+            color: #c82333; /* Rojo más oscuro */
+        }
+        .footer {
+            background-color: #1E3A5F;
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        .display-4 {
+            font-weight: bold;
+            color: #2a3d74;
+        }
+        .lead {
+            color: #6c757d;
+        }
+        .categoria-titulo {
+            color: #2a3d74;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menú de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Rally Fotográfico</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#imagenes">Imágenes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sobre-nosotros">Sobre Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ayuda">Ayuda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Iniciar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sección de Inicio -->
+    <section id="inicio" class="container mt-5 pt-5">
+        <div class="text-center">
+            <h1 class="display-4">Bienvenido al Rally Fotográfico</h1>
+            <p class="lead">Explora, vota y comparte las mejores fotografías de rallys.</p>
+        </div>
+    </section>
+
+    <!-- Sección de Imágenes -->
+    <section id="imagenes" class="container mt-5">
+        <h2 class="text-center mb-4 categoria-titulo">Imágenes más votadas</h2>
+        <div class="row">
+            <!-- Foto 1 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="assets/foto1.jpeg" class="card-img-top" alt="Foto 1">
+                    <div class="card-body">
+                        <p class="card-text">Likes: <span id="likes-1">445</span></p>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-like" data-foto-id="1">
+                                <i class="bi bi-hand-thumbs-up"></i> <!-- Icono de pulgar arriba -->
+                            </button>
+                            <button class="btn btn-dislike" data-foto-id="1">
+                                <i class="bi bi-hand-thumbs-down"></i> <!-- Icono de pulgar abajo -->
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Foto 2 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="assets/foto2.jpeg" class="card-img-top" alt="Foto 2">
+                    <div class="card-body">
+                        <p class="card-text">Likes: <span id="likes-2">558</span></p>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-like" data-foto-id="2">
+                                <i class="bi bi-hand-thumbs-up"></i> <!-- Icono de pulgar arriba -->
+                            </button>
+                            <button class="btn btn-dislike" data-foto-id="2">
+                                <i class="bi bi-hand-thumbs-down"></i> <!-- Icono de pulgar abajo -->
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Foto 3 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="assets/foto3.jpg" class="card-img-top" alt="Foto 3">
+                    <div class="card-body">
+                        <p class="card-text">Likes: <span id="likes-3">1258</span></p>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-like" data-foto-id="3">
+                                <i class="bi bi-hand-thumbs-up"></i> <!-- Icono de pulgar arriba -->
+                            </button>
+                            <button class="btn btn-dislike" data-foto-id="3">
+                                <i class="bi bi-hand-thumbs-down"></i> <!-- Icono de pulgar abajo -->
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Sección de Imágenes -->
+    <section id="imagenes" class="container mt-5">
+        <h2 class="text-center mb-4 categoria-titulo">Últimas imágenes aprobadas</h2>
+        <div class="row">
+            <!-- Foto 1 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="assets/foto1.jpeg" class="card-img-top" alt="Foto 1">
+                    <div class="card-body">
+                        <p class="card-text">Likes: <span id="likes-1">45</span></p>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-like" data-foto-id="1">
+                                <i class="bi bi-hand-thumbs-up"></i> <!-- Icono de pulgar arriba -->
+                            </button>
+                            <button class="btn btn-dislike" data-foto-id="1">
+                                <i class="bi bi-hand-thumbs-down"></i> <!-- Icono de pulgar abajo -->
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Foto 2 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="assets/foto2.jpeg" class="card-img-top" alt="Foto 2">
+                    <div class="card-body">
+                        <p class="card-text">Likes: <span id="likes-2">58</span></p>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-like" data-foto-id="2">
+                                <i class="bi bi-hand-thumbs-up"></i> <!-- Icono de pulgar arriba -->
+                            </button>
+                            <button class="btn btn-dislike" data-foto-id="2">
+                                <i class="bi bi-hand-thumbs-down"></i> <!-- Icono de pulgar abajo -->
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Foto 3 -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="assets/foto3.jpg" class="card-img-top" alt="Foto 3">
+                    <div class="card-body">
+                        <p class="card-text">Likes: <span id="likes-3">258</span></p>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-like" data-foto-id="3">
+                                <i class="bi bi-hand-thumbs-up"></i> <!-- Icono de pulgar arriba -->
+                            </button>
+                            <button class="btn btn-dislike" data-foto-id="3">
+                                <i class="bi bi-hand-thumbs-down"></i> <!-- Icono de pulgar abajo -->
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Sección Sobre Nosotros -->
+    <section id="sobre-nosotros" class="container mt-5">
+        <h2 class="text-center mb-4 categoria-titulo">Sobre Nosotros</h2>
+        <p class="text-center">Somos una comunidad apasionada por la fotografía de rallys. Nuestro objetivo es promover la creatividad y el talento de fotógrafos de todo el mundo.</p>
+    </section>
+
+    <!-- Sección Ayuda -->
+    <section id="ayuda" class="container mt-5">
+        <h2 class="text-center mb-4 categoria-titulo">Ayuda</h2>
+        <p class="text-center">¿Necesitas ayuda? Contáctanos en <a href="mailto:soporte@rallyfotografico.com">soporte@rallyfotografico.com</a>.</p>
+    </section>
+
+    <!-- Pie de página -->
+    <footer class="footer text-center">
+        <div class="container">
+            <p>&copy; 2025 Rally Fotográfico. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Script para manejar likes/dislikes -->
+    <script>
+        document.querySelectorAll('.btn-like, .btn-dislike').forEach(button => {
+            button.addEventListener('click', function() {
+                const fotoId = this.getAttribute('data-foto-id');
+                const likesElement = document.getElementById(`likes-${fotoId}`);
+                let likes = parseInt(likesElement.textContent);
+
+                if (this.classList.contains('btn-like')) {
+                    likes += 1;
+                } else if (this.classList.contains('btn-dislike')) {
+                    likes -= 1;
+                }
+
+                likesElement.textContent = likes;
+            });
+        });
+    </script>
+</body>
+</html>
