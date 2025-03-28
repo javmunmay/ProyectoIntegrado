@@ -4,22 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - Rally Fotográfico</title>
+    <title>Registro - Derrapix</title>
+    <link rel="icon" type="image/png" href="../assets/logoIcon.png">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Estilos personalizados -->
+
     <style>
-        /* Asegura que el body ocupe toda la altura de la ventana */
-        html, body {
+        
+        html,
+        body {
             height: 100%;
             margin: 0;
             display: flex;
             flex-direction: column;
         }
 
-        /* Contenido principal */
+        
         .main-content {
-            flex: 1; /* Ocupa el espacio restante */
+            flex: 1;
+            /* Ocupa el espacio restante */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -98,33 +101,54 @@
             text-decoration: underline;
         }
 
-        /* Estilos para el footer */
+       
         .footer {
             background-color: #1E3A5F;
             color: white;
             text-align: center;
             padding: 20px 0;
-            margin-top: auto; /* Empuja el footer hacia abajo */
+            margin-top: auto;
+            /* Empuja el footer hacia abajo */
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Menú de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="/">Rally Fotográfico</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="/">
+                <img src="../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Inicio</a>
+                        <a class="nav-link active" href="index.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="inicioSesion.php">Iniciar Sesión</a>
+                        <a class="nav-link" href="trending.php">Trending <i class="bi bi-graph-up"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="nuevosTalentos.php">Nuevos Talentos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ganadoras">Top Shots</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.php">Contacto</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-primary" href="registro.php">Registrarse</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-primary" href="inicioSesion.php">
+                            Iniciar Sesión <i class="bi bi-key"></i>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -136,22 +160,29 @@
         <!-- Formulario de Registro -->
         <div class="form-container">
             <h2>Regístrarse</h2>
-            <form action="php/registro.php" method="POST">
+            <form action="../php/registro.php" method="POST">
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                    <input type="email" class="form-control" id="email" name="correo" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <input type="password" class="form-control" id="password" name="contrasena" required>
                 </div>
                 <div class="mb-3">
                     <label for="confirm_password" class="form-label">Confirmar Contraseña</label>
-                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                    <input type="password" class="form-control" id="confirm_password" name="confirmar_contrasena"
+                        required>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="politica" name="politica" required>
+                    <label class="form-check-label" for="politica">
+                        Acepto la <a href="politica-privacidad.php" target="_blank">Política de Privacidad</a>
+                    </label>
                 </div>
                 <button type="submit" class="btn btn-primary">Registrarse</button>
             </form>
@@ -161,14 +192,14 @@
         </div>
     </div>
 
-    <!-- Pie de página -->
+
     <footer class="footer text-center">
         <div class="container">
             <p>&copy; <?php echo date("Y"); ?> Rally Fotográfico. Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

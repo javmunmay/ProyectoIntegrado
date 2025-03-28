@@ -36,40 +36,56 @@ if ($result->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nuevos Talentos - Rally Fotográfico</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- AOS (Animate On Scroll) -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- Estilos personalizados -->
-    <link rel="stylesheet" type="text/css" href="css/stylesNuevosTalentos.css">
 
+    <link rel="stylesheet" type="text/css" href="css/stylesNuevosTalentos.css">
+    <link rel="icon" type="image/png" href="assets/logoIcon.png">
 </head>
 
 <body>
-    <!-- Menú de navegación -->
-    <nav>
-        <a href="/">
-            <img src="assets/logo.png" alt="Logo Rally Fotográfico" class="logo" />
-        </a>
-        <button class="menu-toggle" aria-label="Abrir menú">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-        <ul class="nav-links">
-            <li><a href="index.php" class="active">Inicio</a></li>
-            <li><a href="trending.php">Trending 📈</a></li>
-            <li><a href="nuevosTalentos.php">Nuevos Talentos</a></li>
-            <li><a href="#ganadoras">Top Shots</a></li>
-            <li><a href="contacto.php">Contacto</a></li>
-            <li><a href="InicioSesion/registro.php" class="login-btn">Registrarse</a></li>
-            <li><a href="InicioSesion/inicioSesion.php" class="login-btn">Iniciar Sesión 🔑</a></li>
-        </ul>
+
+           <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.php">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="trending.php">Trending <i class="bi bi-graph-up"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="nuevosTalentos.php">Nuevos Talentos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ganadoras">Top Shots</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.php">Contacto</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-primary" href="InicioSesion/registro.php">Registrarse</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-primary" href="InicioSesion/inicioSesion.php">
+                            Iniciar Sesión <i class="bi bi-key"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
-    <!-- Hero Section -->
+
     <section class="hero-section" data-aos="fade">
         <div class="container">
             <h1 data-aos="fade-up">Descubre los Nuevos Talentos</h1>
@@ -78,7 +94,7 @@ if ($result->num_rows > 0) {
         </div>
     </section>
 
-    <!-- Sección de Talentos -->
+
     <section class="talentos-container">
         <div class="container">
             <div class="row">
@@ -115,24 +131,16 @@ if ($result->num_rows > 0) {
         </div>
     </section>
 
-    <!-- Pie de página -->
+
     <footer class="footer">
         <div class="container">
             <p>&copy; <?php echo date("Y"); ?> Rally Fotográfico. Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS (Animate On Scroll) -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
-    </script>
+    
 </body>
 
 </html>

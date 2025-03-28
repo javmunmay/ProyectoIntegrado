@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Rally Fotográfico</title>
-    <!-- Bootstrap CSS -->
+    <title>Iniciar Sesión - Derrapix</title>
+    <link rel="icon" type="image/png" href="../assets/logoIcon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Estilos personalizados -->
+    
     <style>
-        /* Asegura que el body ocupe toda la altura de la ventana */
+        
         html, body {
             height: 100%;
             margin: 0;
@@ -119,88 +119,82 @@
 
 <body>
 
-    <!-- Menú de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+
+           <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="/">Rally Fotográfico</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="/">
+                <img src="../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Inicio</a>
+                        <a class="nav-link active" href="index.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#imagenes">Imágenes</a>
+                        <a class="nav-link" href="trending.php">Trending <i class="bi bi-graph-up"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#sobre-nosotros">Sobre Nosotros</a>
+                        <a class="nav-link" href="nuevosTalentos.php">Nuevos Talentos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#ayuda">Ayuda</a>
+                        <a class="nav-link" href="#ganadoras">Top Shots</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="inicioSesion.php">Iniciar Sesión</a>
+                        <a class="nav-link" href="contacto.php">Contacto</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-primary" href="registro.php">Registrarse</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-primary" href="inicioSesion.php">
+                            Iniciar Sesión <i class="bi bi-key"></i>
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Contenido Principal -->
+
     <div class="main-content">
-        <!-- Contenedor del Formulario de Inicio de Sesión -->
+
         <div class="login-container">
             <h2>Iniciar Sesión</h2>
-            <form id="loginForm">
-                <!-- Campo de Correo Electrónico -->
+            <form action="../php/login.php" method="POST" >
+
                 <div class="mb-3">
                     <label for="email" class="form-label">Correo Electrónico</label>
                     <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo electrónico" required>
                 </div>
-                <!-- Campo de Contraseña -->
+
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
                 </div>
-                <!-- Botón de Iniciar Sesión -->
+
                 <button type="submit" class="btn btn-login">Iniciar Sesión</button>
             </form>
-            <!-- Enlace para Registrarse -->
+
             <div class="register-link">
                 ¿No tienes una cuenta? <a href="registro.php">Regístrate aquí</a>
             </div>
         </div>
     </div>
 
-    <!-- Pie de página -->
+
     <footer class="footer text-center">
         <div class="container">
             <p>&copy; <?php echo date("Y"); ?> Rally Fotográfico. Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+ 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Validación del Formulario -->
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Evita el envío del formulario
-
-            // Obtener valores de los campos
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            // Validación básica
-            if (email && password) {
-                alert('Inicio de sesión exitoso. Redirigiendo...');
-                // Aquí puedes agregar la lógica para redirigir o enviar datos al servidor
-            } else {
-                alert('Por favor, completa todos los campos.');
-            }
-        });
-    </script>
+    
 </body>
 
 </html>

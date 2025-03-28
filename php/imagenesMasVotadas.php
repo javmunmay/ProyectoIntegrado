@@ -1,11 +1,9 @@
 <?php
-// Simulación de datos (puedes reemplazar esto con una consulta a la base de datos)
+// Simulación de datos
 $imagenes = [
     ['ruta' => 'assets/foto1.jpeg', 'likes' => 120],
     ['ruta' => 'assets/foto2.jpeg', 'likes' => 95],
     ['ruta' => 'assets/foto3.jpg', 'likes' => 150],
-    ['ruta' => 'assets/foto4.jpg', 'likes' => 80],
-    ['ruta' => 'assets/foto5.jpg', 'likes' => 200],
 ];
 
 foreach ($imagenes as $imagen) {

@@ -9,41 +9,57 @@ require_once 'php/conexion.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trending - Rally Fotográfico</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Chart.js -->
+    <!-- Chart.js para los gráficos-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- AOS (Animate On Scroll) -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- Estilos personalizados -->
+
     <link rel="stylesheet" href="css/stylesTrending.css">
+    <link rel="icon" type="image/png" href="assets/logoIcon.png">
 </head>
 
 <body>
-    <!-- Menú de navegación -->
-    <nav>
-        <a href="index.php">
-            <img src="assets/logo.png" alt="Logo Rally Fotográfico" class="logo" />
-        </a>
-        <button class="menu-toggle" aria-label="Abrir menú">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-        <ul class="nav-links">
-            <li><a href="index.php" class="active">Inicio</a></li>
-            <li><a href="trending.php">Trending 📈</a></li>
-            <li><a href="nuevosTalentos.php">Nuevos Talentos</a></li>
-            <li><a href="#ganadoras">Top Shots</a></li>
-            <li><a href="contacto.php">Contacto</a></li>
-            <li><a href="InicioSesion/registro.php" class="login-btn">Registrarse</a></li>
-            <li><a href="InicioSesion/inicioSesion.php" class="login-btn">Iniciar Sesión 🔑</a></li>
-        </ul>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.php">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="trending.php">Trending <i class="bi bi-graph-up"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="nuevosTalentos.php">Nuevos Talentos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ganadoras">Top Shots</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.php">Contacto</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-primary" href="InicioSesion/registro.php">Registrarse</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-primary" href="InicioSesion/inicioSesion.php">
+                            Iniciar Sesión <i class="bi bi-key"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
-    <!-- Hero Section -->
+
     <section class="hero-trending">
         <div class="container">
             <h1 data-aos="fade-up">Las Fotos en Tendencia</h1>
@@ -51,7 +67,7 @@ require_once 'php/conexion.php';
         </div>
     </section>
 
-    <!-- Sección de Estadísticas -->
+
     <section class="stats-section py-5">
         <div class="container">
             <div class="row">
@@ -79,7 +95,7 @@ require_once 'php/conexion.php';
         </div>
     </section>
 
-    <!-- Sección de Imágenes en Tendencia -->
+
     <section class="trending-photos py-5 bg-light">
         <div class="container">
             <h2 class="text-center mb-5" data-aos="fade-up">Fotos que están subiendo</h2>
@@ -89,7 +105,7 @@ require_once 'php/conexion.php';
         </div>
     </section>
 
-    <!-- Sección de Comparativa -->
+
     <section class="comparison-section py-5">
         <div class="container">
             <div class="row">
@@ -107,21 +123,18 @@ require_once 'php/conexion.php';
         </div>
     </section>
 
-    <!-- Pie de página -->
+
     <footer class="footer text-center py-4">
         <div class="container">
             <p>&copy; <?php echo date("Y"); ?> Rally Fotográfico. Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS (Animate On Scroll) -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
     <script>
-        AOS.init();
-        
-        // Datos para los gráficos (deberían ser reemplazados por datos reales de tu base de datos)
+        // Datos para los gráficos (que van a ser reemplazados por datos reales de la base de datos)
         const topPhotosData = {
             labels: ['Foto #245', 'Foto #189', 'Foto #312', 'Foto #76', 'Foto #143'],
             datasets: [{
@@ -147,8 +160,7 @@ require_once 'php/conexion.php';
 
         const votesEvolutionData = {
             labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-            datasets: [
-                {
+            datasets: [{
                     label: 'Foto #245',
                     data: [200, 300, 450, 600, 800, 1000, 1254],
                     borderColor: 'rgba(255, 99, 132, 1)',
@@ -169,8 +181,7 @@ require_once 'php/conexion.php';
 
         const weeklyComparisonData = {
             labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-            datasets: [
-                {
+            datasets: [{
                     label: 'Votos Totales',
                     data: [3200, 4500, 5100, 6200],
                     borderColor: 'rgba(75, 192, 192, 1)',
@@ -249,4 +260,5 @@ require_once 'php/conexion.php';
         };
     </script>
 </body>
+
 </html>

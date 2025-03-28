@@ -13,9 +13,6 @@ $year = date("Y");
         <li><a href="#" rel="noopener noreferrer"><u>Política de privacidad</u></a>
         </li>
         <li><a href="#" rel="noopener noreferrer"><u>Términos y condiciones</u></a>
-        </li>
-        <li><a href="#" rel="noopener noreferrer"><u>Trabaja con nosotros</u></a>
-        </li>
       </ul>
       <br>
     </div>

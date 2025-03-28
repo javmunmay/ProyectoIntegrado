@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: PMYSQL185.dns-servicio.com:3306
--- Tiempo de generación: 25-03-2025 a las 12:04:10
+-- Tiempo de generación: 27-03-2025 a las 09:08:23
 -- Versión del servidor: 8.0.40
 -- Versión de PHP: 8.3.17
 
@@ -76,6 +76,13 @@ CREATE TABLE `Usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Volcado de datos para la tabla `Usuarios`
+--
+
+INSERT INTO `Usuarios` (`id`, `nombre`, `correo`, `contrasena`, `fecha_registro`, `usuario`, `admin`, `politica_privacidad`, `foto_perfil`) VALUES
+(1, 'Javier Muñoz', 'javi@ejemplo.com', '$2y$10$x1.lvyGUidFiX.ITCM4oWezfTPLWZKk7w/fRJw0r.jDLpJeE1UOKG', '2025-03-27 07:57:32', 1, 0, 1, NULL);
+
+--
 -- Índices para tablas volcadas
 --
 
@@ -122,7 +129,7 @@ ALTER TABLE `incidencias`
 -- AUTO_INCREMENT de la tabla `Usuarios`
 --
 ALTER TABLE `Usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas

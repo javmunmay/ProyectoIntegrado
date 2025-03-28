@@ -1,12 +1,5 @@
 <?php
-session_start();
 require_once 'conexion.php';
-
-// Verificar si el usuario está logueado
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php?error=no_autenticado");
-    exit();
-}
 
 // Verificar método POST
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
@@ -15,39 +8,67 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 // Validar campos obligatorios
-if (empty($_POST['titulo']) || empty($_POST['descripcion'])) {
+$camposRequeridos = ['nombre', 'correo', 'titulo', 'descripcion'];
+$camposFaltantes = [];
+
+foreach ($camposRequeridos as $campo) {
+    if (empty(trim($_POST[$campo]))) {
+        $camposFaltantes[] = $campo;
+    }
+}
+
+if (!empty($camposFaltantes)) {
     header("Location: ../contacto.php?error=campos_obligatorios");
     exit();
 }
 
-// Obtener datos del formulario
-$titulo = $conn->real_escape_string($_POST['titulo']);
-$descripcion = $conn->real_escape_string($_POST['descripcion']);
-$prioridad = isset($_POST['prioridad']) ? $conn->real_escape_string($_POST['prioridad']) : 'media';
-$usuario_id = $_SESSION['user_id'];
-
-// Insertar incidencia en la base de datos
-$stmt = $conn->prepare("INSERT INTO incidencias 
-                        (usuario_id, titulo, descripcion, prioridad) 
-                        VALUES (?, ?, ?, ?)");
-$stmt->bind_param("isss", $usuario_id, $titulo, $descripcion, $prioridad);
-
-if ($stmt->execute()) {
-    // Obtener datos del usuario para notificación
-    $sql_usuario = "SELECT nombre, correo FROM Usuarios WHERE id = ?";
-    $stmt_usuario = $conn->prepare($sql_usuario);
-    $stmt_usuario->bind_param("i", $usuario_id);
-    $stmt_usuario->execute();
-    $result_usuario = $stmt_usuario->get_result();
-    $usuario = $result_usuario->fetch_assoc();
-    $stmt_usuario->close();
-    
-    
-    header("Location: ../contacto.php?success=incidencia_registrada");
-    exit();
-} else {
-    header("Location: ../contacto.php?error=error_bd");
+// Verificar política de privacidad
+if (!isset($_POST['politica'])) {
+    header("Location: ../contacto.php?error=politica_requerida");
     exit();
 }
 
+// Obtener y sanitizar datos
+$nombre = $conn->real_escape_string(trim($_POST['nombre']));
+$correo = $conn->real_escape_string(trim($_POST['correo']));
+$titulo = $conn->real_escape_string(trim($_POST['titulo']));
+$descripcion = $conn->real_escape_string(trim($_POST['descripcion']));
+$prioridad = isset($_POST['prioridad']) ? $conn->real_escape_string($_POST['prioridad']) : 'media';
+$politicaAceptada = 1; // Porque ya validamos que está marcado
+
+// Validar prioridad
+$prioridadesValidas = ['baja', 'media', 'alta'];
+if (!in_array($prioridad, $prioridadesValidas)) {
+    $prioridad = 'media';
+}
+
+// Insertar en la base de datos
+try {
+    $query = "INSERT INTO incidencias (
+                nombre_contacto, 
+                correo_contacto, 
+                titulo, 
+                descripcion, 
+                prioridad, 
+                politica_aceptada,
+                estado
+              ) VALUES (?, ?, ?, ?, ?, ?, 'pendiente')";
+    
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("sssssi", $nombre, $correo, $titulo, $descripcion, $prioridad, $politicaAceptada);
+    
+    if ($stmt->execute()) {
+        header("Location: ../contacto.php?success=true");
+        exit();
+    } else {
+        throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
+    }
+} catch (Exception $e) {
+    error_log("Error en procesar_incidencia: " . $e->getMessage());
+    header("Location: ../contacto.php?error=error_bd");
+    exit();
+} finally {
+    if (isset($stmt)) $stmt->close();
+    $conn->close();
+}
 ?>
