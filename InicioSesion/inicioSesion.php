@@ -9,10 +9,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    
+
     <style>
-        
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
             display: flex;
@@ -21,7 +21,8 @@
 
         /* Contenido principal */
         .main-content {
-            flex: 1; /* Ocupa el espacio restante */
+            flex: 1;
+            /* Ocupa el espacio restante */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -112,7 +113,8 @@
             color: white;
             text-align: center;
             padding: 20px 0;
-            margin-top: auto; /* Empuja el footer hacia abajo */
+            margin-top: auto;
+            /* Empuja el footer hacia abajo */
         }
     </style>
 </head>
@@ -120,31 +122,31 @@
 <body>
 
 
-           <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="/">
                 <img src="../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.php">Inicio</a>
+                        <a class="nav-link active" href="/">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="trending.php">Trending <i class="bi bi-graph-up"></i></a>
+                        <a class="nav-link" href="../trending.php">Trending <i class="bi bi-graph-up"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="nuevosTalentos.php">Nuevos Talentos</a>
+                        <a class="nav-link" href="../nuevosTalentos.php">Nuevos Talentos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#ganadoras">Top Shots</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contacto.php">Contacto</a>
+                        <a class="nav-link" href="../contacto.php">Contacto</a>
                     </li>
                     <li class="nav-item ms-lg-2">
                         <a class="btn btn-primary" href="registro.php">Registrarse</a>
@@ -164,16 +166,16 @@
 
         <div class="login-container">
             <h2>Iniciar Sesión</h2>
-            <form action="../php/login.php" method="POST" >
+            <form action="../php/login.php" method="POST">
 
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo electrónico" required>
+                    <label for="correo" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="correo" name="correo" placeholder="Ingresa tu correo electrónico" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
+                    <label for="contrasena" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Ingresa tu contraseña" required>
                 </div>
 
                 <button type="submit" class="btn btn-login">Iniciar Sesión</button>
@@ -186,15 +188,11 @@
     </div>
 
 
-    <footer class="footer text-center">
-        <div class="container">
-            <p>&copy; <?php echo date("Y"); ?> Rally Fotográfico. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+    <?php include '../php/footer.php'; ?>
 
- 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
+
 </body>
 
 </html>

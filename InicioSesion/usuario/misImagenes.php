@@ -57,13 +57,36 @@ $nombreUsuario = "Usuario de prueba";
 
 
     <section id="destacadas" class="container mt-5">
-        <h2 class="text-center mb-4 categoria-titulo">Perfil de <?php echo $nombreUsuario; ?></h2>
+        <h2 class="text-center mb-4 categoria-titulo">Gestionar mis imágenes</h2>
         <div class="image-scroll-container">
             <div class="image-scroll">
                 
             </div>
         </div>
     </section>
+
+
+    <section id="destacadas" class="container mt-5">
+        <h2 class="text-center mb-4 categoria-titulo">Imágenes en revisión</h2>
+        <div class="image-scroll-container">
+            <div class="image-scroll">
+                
+            </div>
+        </div>
+    </section>
+
+
+    <section id="destacadas" class="container mt-5">
+        <h2 class="text-center mb-4 categoria-titulo">Imágenes no aceptadas</h2>
+        <div class="image-scroll-container">
+            <div class="image-scroll">
+                
+            </div>
+        </div>
+    </section>
+
+
+
 
 
     <?php include '../../php/footer.php'; ?>

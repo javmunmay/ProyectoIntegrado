@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'php/conexion.php';
+require_once '../../php/conexion.php';
 
 // Configurar cabeceras para evitar caché
 header("Cache-Control: no-cache, no-store, must-revalidate");
@@ -32,52 +32,49 @@ if (isset($_GET['success'])) {
 }
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacto | Derrapix</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="assets/logoIcon.png">
-    <link rel="stylesheet" type="text/css" href="css/stylesContacto.css">
+    <title>Contacto - Derrrapix</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../css/stylesContacto.css">
+    <link rel="icon" type="image/png" href="../../assets/logoIcon.png">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
+            <a class="navbar-brand" href="home.php">
+                <img src="../../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">Inicio</a>
+                        <a class="nav-link active" href="home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="trending.php">Trending <i class="bi bi-graph-up"></i></a>
+                        <a class="nav-link" href="miPerfil.php">Mi Perfil</i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="nuevosTalentos.php">Nuevos Talentos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#ganadoras">Top Shots</a>
+                        <a class="nav-link" href="misImagenes.php">Mis Imágenes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contacto.php">Contacto</a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a class="btn btn-primary" href="InicioSesion/registro.php">Registrarse</a>
-                    </li>
-                    <li class="nav-item ms-lg-2">
-                        <a class="btn btn-outline-primary" href="InicioSesion/inicioSesion.php">
-                            Iniciar Sesión <i class="bi bi-key"></i>
+                        <a class="btn btn-outline-danger" href="InicioSesion/inicioSesion.php">
+                            Cerrar Sesión <i class="bi bi-cross"></i>
                         </a>
                     </li>
                 </ul>
@@ -99,7 +96,7 @@ if (isset($_GET['success'])) {
 
         <section class="contact-form">
             <h2>Formulario de Contacto</h2>
-            <form action="php/procesar_incidencia.php" method="POST">
+            <form action="../../php/procesar_incidencia_sesionIniciada.php" method="POST">
                 <div class="form-group">
                     <label for="nombre">Nombre:</label>
                     <input type="text" id="nombre" name="nombre" class="form-control" required>
@@ -175,7 +172,7 @@ if (isset($_GET['success'])) {
         </section>
     </main>
 
-    <?php include 'php/footer.php'; ?>
+    <?php include '../../php/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

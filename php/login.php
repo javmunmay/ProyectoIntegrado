@@ -14,7 +14,7 @@ require_once 'conexion.php';
 
 // Verificar si el formulario ha sido enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validar campos recibidos
+    // Validar campos recibidos 
     if (empty($_POST['correo']) || empty($_POST['contrasena'])) {
         header("Location: ../InicioSesion/inicioSesion.php?error=campos_vacios");
         exit();
@@ -26,8 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Buscar el usuario por correo
     $sql = "SELECT id, nombre, correo, contrasena, usuario, admin, politica_privacidad, foto_perfil 
-            FROM Usuarios 
-            WHERE correo = ? AND estado = 'activo'";
+            FROM Usuarios
+            WHERE correo = ?";
     $stmt = $conn->prepare($sql);
     
     if (!$stmt) {
@@ -76,9 +76,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             // Redirigir según rol
             if ($user['admin'] == 1) {
-                header("Location: ../admin/dashboard.php");
+                header("Location: ../InicioSesion/admin/dashboard.php");
             } else {
-                header("Location: ../usuario/home.php");
+                header("Location: ../InicioSesion/usuario/home.php");
             }
             exit();
         } else {

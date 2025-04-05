@@ -128,19 +128,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.php">Inicio</a>
+                        <a class="nav-link active" href="/">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="trending.php">Trending <i class="bi bi-graph-up"></i></a>
+                        <a class="nav-link" href="../trending.php">Trending <i class="bi bi-graph-up"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="nuevosTalentos.php">Nuevos Talentos</a>
+                        <a class="nav-link" href="../nuevosTalentos.php">Nuevos Talentos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#ganadoras">Top Shots</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contacto.php">Contacto</a>
+                        <a class="nav-link" href="../contacto.php">Contacto</a>
                     </li>
                     <li class="nav-item ms-lg-2">
                         <a class="btn btn-primary" href="registro.php">Registrarse</a>
@@ -193,11 +193,7 @@
     </div>
 
 
-    <footer class="footer text-center">
-        <div class="container">
-            <p>&copy; <?php echo date("Y"); ?> Rally Fotográfico. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+    <?php include '../php/footer.php'; ?>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
