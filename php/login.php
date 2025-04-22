@@ -1,37 +1,35 @@
 <?php
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-
+// Headers de seguridad básicos
 header("Cache-Control: no-cache, no-store, must-revalidate");
 header("Pragma: no-cache");
 header("Expires: 0");
-
 
 require_once 'conexion.php';
 
 // Verificar si el formulario ha sido enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validar campos recibidos 
+    // Validar campos recibidos
     if (empty($_POST['correo']) || empty($_POST['contrasena'])) {
-        header("Location: ../InicioSesion/inicioSesion.php?error=campos_vacios");
+        header("Location: ../InicioSesion/inicioSesion.php?error=1"); // 1 = Campos vacíos
         exit();
     }
 
-    // Sanitizar y obtener datos del formulario
+    // Sanitizar datos
     $correo = trim($conn->real_escape_string($_POST['correo']));
     $contrasena = $_POST['contrasena'];
 
-    // Buscar el usuario por correo
-    $sql = "SELECT id, nombre, correo, contrasena, usuario, admin, politica_privacidad, foto_perfil 
-            FROM Usuarios
+    // Buscar usuario
+    $sql = "SELECT id, nombre, correo, contrasena, admin, foto_perfil 
+            FROM Usuarios 
             WHERE correo = ?";
     $stmt = $conn->prepare($sql);
     
-    if (!$stmt) {
-        header("Location: ../InicioSesion/inicioSesion.php?error=error_bd");
+    if ($stmt === false) {
+        header("Location: ../InicioSesion/inicioSesion.php?error=2"); // 2 = Error del sistema
         exit();
     }
 
@@ -42,37 +40,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
         
-        // Verificar la contraseña (tanto hash como texto plano para migración)
-        if (password_verify($contrasena, $user['contrasena'])) {
-            // Contraseña válida (hash)
-            $login_valido = true;
-        } elseif ($contrasena === $user['contrasena']) {
-            // Contraseña válida (texto plano - para migración)
-            $login_valido = true;
-            
-            // Actualizar a contraseña hasheada
-            $new_hash = password_hash($contrasena, PASSWORD_DEFAULT);
-            $update_sql = "UPDATE Usuarios SET contrasena = ? WHERE id = ?";
-            $update_stmt = $conn->prepare($update_sql);
-            $update_stmt->bind_param("si", $new_hash, $user['id']);
-            $update_stmt->execute();
-            $update_stmt->close();
-        } else {
-            // Contraseña inválida
-            $login_valido = false;
-        }
+        // Verificar contraseña (compatible con hash y texto plano)
+        if (password_verify($contrasena, $user['contrasena']) || $contrasena === $user['contrasena']) {
+            // Actualizar a hash si estaba en texto plano
+            if ($contrasena === $user['contrasena']) {
+                $new_hash = password_hash($contrasena, PASSWORD_DEFAULT);
+                $update_sql = "UPDATE Usuarios SET contrasena = ? WHERE id = ?";
+                $update_stmt = $conn->prepare($update_sql);
+                $update_stmt->bind_param("si", $new_hash, $user['id']);
+                $update_stmt->execute();
+                $update_stmt->close();
+            }
 
-        if ($login_valido) {
-            // Establecer variables de sesión
+            // Establecer sesión
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_nombre'] = $user['nombre'];
             $_SESSION['user_correo'] = $user['correo'];
             $_SESSION['user_admin'] = $user['admin'];
-            $_SESSION['user_foto'] = $user['foto_perfil'] ?? 'assets/perfil-default.jpg';
-            $_SESSION['user_politica'] = $user['politica_privacidad'];
-            
-            // Regenerar ID de sesión para prevenir fixation
-            session_regenerate_id(true);
+            $_SESSION['user_foto'] = !empty($user['foto_perfil']) ? $user['foto_perfil'] : '../../assets/Usuario.jpg';
             
             // Redirigir según rol
             if ($user['admin'] == 1) {
@@ -81,17 +66,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: ../InicioSesion/usuario/home.php");
             }
             exit();
-        } else {
-            header("Location: ../InicioSesion/inicioSesion.php?error=credenciales_invalidas");
-            exit();
         }
-    } else {
-        header("Location: ../InicioSesion/inicioSesion.php?error=usuario_no_encontrado");
-        exit();
     }
 
-    $stmt->close();
-    $conn->close();
+    // Credenciales incorrectas
+    header("Location: ../InicioSesion/inicioSesion.php?error=3"); // 3 = Credenciales inválidas
+    exit();
 } else {
     // Método no permitido
     header("Location: ../InicioSesion/inicioSesion.php");

@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: PMYSQL185.dns-servicio.com:3306
--- Tiempo de generación: 27-03-2025 a las 09:08:23
--- Versión del servidor: 8.0.40
+-- Tiempo de generación: 05-04-2025 a las 17:58:24
+-- Versión del servidor: 8.0.41
 -- Versión de PHP: 8.3.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -48,14 +48,22 @@ CREATE TABLE `imagenes` (
 
 CREATE TABLE `incidencias` (
   `id` int NOT NULL,
-  `usuario_id` int NOT NULL,
-  `titulo` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `descripcion` text COLLATE utf8mb4_general_ci NOT NULL,
+  `nombre_contacto` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `correo_contacto` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `titulo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `descripcion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `prioridad` enum('baja','media','alta') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'media',
+  `politica_aceptada` tinyint(1) DEFAULT '0',
   `fecha_creacion` datetime DEFAULT CURRENT_TIMESTAMP,
-  `fecha_actualizacion` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `estado` enum('pendiente','en_proceso','resuelta','cancelada') COLLATE utf8mb4_general_ci DEFAULT 'pendiente',
-  `prioridad` enum('baja','media','alta','critica') COLLATE utf8mb4_general_ci DEFAULT 'media'
+  `estado` enum('pendiente','en_proceso','resuelta','cancelada') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `incidencias`
+--
+
+INSERT INTO `incidencias` (`id`, `nombre_contacto`, `correo_contacto`, `titulo`, `descripcion`, `prioridad`, `politica_aceptada`, `fecha_creacion`, `estado`) VALUES
+(1, 'Prueba', 'javi15mmj@gmail.com', 'problema_cuenta', 'probando prueba hakjdshgjkajkd', 'media', 1, '2025-03-27 17:05:51', 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -98,7 +106,6 @@ ALTER TABLE `imagenes`
 --
 ALTER TABLE `incidencias`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `usuario_id` (`usuario_id`),
   ADD KEY `estado` (`estado`),
   ADD KEY `prioridad` (`prioridad`);
 
@@ -123,23 +130,13 @@ ALTER TABLE `imagenes`
 -- AUTO_INCREMENT de la tabla `incidencias`
 --
 ALTER TABLE `incidencias`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `Usuarios`
 --
 ALTER TABLE `Usuarios`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `incidencias`
---
-ALTER TABLE `incidencias`
-  ADD CONSTRAINT `incidencias_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `Usuarios` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

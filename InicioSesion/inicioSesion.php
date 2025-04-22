@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Derrapix</title>
+    <title>Iniciar Sesión - pixFly</title>
     <link rel="icon" type="image/png" href="../assets/logoIcon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -125,7 +125,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img src="../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
+                <img src="../assets/logo.png" alt="Logo PixFly" class="logo" style="height: 50px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -137,13 +137,10 @@
                         <a class="nav-link active" href="/">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../trending.php">Trending <i class="bi bi-graph-up"></i></a>
+                        <a class="nav-link" href="../votacion.php">Votación</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../nuevosTalentos.php">Nuevos Talentos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#ganadoras">Top Shots</a>
+                        <a class="nav-link" href="../ganadores.php">Ganadores</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../contacto.php">Contacto</a>
@@ -151,7 +148,7 @@
                     <li class="nav-item ms-lg-2">
                         <a class="btn btn-primary" href="registro.php">Registrarse</a>
                     </li>
-                    <li class="nav-item ms-lg-2">
+                    <li class="nav-item ms-lg-2 mt-2">
                         <a class="btn btn-outline-primary" href="inicioSesion.php">
                             Iniciar Sesión <i class="bi bi-key"></i>
                         </a>
@@ -167,6 +164,27 @@
         <div class="login-container">
             <h2>Iniciar Sesión</h2>
             <form action="../php/login.php" method="POST">
+
+                <!-- Mostrar mensajes de error -->
+                <?php if (isset($_GET['error'])): ?>
+                    <div class="alert alert-danger mt-3">
+                        <?php
+                        switch ($_GET['error']) {
+                            case 1:
+                                echo "Por favor completa todos los campos";
+                                break;
+                            case 2:
+                                echo "Error del sistema. Intenta más tarde";
+                                break;
+                            case 3:
+                                echo "Correo o contraseña incorrectos";
+                                break;
+                            default:
+                                echo "Error desconocido";
+                        }
+                        ?>
+                    </div>
+                <?php endif; ?>
 
                 <div class="mb-3">
                     <label for="correo" class="form-label">Correo Electrónico</label>

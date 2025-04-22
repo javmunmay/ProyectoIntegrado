@@ -97,22 +97,19 @@
                         <a class="nav-link active" href="/">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="tendencias.php">Tendencias <i class="bi bi-graph-up"></i></a>
+                        <a class="nav-link" href="votacion.php">Votación</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="nuevos-fotografos.php">Nuevos Talentos</a>
+                        <a class="nav-link" href="ganadores.php">Ganadores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#ganadores">Ganadores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="categorias.php">Categorías</a>
+                        <a class="nav-link" href="contacto.php">Contacto</a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a class="btn btn-primary" href="registro.php">Registrarse</a>
+                        <a class="btn btn-primary" href="InicioSesion/registro.php">Registrarse</a>
                     </li>
-                    <li class="nav-item ms-lg-2">
-                        <a class="btn btn-outline-primary" href="inicio-sesion.php">
+                    <li class="nav-item ms-lg-2 mt-2">
+                        <a class="btn btn-outline-primary" href="InicioSesion/inicioSesion.php">
                             Iniciar Sesión <i class="bi bi-key"></i>
                         </a>
                     </li>
@@ -139,7 +136,7 @@
         <div class="container hero-content">
             <h1>Concurso de Fotografía PixFly 2025</h1>
             <p>Captura momentos extraordinarios y comparte tu visión del mundo. <br><br> Participa por increíbles premios y exposición internacional.</p>
-            <a href="registro.php" class="btn btn-primary">Participa Ahora</a>
+            <a href="InicioSesion/registro.php" class="btn btn-primary">Participa Ahora</a>
         </div>
     </section>
 
