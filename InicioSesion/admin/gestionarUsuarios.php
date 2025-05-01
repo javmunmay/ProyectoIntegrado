@@ -18,7 +18,7 @@ if ($result) {
     }
 }
 
-// Procesar acciones (eliminar, cambiar rol, editar)
+// Procesar acciones (eliminar, cambiar rol, editar, crear)
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['eliminar_usuario'])) {
         $id = intval($_POST['id']);
@@ -48,6 +48,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param("ssii", $nombre, $correo, $admin, $id);
         $stmt->execute();
         header("Location: gestionarUsuarios.php?success=3");
+        exit();
+    } elseif (isset($_POST['crear_usuario'])) {
+        $nombre = $conn->real_escape_string($_POST['nombre']);
+        $correo = $conn->real_escape_string($_POST['correo']);
+        $contrasena = password_hash($_POST['contrasena'], PASSWORD_DEFAULT);
+        $admin = intval($_POST['admin']);
+        
+        // Verificar si el correo ya existe
+        $check_query = "SELECT id FROM Usuarios WHERE correo = ?";
+        $check_stmt = $conn->prepare($check_query);
+        $check_stmt->bind_param("s", $correo);
+        $check_stmt->execute();
+        $check_stmt->store_result();
+        
+        if ($check_stmt->num_rows > 0) {
+            header("Location: gestionarUsuarios.php?error=1");
+            exit();
+        }
+        
+        $query = "INSERT INTO Usuarios (nombre, correo, contrasena, admin) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("sssi", $nombre, $correo, $contrasena, $admin);
+        $stmt->execute();
+        header("Location: gestionarUsuarios.php?success=4");
         exit();
     }
 }
@@ -101,7 +125,7 @@ $conn->close();
                         <a class="nav-link" href="gestionarReportes.php">Gestionar tickets/reportes</a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a class="btn btn-outline-danger" href="../cerrar_sesion.php">
+                        <a class="btn btn-outline-danger" href="../../php/logout.php">
                             Cerrar Sesión <i class="bi bi-box-arrow-right"></i>
                         </a>
                     </li>
@@ -120,6 +144,17 @@ $conn->close();
                     case 1: echo 'Usuario eliminado correctamente'; break;
                     case 2: echo 'Rol de usuario actualizado'; break;
                     case 3: echo 'Usuario actualizado correctamente'; break;
+                    case 4: echo 'Usuario creado correctamente'; break;
+                }
+                ?>
+            </div>
+        <?php endif; ?>
+        
+        <?php if (isset($_GET['error'])): ?>
+            <div class="alert alert-danger">
+                <?php 
+                switch($_GET['error']) {
+                    case 1: echo 'El correo electrónico ya está registrado'; break;
                 }
                 ?>
             </div>
@@ -128,9 +163,9 @@ $conn->close();
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Lista de Usuarios</h5>
-                <a href="?action=create" class="btn btn-primary">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearUsuarioModal">
                     <i class="bi bi-plus-lg"></i> Nuevo Usuario
-                </a>
+                </button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -180,6 +215,50 @@ $conn->close();
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para crear usuario -->
+    <div class="modal fade" id="crearUsuarioModal" tabindex="-1" aria-labelledby="crearUsuarioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="gestionarUsuarios.php">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="crearUsuarioModalLabel">Crear Nuevo Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="crear_usuario" value="1">
+                        
+                        <div class="mb-3">
+                            <label for="nombreNuevo" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreNuevo" name="nombre" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="correoNuevo" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="correoNuevo" name="correo" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="contrasenaNuevo" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="contrasenaNuevo" name="contrasena" required minlength="6">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="adminNuevo" class="form-label">Rol</label>
+                            <select class="form-select" id="adminNuevo" name="admin" required>
+                                <option value="0">Usuario</option>
+                                <option value="1">Administrador</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

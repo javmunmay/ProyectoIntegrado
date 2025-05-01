@@ -137,7 +137,7 @@ $conn->close();
                         <a class="nav-link" href="gestionarReportes.php">Gestionar tickets/reportes</a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a class="btn btn-outline-danger" href="../cerrar_sesion.php">
+                        <a class="btn btn-outline-danger" href="../../php/logout.php">
                             Cerrar Sesión <i class="bi bi-box-arrow-right"></i>
                         </a>
                     </li>
