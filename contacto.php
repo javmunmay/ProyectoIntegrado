@@ -41,24 +41,50 @@ if (isset($_GET['success'])) {
     <title>Contacto - pixFly</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="assets/logoIcon.png">
     <link rel="stylesheet" type="text/css" href="css/stylesContacto.css">
+
+    <style>
+        .btn-registrarse{
+            background-color: #090643;
+            color: white;
+            padding: 7px;
+        }
+
+        .btn-registrarse:hover{
+            background-color:rgb(12, 8, 89);
+            color: white;
+        }
+
+        .btn-iniciosesion{
+            background-color: white;
+            border: solid 1px #090643;
+            color: #090643;
+            padding: 7px;
+        }
+
+        .btn-iniciosesion:hover{
+            background-color: #090643;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img src="assets/logo.png" alt="Logo PixFly" class="logo" style="height: 50px;">
+                <img src="assets/logo.png" alt="Logo PixFly" style="height: 50px;">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">Inicio</a>
+                        <a class="nav-link" href="/">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="votacion.php">Votación</a>
@@ -67,16 +93,24 @@ if (isset($_GET['success'])) {
                         <a class="nav-link" href="ganadores.php">Ganadores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contacto.php">Contacto</a>
+                        <a class="nav-link active" href="contacto.php">Contacto</a>
                     </li>
-                    <li class="nav-item ms-lg-2">
-                        <a class="btn btn-primary" href="InicioSesion/registro.php">Registrarse</a>
-                    </li>
-                    <li class="nav-item ms-lg-2 mt-2">
-                        <a class="btn btn-outline-primary" href="InicioSesion/inicioSesion.php">
-                            Iniciar Sesión <i class="bi bi-key"></i>
-                        </a>
-                    </li>
+                    <?php if ($usuario_logueado): ?>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-outline-primary" href="perfil.php">
+                                Mi Perfil
+                            </a>
+                        </li>
+                    <?php else: ?>
+                         <li class="nav-item ms-lg-2">
+                            <a class="btn btn-registrarse" href="InicioSesion/registro.php">Registrarse</a>
+                        </li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <a class="btn btn-iniciosesion" href="InicioSesion/inicioSesion.php">
+                                Iniciar Sesión <i class="bi bi-box-arrow-in-right"></i>
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

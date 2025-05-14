@@ -4,7 +4,7 @@ require_once '../../php/conexion.php';
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    header("Location: InicioSesion/inicioSesion.php");
+    header("Location: ../inicioSesion.php");
     exit();
 }
 
@@ -158,6 +158,52 @@ $conn->close();
             top: 0;
             height: 100%;
         }
+
+        .nubeLike{
+            background-color: #090643;
+        }
+
+        .btnEditar{
+            background-color: white;
+            border: solid 2px #090643;
+            border-radius: 10px;
+            transform: scale(1.10);
+            margin-right: 7px;
+        }
+
+        .btnEliminar{
+            background-color: white;
+            border: solid 2px #EF0000;
+            border-radius: 10px;
+            transform: scale(1.10);
+        }
+
+        .btnSubir{
+            background-color: #090643;
+            padding-left: 25px;
+            padding-right: 25px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            color: white;
+            border-radius: 6px;
+            font-size: 19px;
+            text-decoration: none;
+        }
+
+        .btn-outline-danger {
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .categoria-titulo{
+            color: #090643;
+        }
     </style>
 </head>
 <body>
@@ -174,21 +220,25 @@ $conn->close();
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="home.php">Inicio</a>
+                        <a class="nav-link" href="home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="miPerfil.php">Mi Perfil</i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="misImagenes.php">Mis Imágenes</a>
+                        <a class="nav-link active" href="misImagenes.php">Mis Imágenes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="votacion.php">Votación</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contacto.php">Contacto</a>
                     </li>
-                    <li class="nav-item ms-lg-2">
-                        <a class="btn btn-outline-danger" href="InicioSesion/inicioSesion.php">
-                            Cerrar Sesión <i class="bi bi-cross"></i>
+                   <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-danger" href="../../php/logout.php">
+                            Cerrar Sesión
                         </a>
+                    </li>
                     </li>
                 </ul>
             </div>
@@ -223,9 +273,10 @@ $conn->close();
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="categoria-titulo mb-0">Mis Imágenes</h2>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#subirImagenModal">
-                <i class="bi bi-plus-circle"></i> Subir Nueva
-            </button>
+
+            <a href="../../php/subir_imagen.php" class="btnSubir  ms-auto me-3">
+                <i class="bi bi-cloud-arrow-up"></i> Subir
+            </a>
         </div>
         
         <!-- Filtros y búsqueda -->
@@ -278,7 +329,7 @@ $conn->close();
                                  data-bs-toggle="modal" 
                                  data-bs-target="#verImagenModal"
                                  onclick="cargarImagenModal('<?= $rutaImagen ?>', '<?= htmlspecialchars($imagen['titulo']) ?>')">
-                            <span class="position-absolute top-0 end-0 bg-primary text-white px-2 py-1 m-2 rounded-pill small">
+                            <span class="nubeLike position-absolute top-0 end-0 text-white px-2 py-1 m-2 rounded-pill small">
                                 <i class="bi bi-heart-fill"></i> <?= $imagen['likes'] ?? 0 ?>
                             </span>
                         </div>
@@ -290,13 +341,13 @@ $conn->close();
                                     <i class="bi bi-calendar"></i> <?= $fechaFormateada ?>
                                 </small>
                                 <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-outline-primary" 
+                                    <button class="btnEditar" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#editarImagenModal"
                                             onclick="cargarEditarModal(<?= $imagen['id'] ?>, '<?= htmlspecialchars($imagen['titulo']) ?>', '<?= htmlspecialchars($imagen['descripcion']) ?>')">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <button class="btn btn-outline-danger" 
+                                    <button class="btnEliminar" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#eliminarImagenModal"
                                             onclick="cargarEliminarModal(<?= $imagen['id'] ?>, '<?= htmlspecialchars($imagen['titulo']) ?>')">
@@ -396,46 +447,6 @@ $conn->close();
     <!-- Footer -->
     <?php include '../../php/footer.php'; ?>
 
-    <!-- Modal Subir Imagen -->
-    <div class="modal fade" id="subirImagenModal" tabindex="-1" aria-labelledby="subirImagenModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form method="POST" enctype="multipart/form-data" action="misImagenes.php">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="subirImagenModalLabel">Subir Nueva Imagen</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="subir_imagen" value="1">
-                        
-                        <div class="mb-3">
-                            <label for="titulo" class="form-label">Título</label>
-                            <input type="text" class="form-control" id="titulo" name="titulo" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripción</label>
-                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="imagen" class="form-label">Seleccionar imagen</label>
-                            <input class="form-control" type="file" id="imagen" name="imagen" accept="image/*" required>
-                            <small class="text-muted">Formatos aceptados: JPG, PNG, GIF. Tamaño máximo: 5MB</small>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <img id="previewImagen" src="#" alt="Vista previa" class="img-fluid d-none">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Subir Imagen</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal Ver Imagen -->
     <div class="modal fade" id="verImagenModal" tabindex="-1" aria-labelledby="verImagenModalLabel" aria-hidden="true">

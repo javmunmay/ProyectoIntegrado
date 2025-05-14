@@ -5,7 +5,7 @@ require_once '../../php/funciones.php';
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    header("Location: InicioSesion/inicioSesion.php");
+    header("Location: ../inicioSesion.php");
     exit();
 }
 
@@ -39,13 +39,13 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
     <link rel="icon" type="image/png" href="../../assets/logoIcon.png">
     <style>
         :root {
-            --primary-color: #2a3d74;
+            --primary-color: #090643;
             --secondary-color: #1E3A5F;
             --accent-color: #4e73df;
         }
 
         .profile-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: var(--primary-color);
             height: 200px;
             border-radius: 15px 15px 0 0;
         }
@@ -98,6 +98,17 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             background-color: var(--accent-color);
         }
 
+        .btn-outline-danger {
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
         .activity-item {
             border-left: 3px solid var(--accent-color);
             padding-left: 15px;
@@ -145,6 +156,24 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             top: 15px;
             right: 15px;
         }
+
+        .card-title{
+            font-weight: bold;
+            color: #090643;
+        }
+
+        .btnSubir{
+            background-color: #090643;
+            padding-left: 25px;
+            padding-right: 25px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            color: white;
+            border-radius: 6px;
+            font-size: 19px;
+            text-decoration: none;
+        }
+        
     </style>
 </head>
 
@@ -154,7 +183,7 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             <a class="navbar-brand" href="home.php">
                 <img src="../../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
-            <a href="../../php/subir_imagen.php" class="btn btn-primary ms-auto me-3">
+             <a href="../../php/subir_imagen.php" class="btnSubir  ms-auto me-3">
                 <i class="bi bi-cloud-arrow-up"></i> Subir
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -164,18 +193,21 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="home.php">Inicio</a>
+                        <a class="nav-link" href="home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="miPerfil.php">Mi Perfil</i></a>
+                        <a class="nav-link active" href="miPerfil.php">Mi Perfil</i></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="misImagenes.php">Mis Imágenes</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="votacion.php">Votación</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="contacto.php">Contacto</a>
                     </li>
-                    <li class="nav-item ms-lg-2">
+                   <li class="nav-item ms-lg-2">
                         <a class="btn btn-outline-danger" href="../../php/logout.php">
                             Cerrar Sesión
                         </a>
@@ -192,16 +224,20 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
         <div class="card mb-4">
             <div class="profile-header"></div>
             <div class="profile-img-container">
-                <img src="<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto de perfil" class="profile-img">
-                <button class="btn btn-primary edit-profile-btn" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
+                <img src="/../../assets/<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto de perfil" class="profile-img">
+                <button class="btn btn-primary edit-profile-btn" data-bs-toggle="modal"
+                    data-bs-target="#editarPerfilModal">
                     <i class="bi bi-pencil"></i> Editar
                 </button>
             </div>
             <div class="card-body text-center pt-4">
                 <h2 class="card-title mb-1"><?php echo htmlspecialchars($nombreUsuario); ?></h2>
-                <p class="text-muted mb-3">@<?php echo htmlspecialchars(strtolower(str_replace(' ', '', $nombreUsuario))); ?></p>
+                <p class="text-muted mb-3">
+                    @<?php echo htmlspecialchars(strtolower(str_replace(' ', '', $nombreUsuario))); ?></p>
 
-                <p class="card-text"><?php echo htmlspecialchars($datosUsuario['biografia'] ?? 'Este usuario no ha añadido una biografía todavía.'); ?></p>
+                <p class="card-text">
+                    <?php echo htmlspecialchars($datosUsuario['biografia'] ?? 'Este usuario no ha añadido una biografía todavía.'); ?>
+                </p>
             </div>
         </div>
 
@@ -231,10 +267,13 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                         <div class="mb-3">
                             <h6 class="mb-2">Espacio utilizado</h6>
                             <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: <?php echo min($estadisticas['espacio_utilizado'], 100); ?>%"
-                                    aria-valuenow="<?php echo $estadisticas['espacio_utilizado']; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar" role="progressbar"
+                                    style="width: <?php echo min($estadisticas['espacio_utilizado'], 100); ?>%"
+                                    aria-valuenow="<?php echo $estadisticas['espacio_utilizado']; ?>" aria-valuemin="0"
+                                    aria-valuemax="100"></div>
                             </div>
-                            <small class="text-muted"><?php echo $estadisticas['espacio_utilizado']; ?>% de 1GB usado</small>
+                            <small class="text-muted"><?php echo $estadisticas['espacio_utilizado']; ?>% de 1GB
+                                usado</small>
                         </div>
                     </div>
                 </div>
@@ -273,7 +312,7 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                 <div class="card mb-4">
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
                         <h5 class="mb-0"><i class="bi bi-images me-2"></i>Mis imágenes recientes</h5>
-                        <a href="misImagenes.php" class="btn btn-sm btn-outline-primary">Ver todas</a>
+                        <a href="misImagenes.php" class="btn btn-sm btn-outline-primary">Gestionar</a>
                     </div>
                     <div class="card-body">
                         <?php if (!empty($imagenesRecientes)): ?>
@@ -305,7 +344,8 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                     <div class="card-body">
                         <div class="activity-item">
                             <h6>Imagen destacada</h6>
-                            <p class="small text-muted mb-1">Tu imagen "Atardecer en la playa" recibió 15 nuevos likes</p>
+                            <p class="small text-muted mb-1">Tu imagen "Atardecer en la playa" recibió 15 nuevos likes
+                            </p>
                             <small class="text-muted">Hace 2 días</small>
                         </div>
                         <div class="activity-item">
@@ -318,14 +358,14 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                             <p class="small text-muted mb-1">Subiste "Paisaje montañoso"</p>
                             <small class="text-muted">Hace 1 semana</small>
                         </div>
-                        <a href="#" class="btn btn-sm btn-outline-primary mt-2">Ver toda la actividad</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -333,11 +373,15 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formEditarPerfil" action="../../php/actualizar_perfil.php" method="POST" enctype="multipart/form-data">
+                    <form id="formEditarPerfil" action="../../php/actualizar_perfil.php" method="POST"
+                        enctype="multipart/form-data">
                         <div class="mb-3 text-center">
-                            <img src="<?php echo htmlspecialchars($fotoPerfil); ?>" id="previewFoto" class="rounded-circle mb-2" width="120" height="75">
-                            <input type="file" class="form-control d-none" id="fotoPerfil" name="fotoPerfil" accept="image/*">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('fotoPerfil').click()">
+                            <img src="/../../assets/<?php echo htmlspecialchars($fotoPerfil); ?>" id="previewFoto"
+                                class="rounded-circle mb-2" width="125" height="125">
+                            <input type="file" class="form-control d-none" id="fotoPerfil" name="fotoPerfil"
+                                accept="image/*">
+                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                onclick="document.getElementById('fotoPerfil').click()">
                                 <i class="bi bi-camera"></i> Cambiar foto
                             </button>
                         </div>
@@ -345,17 +389,20 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="nombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo htmlspecialchars($nombreUsuario); ?>">
+                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                    value="<?php echo htmlspecialchars($nombreUsuario); ?>">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="ubicacion" class="form-label">Ubicación</label>
-                                <input type="text" class="form-control" id="ubicacion" name="ubicacion" value="<?php echo htmlspecialchars($datosUsuario['ubicacion'] ?? ''); ?>">
+                                <input type="text" class="form-control" id="ubicacion" name="ubicacion"
+                                    value="<?php echo htmlspecialchars($datosUsuario['ubicacion'] ?? ''); ?>">
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="bio" class="form-label">Biografía</label>
-                            <textarea class="form-control" id="bio" name="bio" rows="3"><?php echo htmlspecialchars($datosUsuario['biografia'] ?? ''); ?></textarea>
+                            <textarea class="form-control" id="bio" name="bio"
+                                rows="3"><?php echo htmlspecialchars($datosUsuario['biografia'] ?? ''); ?></textarea>
                         </div>
 
                     </form>
@@ -373,11 +420,11 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Preview de la foto de perfil al seleccionar
-        document.getElementById('fotoPerfil').addEventListener('change', function(e) {
+        document.getElementById('fotoPerfil').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = function (event) {
                     document.getElementById('previewFoto').src = event.target.result;
                 }
                 reader.readAsDataURL(file);

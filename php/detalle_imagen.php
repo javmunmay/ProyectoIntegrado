@@ -39,6 +39,18 @@ $es_propietario = ($imagen['usuario_id'] == $usuario_id);
     <title><?php echo htmlspecialchars($imagen['titulo']); ?> | pixFly</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/stylesIndex.css">
+    <link rel="icon" type="image/png" href="../../assets/logoIcon.png">
+
+    <style>
+        .footer {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 0;
+            text-align: center;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -54,13 +66,16 @@ $es_propietario = ($imagen['usuario_id'] == $usuario_id);
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="../InicioSesion/usuario/home.php">Inicio</a>
+                        <a class="nav-link" href="../InicioSesion/usuario/home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../InicioSesion/usuario/miPerfil.php">Mi Perfil</i></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../InicioSesion/usuario/misImagenes.php">Mis Imágenes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="votacion.php">Votación</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../InicioSesion/usuario/contacto.php">Contacto</a>
@@ -87,9 +102,8 @@ $es_propietario = ($imagen['usuario_id'] == $usuario_id);
                                     <!--<a href="editar_imagen.php?id=<?php echo $imagen_id; ?>" class="btn btn-sm btn-outline-primary me-2">
                                         <i class="bi bi-pencil"></i> Editar
                                     </a>-->
-                                    <a href="eliminar_imagen.php?id=<?php echo $imagen_id; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar esta imagen?');">
-                                        <i class="bi bi-trash"></i> Eliminar
-                                    </a>
+                                    <a href="../InicioSesion/usuario/misImagenes.php" class="btn btn-sm btn-outline-primary">Gestionar</a>
+
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -100,7 +114,7 @@ $es_propietario = ($imagen['usuario_id'] == $usuario_id);
                         </div>
 
                         <div class="d-flex align-items-center mb-4">
-                            <img src="<?php echo htmlspecialchars($imagen['foto_perfil'] ?? '../assets/Usuario.jpg'); ?>" class="rounded-circle me-3" width="80" height="50">
+                            <img src="/../../assets/<?php echo htmlspecialchars($imagen['foto_perfil'] ?? '../assets/Usuario.jpg'); ?>" class="rounded-circle me-3" width="80" height="80">
                             <div>
                                 <h5 class="mb-0"><?php echo htmlspecialchars($imagen['nombre_usuario']); ?></h5>
                                 <small class="text-muted">Subido el <?php echo date("d/m/Y", strtotime($imagen['fecha_subida'])); ?></small>
@@ -109,17 +123,6 @@ $es_propietario = ($imagen['usuario_id'] == $usuario_id);
 
                         <div class="mb-4">
                             <p><?php echo nl2br(htmlspecialchars($imagen['descripcion'])); ?></p>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <button class="btn btn-outline-primary me-2">
-                                    <i class="bi bi-heart"></i> Like <span class="badge bg-primary"><?php echo $imagen['likes']; ?></span>
-                                </button>
-                                <button class="btn btn-outline-secondary">
-                                    <i class="bi bi-chat"></i> Comentar
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
