@@ -199,6 +199,7 @@ $conn->close();
             text-decoration: none;
         }
         
+<<<<<<< HEAD
         /* Estilos para el modal de advertencia */
         .modal-advertencia .modal-header {
             background-color: #dc3545;
@@ -248,6 +249,8 @@ $conn->close();
             opacity: 0.5;
             pointer-events: none;
         }
+=======
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
     </style>
 </head>
 
@@ -257,7 +260,11 @@ $conn->close();
             <a class="navbar-brand" href="home.php">
                 <img src="../../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
+<<<<<<< HEAD
              <a href="../../php/subir_imagen.php" class="btnSubir <?php echo $excede_limite ? 'btn-subir-deshabilitado' : ''; ?>">
+=======
+             <a href="../../php/subir_imagen.php" class="btnSubir  ms-auto me-3">
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
                 <i class="bi bi-cloud-arrow-up"></i> Subir
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -276,7 +283,11 @@ $conn->close();
                         <a class="nav-link" href="misImagenes.php">Mis Imágenes</a>
                     </li>
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a class="nav-link <?php echo $excede_limite ? 'disabled' : ''; ?>" href="votacion.php">Votación</a>
+=======
+                        <a class="nav-link" href="votacion.php">Votación</a>
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contacto.php">Contacto</a>
@@ -341,7 +352,11 @@ $conn->close();
             <div class="profile-img-container">
                 <img src="/../../assets/<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto de perfil" class="profile-img">
                 <button class="btn btn-primary edit-profile-btn" data-bs-toggle="modal"
+<<<<<<< HEAD
                     data-bs-target="#editarPerfilModal" <?php echo $excede_limite ? 'disabled' : ''; ?>>
+=======
+                    data-bs-target="#editarPerfilModal">
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
                     <i class="bi bi-pencil"></i> Editar
                 </button>
             </div>
@@ -390,11 +405,23 @@ $conn->close();
 
                         <!-- Sección de imágenes disponibles -->
                         <div class="mb-3">
+<<<<<<< HEAD
                             <div class="stats-card text-center <?php echo $excede_limite ? 'bg-danger text-white' : ''; ?>">
                                 <div class="stat-number"><?php echo $imagenes_restantes; ?></div>
                                 <div class="stat-label">Imágenes disponibles</div>
                                 <small class="<?php echo $excede_limite ? 'text-white' : 'text-muted'; ?>">(Límite: <?php echo $max_imagenes_concurso; ?> por concurso)</small>
                             </div>
+=======
+                            <h6 class="mb-2">Espacio utilizado</h6>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar"
+                                    style="width: <?php echo min($estadisticas['espacio_utilizado'], 100); ?>%"
+                                    aria-valuenow="<?php echo $estadisticas['espacio_utilizado']; ?>" aria-valuemin="0"
+                                    aria-valuemax="100"></div>
+                            </div>
+                            <small class="text-muted"><?php echo $estadisticas['espacio_utilizado']; ?>% de 1GB
+                                usado</small>
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
                         </div>
                     </div>
                 </div>
