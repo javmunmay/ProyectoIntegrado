@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="../assets/logoIcon.png">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
         
@@ -40,11 +41,6 @@
             font-size: 1.5rem;
         }
 
-        .nav-link {
-            color: #2a3d74 !important;
-            font-weight: bold;
-        }
-
         .nav-link:hover {
             color: #1E3A5F !important;
         }
@@ -61,12 +57,13 @@
         .form-container h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: #2a3d74;
+            color: #090643;
             font-weight: bold;
         }
 
         .form-container .btn-primary {
-            background-color: #2a3d74;
+            background-color: #090643;
+            color: white;
             border: none;
             padding: 10px 20px;
             font-size: 1.2rem;
@@ -75,7 +72,7 @@
         }
 
         .form-container .btn-primary:hover {
-            background-color: #1E3A5F;
+            background-color:rgb(16, 11, 112);
         }
 
         .form-container .form-control {
@@ -92,7 +89,7 @@
         }
 
         .form-container .text-center a {
-            color: #2a3d74;
+            color: #090643;
             text-decoration: none;
             font-weight: bold;
         }
@@ -109,6 +106,33 @@
             padding: 20px 0;
             margin-top: auto;
             /* Empuja el footer hacia abajo */
+        }
+
+        .btn-registrarse{
+            background-color: #090643;
+            color: white;
+            padding: 7px;
+        }
+
+        .btn-registrarse:hover{
+            background-color:rgb(12, 8, 89);
+            color: white;
+        }
+
+        .btn-iniciosesion{
+            background-color: white;
+            border: solid 1px #090643;
+            color: #090643;
+            padding: 7px;
+        }
+
+        .btn-iniciosesion:hover{
+            background-color: #090643;
+            color: white;
+        }
+
+        label a{
+            color: #090643;
         }
     </style>
 </head>
@@ -128,7 +152,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">Inicio</a>
+                        <a class="nav-link" href="/">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../votacion.php">Votación</a>
@@ -140,11 +164,11 @@
                         <a class="nav-link" href="../contacto.php">Contacto</a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a class="btn btn-primary" href="registro.php">Registrarse</a>
+                        <a class="btn btn-registrarse" href="registro.php">Registrarse</a>
                     </li>
                     <li class="nav-item ms-lg-2 mt-2">
-                        <a class="btn btn-outline-primary" href="inicioSesion.php">
-                            Iniciar Sesión <i class="bi bi-key"></i>
+                        <a class="btn btn-iniciosesion" href="inicioSesion.php">
+                            Iniciar Sesión <i class="bi bi-box-arrow-in-right"></i>
                         </a>
                     </li>
                 </ul>
@@ -188,6 +212,7 @@
             </div>
         </div>
     </div>
+
 
 
     <?php include '../php/footer.php'; ?>

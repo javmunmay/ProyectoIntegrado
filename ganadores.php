@@ -31,6 +31,19 @@ if ($result_top3->num_rows > 0) {
     }
 }
 
+// Consulta para obtener las fechas del concurso desde bases_concurso
+$sql_fechas = "SELECT fecha_inicio_concurso, fecha_fin_concurso FROM bases_concurso ORDER BY id DESC LIMIT 1";
+$result_fechas = $conn->query($sql_fechas);
+$fechas_concurso = $result_fechas->fetch_assoc();
+
+// Si no hay fechas configuradas, usamos unas por defecto
+if (!$fechas_concurso) {
+    $fechas_concurso = [
+        'fecha_inicio_concurso' => '2025-04-15',
+        'fecha_fin_concurso' => '2025-05-31'
+    ];
+}
+
 // Consulta para estadísticas generales
 $sql_stats = "SELECT 
             COUNT(DISTINCT u.id) AS total_participantes,
@@ -81,7 +94,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
             min-height: 400px;
             overflow: hidden;
         }
-        
+
         .hero-content {
             position: absolute;
             top: 50%;
@@ -92,7 +105,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
             z-index: 2;
             width: 80%;
         }
-        
+
         .hero-bg {
             object-fit: cover;
             height: 100%;
@@ -102,7 +115,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
             top: 0;
             left: 0;
         }
-        
+
         .categoria-titulo {
             font-weight: 700;
             color: #2c3e50;
@@ -110,7 +123,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
             padding-bottom: 10px;
             margin-bottom: 30px;
         }
-        
+
         .categoria-titulo:after {
             content: "";
             position: absolute;
@@ -121,50 +134,50 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
             height: 3px;
             background: linear-gradient(90deg, #3498db, #9b59b6);
         }
-        
+
         .logo {
             transition: transform 0.3s;
         }
-        
+
         .logo:hover {
             transform: scale(1.05);
         }
-        
+
         .premio-card {
             border: none;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
         }
-        
+
         .premio-card:hover {
             transform: translateY(-10px);
         }
-        
+
         .premio-icon {
             font-size: 2.5rem;
             color: #3498db;
             margin-bottom: 1rem;
         }
-        
+
         .ganador-card {
             border: none;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
         }
-        
+
         .ganador-card:hover {
             transform: translateY(-5px);
         }
-        
+
         .ganador-img {
             height: 250px;
             object-fit: cover;
         }
-        
+
         .medalla {
             position: absolute;
             top: 15px;
@@ -177,89 +190,112 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
             justify-content: center;
             color: white;
             font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
-        
+
         .medalla-oro {
             background: linear-gradient(135deg, #FFD700, #D4AF37);
         }
-        
+
         .medalla-plata {
             background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
         }
-        
+
         .medalla-bronce {
             background: linear-gradient(135deg, #CD7F32, #B87333);
         }
-        
+
         .stat-card {
             border: none;
             border-radius: 10px;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s;
         }
-        
+
         .stat-card:hover {
             transform: translateY(-5px);
         }
-        
+
         .stat-icon {
             font-size: 2rem;
-            color: #9b59b6;
+            color:rgb(223, 36, 36);
             margin-bottom: 15px;
         }
-        
+
         .stat-number {
             font-size: 2rem;
             font-weight: bold;
             color: #2c3e50;
         }
-        
+
         .progress-title {
             font-weight: 600;
             margin-bottom: 5px;
         }
-        
+
         .countdown-container {
             margin-top: 30px;
         }
-        
+
         .countdown-item {
             display: inline-block;
             margin: 0 10px;
             text-align: center;
         }
-        
+
         .countdown-number {
             font-size: 2rem;
             font-weight: bold;
             color: white;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             padding: 10px 20px;
             border-radius: 8px;
             display: inline-block;
             min-width: 80px;
         }
-        
+
         .countdown-label {
             font-size: 0.9rem;
             margin-top: 5px;
             display: block;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
         }
-        
+
         @media (max-width: 768px) {
             .hero-section {
                 height: 50vh;
             }
-            
+
             .countdown-number {
                 font-size: 1.5rem;
                 min-width: 60px;
                 padding: 8px 15px;
             }
+        }
+
+        .btn-registrarse{
+            background-color: #090643;
+            color: white;
+            padding: 7px;
+        }
+
+        .btn-registrarse:hover{
+            background-color:rgb(12, 8, 89);
+            color: white;
+        }
+
+        .btn-iniciosesion{
+            background-color: white;
+            border: solid 1px #090643;
+            color: #090643;
+            padding: 7px;
+        }
+
+        .btn-iniciosesion:hover{
+            background-color: #090643;
+            color: white;
         }
     </style>
 </head>
@@ -268,7 +304,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img src="assets/logo.png" alt="Logo PixFly" class="logo" style="height: 50px;">
+                <img src="assets/logo.png" alt="Logo PixFly" style="height: 50px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -288,14 +324,22 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                     <li class="nav-item">
                         <a class="nav-link" href="contacto.php">Contacto</a>
                     </li>
-                    <li class="nav-item ms-lg-2">
-                        <a class="btn btn-primary" href="InicioSesion/registro.php">Registrarse</a>
-                    </li>
-                    <li class="nav-item ms-lg-2 mt-2">
-                        <a class="btn btn-outline-primary" href="InicioSesion/inicioSesion.php">
-                            Iniciar Sesión <i class="bi bi-key"></i>
-                        </a>
-                    </li>
+                    <?php if ($usuario_logueado): ?>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-outline-primary" href="perfil.php">
+                                Mi Perfil
+                            </a>
+                        </li>
+                    <?php else: ?>
+                         <li class="nav-item ms-lg-2">
+                            <a class="btn btn-registrarse" href="InicioSesion/registro.php">Registrarse</a>
+                        </li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <a class="btn btn-iniciosesion" href="InicioSesion/inicioSesion.php">
+                                Iniciar Sesión <i class="bi bi-box-arrow-in-right"></i>
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -306,7 +350,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
         <div class="hero-content">
             <h1 class="display-4 fw-bold">Ganadores del Concurso 2025</h1>
             <p class="lead">Descubre a los fotógrafos más votados y los increíbles premios en juego</p>
-            
+
             <div class="countdown-container">
                 <p>Tiempo restante para el cierre del concurso:</p>
                 <div id="countdown">
@@ -400,7 +444,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                     </div>
                 </div>
             </div>
-            
+
             <div class="mt-5">
                 <h4 class="text-center mb-4">Top 5 participantes</h4>
                 <?php
@@ -409,11 +453,11 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                     $percentage = ($participante['total_likes'] / $max_likes) * 100;
                     echo '
                     <div class="progress-title">
-                        '.htmlspecialchars($participante['username']).' - '.number_format($participante['total_likes']).' likes
+                        ' . htmlspecialchars($participante['username']) . ' - ' . number_format($participante['total_likes']) . ' likes
                     </div>
                     <div class="progress mb-3">
-                        <div class="progress-bar" role="progressbar" style="width: '.$percentage.'%" 
-                            aria-valuenow="'.$participante['total_likes'].'" aria-valuemin="0" aria-valuemax="'.$max_likes.'">
+                        <div class="progress-bar" role="progressbar" style="width: ' . $percentage . '%" 
+                            aria-valuenow="' . $participante['total_likes'] . '" aria-valuemin="0" aria-valuemax="' . $max_likes . '">
                         </div>
                     </div>';
                 }
@@ -430,8 +474,9 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                     <div class="col-md-4 mb-4">
                         <div class="card ganador-card h-100">
                             <div class="position-relative">
-                                <img src="<?php echo $ganador['foto_perfil'] ? htmlspecialchars($ganador['foto_perfil']) : 'assets/user-default.jpg'; ?>"
-                                    alt="<?php echo htmlspecialchars($ganador['username']); ?>" class="card-img-top ganador-img">
+                                <img src="assets/<?php echo $ganador['foto_perfil'] ? htmlspecialchars($ganador['foto_perfil']) : 'assets/user-default.jpg'; ?>"
+                                    alt="<?php echo htmlspecialchars($ganador['username']); ?>"
+                                    class="card-img-top ganador-img">
                                 <?php if ($index == 0): ?>
                                     <div class="medalla medalla-oro">1°</div>
                                 <?php elseif ($index == 1): ?>
@@ -452,7 +497,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                                         <small class="text-muted">Fotos</small>
                                     </div>
                                 </div>
-                                <a href="perfil.php?id=<?php echo $ganador['user_id']; ?>" class="btn btn-primary btn-sm">
+                                <a href="perfil.php?id=<?php echo $ganador['user_id']; ?>" class="btn btn-sm text-white" style="background-color: #090643;">
                                     Ver Perfil <i class="bi bi-arrow-right"></i>
                                 </a>
                             </div>
@@ -476,8 +521,8 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
-                            <div class="display-4 text-primary mb-3">1</div>
-                            <h4>15 Abril 2025</h4>
+                            <div class="display-4 text-primary mb-3 fw-bold">1</div>
+                            <h4><?php echo date('d M Y', strtotime($fechas_concurso['fecha_inicio_concurso'])); ?></h4>
                             <p>Apertura del concurso</p>
                             <p class="small text-muted">Inicio del periodo para subir fotografías</p>
                         </div>
@@ -486,8 +531,11 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
-                            <div class="display-4 text-primary mb-3">2</div>
-                            <h4>30 Abril 2025</h4>
+                            <div class="display-4 text-primary mb-3 fw-bold">2</div>
+                            <?php
+                            $primer_reporte = date('Y-m-d', strtotime($fechas_concurso['fecha_inicio_concurso'] . ' +15 days'));
+                            ?>
+                            <h4><?php echo date('d M Y', strtotime($primer_reporte)); ?></h4>
                             <p>Primer reporte</p>
                             <p class="small text-muted">Publicación de estadísticas iniciales</p>
                         </div>
@@ -496,8 +544,11 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
-                            <div class="display-4 text-primary mb-3">3</div>
-                            <h4>15 Mayo 2025</h4>
+                            <div class="display-4 text-primary mb-3 fw-bold">3</div>
+                            <?php
+                            $cierre_recepcion = date('Y-m-d', strtotime($fechas_concurso['fecha_fin_concurso'] . ' -15 days'));
+                            ?>
+                            <h4><?php echo date('d M Y', strtotime($cierre_recepcion)); ?></h4>
                             <p>Cierre de recepción</p>
                             <p class="small text-muted">Último día para subir fotos</p>
                         </div>
@@ -506,8 +557,8 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
-                            <div class="display-4 text-primary mb-3">4</div>
-                            <h4>31 Mayo 2025</h4>
+                            <div class="display-4 text-primary mb-3 fw-bold">4</div>
+                            <h4><?php echo date('d M Y', strtotime($fechas_concurso['fecha_fin_concurso'])); ?></h4>
                             <p>Anuncio de ganadores</p>
                             <p class="small text-muted">Fin del concurso y premiación</p>
                         </div>
@@ -517,60 +568,35 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
         </div>
     </section>
 
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="assets/logo-white.png" alt="PixFly" style="height: 40px; margin-bottom: 15px;">
-                    <p>Plataforma líder en concursos de fotografía digital desde 2010.</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Contacto</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="bi bi-envelope"></i> info@pixfly.com</li>
-                        <li><i class="bi bi-phone"></i> +34 123 456 789</li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Síguenos</h5>
-                    <a href="#" class="text-white me-2"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-white me-2"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="text-white me-2"><i class="bi bi-twitter-x"></i></a>
-                </div>
-            </div>
-            <hr>
-            <div class="text-center">
-                <p class="mb-0">© 2025 PixFly. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include 'php/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Countdown Timer
+        // Countdown Timer con fechas dinámicas desde PHP
         function updateCountdown() {
-            const endDate = new Date('May 31, 2025 23:59:59').getTime();
+            const endDate = new Date('<?php echo $fechas_concurso['fecha_fin_concurso']; ?> 23:59:59').getTime();
             const now = new Date().getTime();
             const distance = endDate - now;
-            
+
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
+
             document.getElementById('days').textContent = days.toString().padStart(2, '0');
             document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
             document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            
+
             if (distance < 0) {
                 clearInterval(countdownTimer);
                 document.getElementById('countdown').innerHTML = '<div class="alert alert-success">¡El concurso ha finalizado!</div>';
             }
         }
-        
+
         const countdownTimer = setInterval(updateCountdown, 1000);
         updateCountdown();
     </script>
 </body>
+
 </html>

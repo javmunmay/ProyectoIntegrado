@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 require_once '../../php/conexion.php';
 
@@ -68,21 +68,26 @@ $conn->close();
             border: none;
             height: 100%;
         }
+
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
+
         .stat-icon {
             font-size: 2.5rem;
             margin-bottom: 15px;
         }
+
         .stat-number {
             font-size: 2rem;
             font-weight: bold;
         }
+
         .quick-action-btn {
             transition: all 0.3s ease;
         }
+
         .quick-action-btn:hover {
             transform: scale(1.05);
         }
@@ -95,8 +100,8 @@ $conn->close();
             <a class="navbar-brand" href="dashboard.php">
                 <img src="../../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -131,11 +136,12 @@ $conn->close();
         <div class="row mb-4">
             <div class="col-md-6 mx-auto text-center">
                 <div class="alert alert-info">
-                    <i class="bi bi-info-circle-fill"></i> Bienvenido <?php echo htmlspecialchars($nombreUsuario); ?> al panel de administración de pixFly
+                    <i class="bi bi-info-circle-fill"></i> Bienvenido <?php echo htmlspecialchars($nombreUsuario); ?> al
+                    panel de administración de pixFly
                 </div>
             </div>
         </div>
-        
+
         <!-- Estadísticas -->
         <div class="row g-4 mb-5">
             <div class="col-md-3">
@@ -171,7 +177,7 @@ $conn->close();
                 </div>
             </div>
         </div>
-        
+
         <!-- Acciones rápidas -->
         <div class="row mb-5">
             <div class="col-12">
@@ -189,10 +195,14 @@ $conn->close();
                     <a href="gestionarReportes.php?filter=open" class="btn btn-outline-warning quick-action-btn">
                         <i class="bi bi-ticket-detailed"></i> Reportes sin resolver
                     </a>
+                    <!-- Nuevo botón para gestionar bases del concurso -->
+                    <a href="gestionarBases.php" class="btn btn-outline-info quick-action-btn">
+                        <i class="bi bi-journal-text"></i> Modificar bases del concurso
+                    </a>
                 </div>
             </div>
         </div>
-        
+
         <!-- Últimas actividades (ejemplo) -->
         <div class="row">
             <div class="col-12">
@@ -209,7 +219,8 @@ $conn->close();
                                 <i class="bi bi-image text-success"></i> 5 imágenes subidas en las últimas 24 horas
                             </li>
                             <li class="list-group-item">
-                                <i class="bi bi-exclamation-triangle text-warning"></i> 2 incidencias reportadas esta semana
+                                <i class="bi bi-exclamation-triangle text-warning"></i> 2 incidencias reportadas esta
+                                semana
                             </li>
                             <li class="list-group-item">
                                 <i class="bi bi-check-circle text-success"></i> 1 ticket resuelto ayer
@@ -238,4 +249,5 @@ $conn->close();
         }, 60000);
     </script>
 </body>
+
 </html>

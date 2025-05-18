@@ -17,29 +17,25 @@ function obtenerDatosUsuario($conn, $usuario_id) {
 
 // Contar imágenes del usuario
 function contarImagenesUsuario($conn, $usuario_id) {
-    $sql = "SELECT COUNT(*) as total FROM imagenes WHERE usuario_id = ?";
+    $sql = "SELECT COUNT(*) as total FROM imagenes WHERE usuario_id = ? AND estado IN ('activo', 'pendiente')";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $usuario_id);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    
+    $stmt->close();
     return $row['total'];
 }
 
 // Obtener imágenes recientes del usuario
 function obtenerImagenesRecientes($conn, $usuario_id, $limite = 4) {
-    $sql = "SELECT * FROM imagenes WHERE usuario_id = ? ORDER BY fecha_subida DESC LIMIT ?";
+    $sql = "SELECT id, ruta, titulo FROM imagenes WHERE usuario_id = ? AND estado = 'activo' ORDER BY fecha_subida DESC LIMIT ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ii", $usuario_id, $limite);
     $stmt->execute();
     $result = $stmt->get_result();
-    
-    $imagenes = array();
-    while ($row = $result->fetch_assoc()) {
-        $imagenes[] = $row;
-    }
-    
+    $imagenes = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
     return $imagenes;
 }
 

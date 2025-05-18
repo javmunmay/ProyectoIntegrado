@@ -33,7 +33,7 @@ if ($result_imagenes->num_rows > 0) {
 }
 
 // Procesar votos si se envía el formulario
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar']) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
     if ($usuario_logueado) {
         $imagen_id = intval($_POST['imagen_id']);
         
@@ -198,6 +198,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar']) {
                 height: 200px;
             }
         }
+
+        .btn-registrarse{
+            background-color: #090643;
+            color: white;
+            padding: 7px;
+        }
+
+        .btn-registrarse:hover{
+            background-color:rgb(12, 8, 89);
+            color: white;
+        }
+
+        .btn-iniciosesion{
+            background-color: white;
+            border: solid 1px #090643;
+            color: #090643;
+            padding: 7px;
+        }
+
+        .btn-iniciosesion:hover{
+            background-color: #090643;
+            color: white;
+        }
     </style>
 </head>
 
@@ -233,10 +256,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar']) {
                         </li>
                     <?php else: ?>
                         <li class="nav-item ms-lg-2">
-                            <a class="btn btn-primary" href="InicioSesion/registro.php">Registrarse</a>
+                            <a class="btn btn-registrarse" href="InicioSesion/registro.php">Registrarse</a>
                         </li>
                         <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                            <a class="btn btn-outline-primary" href="InicioSesion/inicioSesion.php">
+                            <a class="btn btn-iniciosesion" href="InicioSesion/inicioSesion.php">
                                 Iniciar Sesión <i class="bi bi-box-arrow-in-right"></i>
                             </a>
                         </li>
@@ -250,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar']) {
         <div class="hero-content">
             <h1 class="display-4 fw-bold">Vota por tus fotos favoritas</h1>
             <p class="lead">Descubre increíbles fotografías y apoya a tus artistas preferidos</p>
-            <a href="#fotos" class="btn btn-primary btn-lg mt-3">Explorar Fotos</a>
+            <a href="#fotos" class="btn btn-lg mt-3 text-white" style="background-color: #090643;">Explorar Fotos</a>
         </div>
     </section>
 
@@ -275,7 +298,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar']) {
                                 
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <div class="user-info">
-                                        <img src="<?php echo $imagen['foto_perfil'] ? htmlspecialchars($imagen['foto_perfil']) : 'assets/user-default.jpg'; ?>" 
+                                        <img src="assets/<?php echo $imagen['foto_perfil'] ? htmlspecialchars($imagen['foto_perfil']) : 'assets/user-default.jpg'; ?>" 
                                              alt="<?php echo htmlspecialchars($imagen['usuario_nombre']); ?>" class="user-avatar">
                                         <span><?php echo htmlspecialchars($imagen['usuario_nombre']); ?></span>
                                     </div>
@@ -345,37 +368,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar']) {
         </div>
     </section>
 
-    <footer class="bg-dark text-white py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <img src="assets/logo-white.png" alt="PixFly" style="height: 40px; margin-bottom: 15px;">
-                    <p>Plataforma líder en concursos de fotografía digital desde 2010.</p>
-                </div>
-                <div class="col-md-4 mb-4 mb-md-0">
-                    <h5>Contacto</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="bi bi-envelope me-2"></i> info@pixfly.com</li>
-                        <li><i class="bi bi-phone me-2"></i> +34 123 456 789</li>
-                        <li><i class="bi bi-geo-alt me-2"></i> Madrid, España</li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Síguenos</h5>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="text-white fs-4"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="text-white fs-4"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-white fs-4"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="text-white fs-4"><i class="bi bi-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="text-center">
-                <p class="mb-0 small">© 2025 PixFly. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include 'php/footer.php'; ?>
 
     <?php if (!$usuario_logueado): ?>
         <div class="login-alert alert alert-warning alert-dismissible fade show" role="alert">

@@ -2,6 +2,12 @@
 session_start();
 require_once '../../php/conexion.php';
 
+// Verificar sesión
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../inicioSesion.php");
+    exit();
+}
+
 // Configurar cabeceras para evitar caché
 header("Cache-Control: no-cache, no-store, must-revalidate");
 header("Pragma: no-cache");
@@ -46,6 +52,19 @@ if (isset($_GET['success'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../../css/stylesContacto.css">
     <link rel="icon" type="image/png" href="../../assets/logoIcon.png">
+
+    <style>
+        .btn-outline-danger {
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 
 <body>
@@ -61,7 +80,7 @@ if (isset($_GET['success'])) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="home.php">Inicio</a>
+                        <a class="nav-link" href="home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="miPerfil.php">Mi Perfil</i></a>
@@ -70,11 +89,14 @@ if (isset($_GET['success'])) {
                         <a class="nav-link" href="misImagenes.php">Mis Imágenes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contacto.php">Contacto</a>
+                        <a class="nav-link" href="votacion.php">Votación</a>
                     </li>
-                    <li class="nav-item ms-lg-2">
-                        <a class="btn btn-outline-danger" href="InicioSesion/inicioSesion.php">
-                            Cerrar Sesión <i class="bi bi-cross"></i>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="contacto.php">Contacto</a>
+                    </li>
+                   <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-danger" href="../../php/logout.php">
+                            Cerrar Sesión
                         </a>
                     </li>
                 </ul>

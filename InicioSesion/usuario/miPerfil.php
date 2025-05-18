@@ -5,7 +5,7 @@ require_once '../../php/funciones.php';
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    header("Location: InicioSesion/inicioSesion.php");
+    header("Location: ../inicioSesion.php");
     exit();
 }
 
@@ -20,9 +20,34 @@ $totalImagenes = contarImagenesUsuario($conn, $usuario_id);
 $imagenesRecientes = obtenerImagenesRecientes($conn, $usuario_id, 4);
 $estadisticas = obtenerEstadisticasUsuario($conn, $usuario_id);
 
+// Obtener información del concurso activo
+$sql_concurso = "SELECT max_imagenes_por_usuario FROM bases_concurso ORDER BY id DESC LIMIT 1";
+$result_concurso = $conn->query($sql_concurso);
+$concurso = $result_concurso->fetch_assoc();
+$max_imagenes_concurso = $concurso['max_imagenes_por_usuario'] ?? 5;
+$imagenes_restantes = max(0, $max_imagenes_concurso - $totalImagenes);
+
+// Verificar si se ha excedido el límite
+$excede_limite = $totalImagenes > $max_imagenes_concurso;
+$imagenes_a_eliminar = $excede_limite ? $totalImagenes - $max_imagenes_concurso : 0;
+
+// Obtener todas las imágenes del usuario para el modal de eliminación
+$imagenes_usuario = [];
+if ($excede_limite) {
+    $sql_imagenes = "SELECT id, ruta, titulo FROM imagenes WHERE usuario_id = ? AND estado IN ('activo', 'pendiente') ORDER BY fecha_subida DESC";
+    $stmt = $conn->prepare($sql_imagenes);
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $imagenes_usuario = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+}
+
 // Formatear fechas
 $fechaRegistro = date("d/m/Y", strtotime($datosUsuario['fecha_registro']));
 $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtotime($datosUsuario['ultimo_login'])) : "Nunca";
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -39,13 +64,13 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
     <link rel="icon" type="image/png" href="../../assets/logoIcon.png">
     <style>
         :root {
-            --primary-color: #2a3d74;
+            --primary-color: #090643;
             --secondary-color: #1E3A5F;
             --accent-color: #4e73df;
         }
 
         .profile-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: var(--primary-color);
             height: 200px;
             border-radius: 15px 15px 0 0;
         }
@@ -98,6 +123,17 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             background-color: var(--accent-color);
         }
 
+        .btn-outline-danger {
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
         .activity-item {
             border-left: 3px solid var(--accent-color);
             padding-left: 15px;
@@ -145,6 +181,73 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             top: 15px;
             right: 15px;
         }
+
+        .card-title{
+            font-weight: bold;
+            color: #090643;
+        }
+
+        .btnSubir{
+            background-color: #090643;
+            padding-left: 25px;
+            padding-right: 25px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            color: white;
+            border-radius: 6px;
+            font-size: 19px;
+            text-decoration: none;
+        }
+        
+        /* Estilos para el modal de advertencia */
+        .modal-advertencia .modal-header {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .imagen-eliminar {
+            position: relative;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            transition: all 0.3s;
+        }
+        
+        .imagen-eliminar img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        
+        .imagen-eliminar .form-check {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        
+        .imagen-eliminar .titulo {
+            margin-top: 5px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .contador-eliminar {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        
+        .imagen-seleccionada {
+            border-color: #dc3545;
+            background-color: #fff5f5;
+        }
+        
+        .btn-subir-deshabilitado {
+            opacity: 0.5;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -154,7 +257,7 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             <a class="navbar-brand" href="home.php">
                 <img src="../../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
-            <a href="../../php/subir_imagen.php" class="btn btn-primary ms-auto me-3">
+             <a href="../../php/subir_imagen.php" class="btnSubir <?php echo $excede_limite ? 'btn-subir-deshabilitado' : ''; ?>">
                 <i class="bi bi-cloud-arrow-up"></i> Subir
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -164,18 +267,21 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="home.php">Inicio</a>
+                        <a class="nav-link" href="home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="miPerfil.php">Mi Perfil</i></a>
+                        <a class="nav-link active" href="miPerfil.php">Mi Perfil</i></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="misImagenes.php">Mis Imágenes</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link <?php echo $excede_limite ? 'disabled' : ''; ?>" href="votacion.php">Votación</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="contacto.php">Contacto</a>
                     </li>
-                    <li class="nav-item ms-lg-2">
+                   <li class="nav-item ms-lg-2">
                         <a class="btn btn-outline-danger" href="../../php/logout.php">
                             Cerrar Sesión
                         </a>
@@ -185,25 +291,79 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
         </div>
     </nav>
 
-
+    <!-- Modal de advertencia cuando se excede el límite -->
+    <?php if ($excede_limite): ?>
+    <div class="modal fade modal-advertencia" id="advertenciaModal" tabindex="-1" aria-hidden="false" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Límite de imágenes excedido</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <h5>Has excedido el límite de imágenes permitidas para el concurso.</h5>
+                        <p class="mb-2">Actualmente tienes <strong><?php echo $totalImagenes; ?> imágenes</strong> (límite: <?php echo $max_imagenes_concurso; ?>).</p>
+                        <p class="mb-0">Debes eliminar al menos <span class="contador-eliminar"><?php echo $imagenes_a_eliminar; ?></span> imagen(es) para poder continuar.</p>
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Selecciona las imágenes a eliminar:</h5>
+                    <form id="formEliminarImagenes" action="../../php/eliminar_imagenes.php" method="POST">
+                        <div class="row">
+                            <?php foreach ($imagenes_usuario as $imagen): ?>
+                            <div class="col-md-4">
+                                <div class="imagen-eliminar">
+                                    <div class="form-check">
+                                        <input class="form-check-input checkbox-eliminar" type="checkbox" name="imagenes_eliminar[]" value="<?php echo $imagen['id']; ?>" id="img-<?php echo $imagen['id']; ?>">
+                                    </div>
+                                    <img src="../../<?php echo htmlspecialchars($imagen['ruta']); ?>" class="img-fluid" alt="<?php echo htmlspecialchars($imagen['titulo']); ?>">
+                                    <div class="titulo"><?php echo htmlspecialchars($imagen['titulo']); ?></div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <input type="hidden" name="imagenes_a_eliminar" value="<?php echo $imagenes_a_eliminar; ?>">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="formEliminarImagenes" class="btn btn-danger" id="btnEliminarSeleccionadas" disabled>
+                        <i class="bi bi-trash"></i> Eliminar seleccionadas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <div class="container mt-4 mb-5">
         <!-- Header del perfil -->
         <div class="card mb-4">
             <div class="profile-header"></div>
             <div class="profile-img-container">
-                <img src="<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto de perfil" class="profile-img">
-                <button class="btn btn-primary edit-profile-btn" data-bs-toggle="modal" data-bs-target="#editarPerfilModal">
+                <img src="/../../assets/<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto de perfil" class="profile-img">
+                <button class="btn btn-primary edit-profile-btn" data-bs-toggle="modal"
+                    data-bs-target="#editarPerfilModal" <?php echo $excede_limite ? 'disabled' : ''; ?>>
                     <i class="bi bi-pencil"></i> Editar
                 </button>
             </div>
             <div class="card-body text-center pt-4">
                 <h2 class="card-title mb-1"><?php echo htmlspecialchars($nombreUsuario); ?></h2>
-                <p class="text-muted mb-3">@<?php echo htmlspecialchars(strtolower(str_replace(' ', '', $nombreUsuario))); ?></p>
+                <p class="text-muted mb-3">
+                    @<?php echo htmlspecialchars(strtolower(str_replace(' ', '', $nombreUsuario))); ?></p>
 
-                <p class="card-text"><?php echo htmlspecialchars($datosUsuario['biografia'] ?? 'Este usuario no ha añadido una biografía todavía.'); ?></p>
+                <p class="card-text">
+                    <?php echo htmlspecialchars($datosUsuario['biografia'] ?? 'Este usuario no ha añadido una biografía todavía.'); ?>
+                </p>
             </div>
         </div>
+
+        <!-- Mensaje de advertencia si se excede el límite -->
+        <?php if ($excede_limite): ?>
+        <div class="alert alert-danger">
+            <h5><i class="bi bi-exclamation-triangle-fill"></i> Has excedido el límite de imágenes</h5>
+            <p class="mb-0">Tienes <?php echo $totalImagenes; ?> imágenes (límite: <?php echo $max_imagenes_concurso; ?>). 
+            Debes eliminar <?php echo $imagenes_a_eliminar; ?> imagen(es) para poder continuar participando en el concurso.</p>
+        </div>
+        <?php endif; ?>
 
         <div class="row">
             <!-- Columna izquierda - Estadísticas -->
@@ -228,13 +388,13 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                             </div>
                         </div>
 
+                        <!-- Sección de imágenes disponibles -->
                         <div class="mb-3">
-                            <h6 class="mb-2">Espacio utilizado</h6>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: <?php echo min($estadisticas['espacio_utilizado'], 100); ?>%"
-                                    aria-valuenow="<?php echo $estadisticas['espacio_utilizado']; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="stats-card text-center <?php echo $excede_limite ? 'bg-danger text-white' : ''; ?>">
+                                <div class="stat-number"><?php echo $imagenes_restantes; ?></div>
+                                <div class="stat-label">Imágenes disponibles</div>
+                                <small class="<?php echo $excede_limite ? 'text-white' : 'text-muted'; ?>">(Límite: <?php echo $max_imagenes_concurso; ?> por concurso)</small>
                             </div>
-                            <small class="text-muted"><?php echo $estadisticas['espacio_utilizado']; ?>% de 1GB usado</small>
                         </div>
                     </div>
                 </div>
@@ -273,7 +433,7 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                 <div class="card mb-4">
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
                         <h5 class="mb-0"><i class="bi bi-images me-2"></i>Mis imágenes recientes</h5>
-                        <a href="misImagenes.php" class="btn btn-sm btn-outline-primary">Ver todas</a>
+                        <a href="misImagenes.php" class="btn btn-sm btn-outline-primary">Gestionar</a>
                     </div>
                     <div class="card-body">
                         <?php if (!empty($imagenesRecientes)): ?>
@@ -305,7 +465,8 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                     <div class="card-body">
                         <div class="activity-item">
                             <h6>Imagen destacada</h6>
-                            <p class="small text-muted mb-1">Tu imagen "Atardecer en la playa" recibió 15 nuevos likes</p>
+                            <p class="small text-muted mb-1">Tu imagen "Atardecer en la playa" recibió 15 nuevos likes
+                            </p>
                             <small class="text-muted">Hace 2 días</small>
                         </div>
                         <div class="activity-item">
@@ -318,14 +479,14 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                             <p class="small text-muted mb-1">Subiste "Paisaje montañoso"</p>
                             <small class="text-muted">Hace 1 semana</small>
                         </div>
-                        <a href="#" class="btn btn-sm btn-outline-primary mt-2">Ver toda la actividad</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -333,11 +494,15 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formEditarPerfil" action="../../php/actualizar_perfil.php" method="POST" enctype="multipart/form-data">
+                    <form id="formEditarPerfil" action="../../php/actualizar_perfil.php" method="POST"
+                        enctype="multipart/form-data">
                         <div class="mb-3 text-center">
-                            <img src="<?php echo htmlspecialchars($fotoPerfil); ?>" id="previewFoto" class="rounded-circle mb-2" width="120" height="75">
-                            <input type="file" class="form-control d-none" id="fotoPerfil" name="fotoPerfil" accept="image/*">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('fotoPerfil').click()">
+                            <img src="/../../assets/<?php echo htmlspecialchars($fotoPerfil); ?>" id="previewFoto"
+                                class="rounded-circle mb-2" width="125" height="125">
+                            <input type="file" class="form-control d-none" id="fotoPerfil" name="fotoPerfil"
+                                accept="image/*">
+                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                onclick="document.getElementById('fotoPerfil').click()">
                                 <i class="bi bi-camera"></i> Cambiar foto
                             </button>
                         </div>
@@ -345,17 +510,20 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="nombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo htmlspecialchars($nombreUsuario); ?>">
+                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                    value="<?php echo htmlspecialchars($nombreUsuario); ?>">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="ubicacion" class="form-label">Ubicación</label>
-                                <input type="text" class="form-control" id="ubicacion" name="ubicacion" value="<?php echo htmlspecialchars($datosUsuario['ubicacion'] ?? ''); ?>">
+                                <input type="text" class="form-control" id="ubicacion" name="ubicacion"
+                                    value="<?php echo htmlspecialchars($datosUsuario['ubicacion'] ?? ''); ?>">
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="bio" class="form-label">Biografía</label>
-                            <textarea class="form-control" id="bio" name="bio" rows="3"><?php echo htmlspecialchars($datosUsuario['biografia'] ?? ''); ?></textarea>
+                            <textarea class="form-control" id="bio" name="bio"
+                                rows="3"><?php echo htmlspecialchars($datosUsuario['biografia'] ?? ''); ?></textarea>
                         </div>
 
                     </form>
@@ -372,12 +540,59 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Mostrar modal de advertencia si se excede el límite
+        <?php if ($excede_limite): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            var advertenciaModal = new bootstrap.Modal(document.getElementById('advertenciaModal'));
+            advertenciaModal.show();
+            
+            // Variables de control
+            const checkboxes = document.querySelectorAll('.checkbox-eliminar');
+            const contador = document.querySelector('.contador-eliminar');
+            const btnEliminar = document.getElementById('btnEliminarSeleccionadas');
+            const imagenesAEliminar = <?php echo $imagenes_a_eliminar; ?>;
+            
+            // Función para actualizar el estado
+            function actualizarEstado() {
+                const seleccionadas = document.querySelectorAll('.checkbox-eliminar:checked').length;
+                const restantes = Math.max(0, imagenesAEliminar - seleccionadas);
+                
+                contador.textContent = restantes;
+                btnEliminar.disabled = restantes > 0;
+                
+                // Resaltar imágenes seleccionadas
+                checkboxes.forEach(checkbox => {
+                    const card = checkbox.closest('.imagen-eliminar');
+                    if (checkbox.checked) {
+                        card.classList.add('imagen-seleccionada');
+                    } else {
+                        card.classList.remove('imagen-seleccionada');
+                    }
+                });
+            }
+            
+            // Event listeners
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', actualizarEstado);
+            });
+            
+            // Validar antes de enviar el formulario
+            document.getElementById('formEliminarImagenes').addEventListener('submit', function(e) {
+                const seleccionadas = document.querySelectorAll('.checkbox-eliminar:checked').length;
+                if (seleccionadas < imagenesAEliminar) {
+                    e.preventDefault();
+                    alert(`Debes seleccionar al menos ${imagenesAEliminar} imágenes para eliminar.`);
+                }
+            });
+        });
+        <?php endif; ?>
+
         // Preview de la foto de perfil al seleccionar
-        document.getElementById('fotoPerfil').addEventListener('change', function(e) {
+        document.getElementById('fotoPerfil').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = function (event) {
                     document.getElementById('previewFoto').src = event.target.result;
                 }
                 reader.readAsDataURL(file);
@@ -385,5 +600,4 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
         });
     </script>
 </body>
-
 </html>

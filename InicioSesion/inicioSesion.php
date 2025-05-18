@@ -40,11 +40,6 @@
             font-size: 1.5rem;
         }
 
-        .nav-link {
-            color: #2a3d74 !important;
-            font-weight: bold;
-        }
-
         .nav-link:hover {
             color: #1E3A5F !important;
         }
@@ -61,7 +56,7 @@
 
         .login-container h2 {
             text-align: center;
-            color: #2a3d74;
+            color: #090643;
             margin-bottom: 20px;
             font-weight: bold;
         }
@@ -78,7 +73,7 @@
         }
 
         .btn-login {
-            background-color: #2a3d74;
+            background-color: #090643;
             color: white;
             width: 100%;
             padding: 10px;
@@ -90,6 +85,7 @@
 
         .btn-login:hover {
             background-color: #1E3A5F;
+            color: white;
         }
 
         .register-link {
@@ -98,7 +94,7 @@
         }
 
         .register-link a {
-            color: #2a3d74;
+            color: #090643;
             text-decoration: none;
             font-weight: bold;
         }
@@ -116,6 +112,31 @@
             margin-top: auto;
             /* Empuja el footer hacia abajo */
         }
+
+        .btn-registrarse{
+            background-color: #090643;
+            color: white;
+            padding: 7px;
+        }
+
+        .btn-registrarse:hover{
+            background-color:rgb(12, 8, 89);
+            color: white;
+        }
+
+        .btn-iniciosesion{
+            background-color: white;
+            border: solid 1px #090643;
+            color: #090643;
+            padding: 7px;
+        }
+
+        .btn-iniciosesion:hover{
+            background-color: #090643;
+            color: white;
+        }
+
+        
     </style>
 </head>
 
@@ -124,8 +145,8 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="../assets/logo.png" alt="Logo PixFly" class="logo" style="height: 50px;">
+            <a class="navbar-brand" href="home.php">
+                <img src="../../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -134,7 +155,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">Inicio</a>
+                        <a class="nav-link" href="/">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../votacion.php">Votación</a>
@@ -146,11 +167,11 @@
                         <a class="nav-link" href="../contacto.php">Contacto</a>
                     </li>
                     <li class="nav-item ms-lg-2">
-                        <a class="btn btn-primary" href="registro.php">Registrarse</a>
+                        <a class="btn btn-registrarse" href="registro.php">Registrarse</a>
                     </li>
                     <li class="nav-item ms-lg-2 mt-2">
-                        <a class="btn btn-outline-primary" href="inicioSesion.php">
-                            Iniciar Sesión <i class="bi bi-key"></i>
+                        <a class="btn btn-iniciosesion" href="inicioSesion.php">
+                            Iniciar Sesión <i class="bi bi-box-arrow-in-right"></i>
                         </a>
                     </li>
                 </ul>
@@ -188,12 +209,14 @@
 
                 <div class="mb-3">
                     <label for="correo" class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="correo" name="correo" placeholder="Ingresa tu correo electrónico" required>
+                    <input type="email" class="form-control" id="correo" name="correo"
+                        placeholder="Ingresa tu correo electrónico" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="contrasena" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Ingresa tu contraseña" required>
+                    <input type="password" class="form-control" id="contrasena" name="contrasena"
+                        placeholder="Ingresa tu contraseña" required>
                 </div>
 
                 <button type="submit" class="btn btn-login">Iniciar Sesión</button>
