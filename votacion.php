@@ -2,9 +2,6 @@
 session_start();
 require_once 'php/conexion.php';
 
-// Verificar si el usuario está logueado
-$usuario_logueado = isset($_SESSION['user_id']);
-
 // Consulta para obtener las imágenes activas con información del usuario
 $sql_imagenes = "SELECT 
                 i.id AS imagen_id,
@@ -31,32 +28,9 @@ if ($result_imagenes->num_rows > 0) {
         $imagenes[] = $row;
     }
 }
-
-// Procesar votos si se envía el formulario
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
-    if ($usuario_logueado) {
-        $imagen_id = intval($_POST['imagen_id']);
-        
-        // Actualizar los likes en la base de datos
-        $sql_votar = "UPDATE imagenes SET likes = likes + 1 WHERE id = ?";
-        $stmt = $conn->prepare($sql_votar);
-        $stmt->bind_param("i", $imagen_id);
-        
-        if ($stmt->execute()) {
-            // Actualizar la lista de imágenes después del voto
-            header("Location: votacion.php");
-            exit();
-        } else {
-            $error_voto = "Error al registrar el voto";
-        }
-    } else {
-        $error_voto = "Debes iniciar sesión para votar";
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -150,43 +124,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
             border: 2px solid #eee;
         }
         
-        .votar-btn {
-            background: linear-gradient(90deg, #3498db, #9b59b6);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        
-        .votar-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-        }
-        
-        .votar-btn:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-        }
-        
         .likes-count {
             font-weight: bold;
             color: #2c3e50;
             margin-left: 5px;
         }
         
-        .login-alert {
+        .likes-container {
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .likes-container:hover {
+            background: #e9ecef;
+        }
+        
+        .login-required-alert {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            z-index: 1000;
-            animation: slideIn 0.5s forwards;
+            z-index: 1100;
+            animation: slideIn 0.3s forwards;
+            max-width: 300px;
         }
         
         @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         
         @media (max-width: 768px) {
@@ -199,31 +168,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
             }
         }
 
-        .btn-registrarse{
+        .btn-registrarse {
             background-color: #090643;
             color: white;
             padding: 7px;
         }
 
-        .btn-registrarse:hover{
-            background-color:rgb(12, 8, 89);
+        .btn-registrarse:hover {
+            background-color: rgb(12, 8, 89);
             color: white;
         }
 
-        .btn-iniciosesion{
+        .btn-iniciosesion {
             background-color: white;
             border: solid 1px #090643;
             color: #090643;
             padding: 7px;
         }
 
-        .btn-iniciosesion:hover{
+        .btn-iniciosesion:hover {
             background-color: #090643;
             color: white;
         }
     </style>
 </head>
-
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
@@ -248,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="contacto.php">Contacto</a>
                     </li>
-                    <?php if ($usuario_logueado): ?>
+                    <?php if (isset($_SESSION['user_id'])): ?>
                         <li class="nav-item ms-lg-2">
                             <a class="btn btn-outline-primary" href="perfil.php">
                                 Mi Perfil
@@ -280,10 +248,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
     <section class="container py-5" id="fotos">
         <h2 class="text-center categoria-titulo">Fotografías en concurso</h2>
         
-        <?php if (isset($error_voto)): ?>
-            <div class="alert alert-danger"><?php echo $error_voto; ?></div>
-        <?php endif; ?>
-        
         <div class="row">
             <?php if (!empty($imagenes)): ?>
                 <?php foreach ($imagenes as $imagen): ?>
@@ -303,13 +267,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
                                         <span><?php echo htmlspecialchars($imagen['usuario_nombre']); ?></span>
                                     </div>
                                     
-                                    <form method="POST" action="votacion.php">
-                                        <input type="hidden" name="imagen_id" value="<?php echo $imagen['imagen_id']; ?>">
-                                        <button type="submit" name="votar" class="votar-btn" <?php echo !$usuario_logueado ? 'disabled' : ''; ?>>
-                                            <i class="bi bi-heart-fill"></i> 
-                                            <span class="likes-count"><?php echo $imagen['likes']; ?></span>
-                                        </button>
-                                    </form>
+                                    <div class="likes-container" onclick="mostrarLoginRequired()">
+                                        <i class="bi bi-heart-fill text-danger"></i> 
+                                        <span class="likes-count" data-imagen-id="<?php echo $imagen['imagen_id']; ?>">
+                                            <?php echo $imagen['likes']; ?>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -370,40 +333,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
 
     <?php include 'php/footer.php'; ?>
 
-    <?php if (!$usuario_logueado): ?>
-        <div class="login-alert alert alert-warning alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            <strong>Inicia sesión</strong> para poder votar por tus fotos favoritas.
-            <a href="InicioSesion/inicioSesion.php" class="alert-link">Ingresar ahora</a>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <?php endif; ?>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Efecto suave al hacer clic en votar
-        document.querySelectorAll('.votar-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (!this.disabled) {
-                    this.innerHTML = '<i class="bi bi-heart-fill"></i> Gracias!';
-                    this.classList.add('btn-success');
-                    this.classList.remove('bg-gradient');
-                    
-                    // Actualizar contador
-                    const countElement = this.querySelector('.likes-count');
-                    let count = parseInt(countElement.textContent);
-                    countElement.textContent = count + 1;
-                    
-                    // Deshabilitar después de votar
-                    this.disabled = true;
+        // Función para mostrar mensaje de login requerido
+        function mostrarLoginRequired() {
+            // Eliminar notificaciones anteriores
+            const oldAlerts = document.querySelectorAll('.login-required-alert');
+            oldAlerts.forEach(alert => alert.remove());
+            
+            // Crear nueva notificación
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-warning login-required-alert alert-dismissible fade show';
+            alertDiv.role = 'alert';
+            alertDiv.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <div>Debes iniciar sesión para votar</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="mt-2">
+                    <a href="InicioSesion/inicioSesion.php" class="btn btn-sm btn-primary">Iniciar Sesión</a>
+                </div>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            // Eliminar automáticamente después de 5 segundos
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Función para actualizar los likes
+        async function actualizarLikes() {
+            try {
+                const response = await fetch('php/obtener_likes.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Actualizar todos los contadores de likes
+                    data.likes.forEach(imagen => {
+                        const likeElement = document.querySelector(`.likes-count[data-imagen-id="${imagen.id}"]`);
+                        if (likeElement) {
+                            likeElement.textContent = imagen.likes;
+                        }
+                    });
                 }
-            });
-        });
-        
-        // Cerrar alerta de login
-        document.querySelector('.btn-close')?.addEventListener('click', function() {
-            this.closest('.alert').style.display = 'none';
-        });
+            } catch (error) {
+                console.error('Error al actualizar likes:', error);
+            }
+        }
+
+        // Actualizar likes cada 5 segundos
+        setInterval(actualizarLikes, 5000);
+
+        // También actualizar al cargar la página
+        document.addEventListener('DOMContentLoaded', actualizarLikes);
     </script>
 </body>
 </html>

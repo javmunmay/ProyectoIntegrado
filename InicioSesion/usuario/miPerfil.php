@@ -5,7 +5,7 @@ require_once '../../php/funciones.php';
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../inicioSesion.php");
+    header("Location: https://41183897.servicio-online.net/InicioSesion/inicioSesion.php");
     exit();
 }
 
@@ -20,9 +20,34 @@ $totalImagenes = contarImagenesUsuario($conn, $usuario_id);
 $imagenesRecientes = obtenerImagenesRecientes($conn, $usuario_id, 4);
 $estadisticas = obtenerEstadisticasUsuario($conn, $usuario_id);
 
+// Obtener información del concurso activo
+$sql_concurso = "SELECT max_imagenes_por_usuario FROM bases_concurso ORDER BY id DESC LIMIT 1";
+$result_concurso = $conn->query($sql_concurso);
+$concurso = $result_concurso->fetch_assoc();
+$max_imagenes_concurso = $concurso['max_imagenes_por_usuario'] ?? 5;
+$imagenes_restantes = max(0, $max_imagenes_concurso - $totalImagenes);
+
+// Verificar si se ha excedido el límite
+$excede_limite = $totalImagenes > $max_imagenes_concurso;
+$imagenes_a_eliminar = $excede_limite ? $totalImagenes - $max_imagenes_concurso : 0;
+
+// Obtener todas las imágenes del usuario para el modal de eliminación
+$imagenes_usuario = [];
+if ($excede_limite) {
+    $sql_imagenes = "SELECT id, ruta, titulo FROM imagenes WHERE usuario_id = ? AND estado IN ('activo', 'pendiente') ORDER BY fecha_subida DESC";
+    $stmt = $conn->prepare($sql_imagenes);
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $imagenes_usuario = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+}
+
 // Formatear fechas
 $fechaRegistro = date("d/m/Y", strtotime($datosUsuario['fecha_registro']));
 $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtotime($datosUsuario['ultimo_login'])) : "Nunca";
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -110,7 +135,7 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
         }
 
         .activity-item {
-            border-left: 3px solid var(--accent-color);
+            border-left: 3px solid var(--primary-color);
             padding-left: 15px;
             margin-bottom: 15px;
         }
@@ -174,6 +199,60 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             text-decoration: none;
         }
         
+        /* Estilos para el modal de advertencia */
+        .modal-advertencia .modal-header {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .imagen-eliminar {
+            position: relative;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            transition: all 0.3s;
+        }
+        
+        .imagen-eliminar img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        
+        .imagen-eliminar .form-check {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        
+        .imagen-eliminar .titulo {
+            margin-top: 5px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .contador-eliminar {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        
+        .imagen-seleccionada {
+            border-color: #dc3545;
+            background-color: #fff5f5;
+        }
+        
+        .btn-subir-deshabilitado {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-outline-gestionar{
+            background-color: #090643;
+            color: white;
+        }
     </style>
 </head>
 
@@ -183,7 +262,7 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             <a class="navbar-brand" href="home.php">
                 <img src="../../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
-             <a href="../../php/subir_imagen.php" class="btnSubir  ms-auto me-3">
+            <a href="../../php/subir_imagen.php" class="btnSubir  ms-auto me-3">
                 <i class="bi bi-cloud-arrow-up"></i> Subir
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -202,7 +281,7 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                         <a class="nav-link" href="misImagenes.php">Mis Imágenes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="votacion.php">Votación</a>
+                        <a class="nav-link <?php echo $excede_limite ? 'disabled' : ''; ?>" href="votacion.php">Votación</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contacto.php">Contacto</a>
@@ -217,7 +296,48 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
         </div>
     </nav>
 
-
+    <!-- Modal de advertencia cuando se excede el límite -->
+    <?php if ($excede_limite): ?>
+    <div class="modal fade modal-advertencia" id="advertenciaModal" tabindex="-1" aria-hidden="false" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Límite de imágenes excedido</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <h5>Has excedido el límite de imágenes permitidas para el concurso.</h5>
+                        <p class="mb-2">Actualmente tienes <strong><?php echo $totalImagenes; ?> imágenes</strong> (límite: <?php echo $max_imagenes_concurso; ?>).</p>
+                        <p class="mb-0">Debes eliminar al menos <span class="contador-eliminar"><?php echo $imagenes_a_eliminar; ?></span> imagen(es) para poder continuar.</p>
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Selecciona las imágenes a eliminar:</h5>
+                    <form id="formEliminarImagenes" action="../../php/eliminar_imagenes.php" method="POST">
+                        <div class="row">
+                            <?php foreach ($imagenes_usuario as $imagen): ?>
+                            <div class="col-md-4">
+                                <div class="imagen-eliminar">
+                                    <div class="form-check">
+                                        <input class="form-check-input checkbox-eliminar" type="checkbox" name="imagenes_eliminar[]" value="<?php echo $imagen['id']; ?>" id="img-<?php echo $imagen['id']; ?>">
+                                    </div>
+                                    <img src="../../<?php echo htmlspecialchars($imagen['ruta']); ?>" class="img-fluid" alt="<?php echo htmlspecialchars($imagen['titulo']); ?>">
+                                    <div class="titulo"><?php echo htmlspecialchars($imagen['titulo']); ?></div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <input type="hidden" name="imagenes_a_eliminar" value="<?php echo $imagenes_a_eliminar; ?>">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="formEliminarImagenes" class="btn btn-danger" id="btnEliminarSeleccionadas" disabled>
+                        <i class="bi bi-trash"></i> Eliminar seleccionadas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <div class="container mt-4 mb-5">
         <!-- Header del perfil -->
@@ -226,7 +346,7 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
             <div class="profile-img-container">
                 <img src="/../../assets/<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Foto de perfil" class="profile-img">
                 <button class="btn btn-primary edit-profile-btn" data-bs-toggle="modal"
-                    data-bs-target="#editarPerfilModal">
+                    data-bs-target="#editarPerfilModal" <?php echo $excede_limite ? 'disabled' : ''; ?>>
                     <i class="bi bi-pencil"></i> Editar
                 </button>
             </div>
@@ -240,6 +360,15 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                 </p>
             </div>
         </div>
+
+        <!-- Mensaje de advertencia si se excede el límite -->
+        <?php if ($excede_limite): ?>
+        <div class="alert alert-danger">
+            <h5><i class="bi bi-exclamation-triangle-fill"></i> Has excedido el límite de imágenes</h5>
+            <p class="mb-0">Tienes <?php echo $totalImagenes; ?> imágenes (límite: <?php echo $max_imagenes_concurso; ?>). 
+            Debes eliminar <?php echo $imagenes_a_eliminar; ?> imagen(es) para poder continuar participando en el concurso.</p>
+        </div>
+        <?php endif; ?>
 
         <div class="row">
             <!-- Columna izquierda - Estadísticas -->
@@ -264,16 +393,13 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                             </div>
                         </div>
 
+                        <!-- Sección de imágenes disponibles -->
                         <div class="mb-3">
-                            <h6 class="mb-2">Espacio utilizado</h6>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar"
-                                    style="width: <?php echo min($estadisticas['espacio_utilizado'], 100); ?>%"
-                                    aria-valuenow="<?php echo $estadisticas['espacio_utilizado']; ?>" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
+                            <div class="stats-card text-center <?php echo $excede_limite ? 'bg-danger text-white' : ''; ?>">
+                                <div class="stat-number"><?php echo $imagenes_restantes; ?></div>
+                                <div class="stat-label">Imágenes disponibles</div>
+                                <small class="<?php echo $excede_limite ? 'text-white' : 'text-muted'; ?>">(Límite: <?php echo $max_imagenes_concurso; ?> por concurso)</small>
                             </div>
-                            <small class="text-muted"><?php echo $estadisticas['espacio_utilizado']; ?>% de 1GB
-                                usado</small>
                         </div>
                     </div>
                 </div>
@@ -312,7 +438,7 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
                 <div class="card mb-4">
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
                         <h5 class="mb-0"><i class="bi bi-images me-2"></i>Mis imágenes recientes</h5>
-                        <a href="misImagenes.php" class="btn btn-sm btn-outline-primary">Gestionar</a>
+                        <a href="misImagenes.php" class="btn btn-sm btn-outline-gestionar">Gestionar</a>
                     </div>
                     <div class="card-body">
                         <?php if (!empty($imagenesRecientes)): ?>
@@ -419,6 +545,53 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Mostrar modal de advertencia si se excede el límite
+        <?php if ($excede_limite): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            var advertenciaModal = new bootstrap.Modal(document.getElementById('advertenciaModal'));
+            advertenciaModal.show();
+            
+            // Variables de control
+            const checkboxes = document.querySelectorAll('.checkbox-eliminar');
+            const contador = document.querySelector('.contador-eliminar');
+            const btnEliminar = document.getElementById('btnEliminarSeleccionadas');
+            const imagenesAEliminar = <?php echo $imagenes_a_eliminar; ?>;
+            
+            // Función para actualizar el estado
+            function actualizarEstado() {
+                const seleccionadas = document.querySelectorAll('.checkbox-eliminar:checked').length;
+                const restantes = Math.max(0, imagenesAEliminar - seleccionadas);
+                
+                contador.textContent = restantes;
+                btnEliminar.disabled = restantes > 0;
+                
+                // Resaltar imágenes seleccionadas
+                checkboxes.forEach(checkbox => {
+                    const card = checkbox.closest('.imagen-eliminar');
+                    if (checkbox.checked) {
+                        card.classList.add('imagen-seleccionada');
+                    } else {
+                        card.classList.remove('imagen-seleccionada');
+                    }
+                });
+            }
+            
+            // Event listeners
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', actualizarEstado);
+            });
+            
+            // Validar antes de enviar el formulario
+            document.getElementById('formEliminarImagenes').addEventListener('submit', function(e) {
+                const seleccionadas = document.querySelectorAll('.checkbox-eliminar:checked').length;
+                if (seleccionadas < imagenesAEliminar) {
+                    e.preventDefault();
+                    alert(`Debes seleccionar al menos ${imagenesAEliminar} imágenes para eliminar.`);
+                }
+            });
+        });
+        <?php endif; ?>
+
         // Preview de la foto de perfil al seleccionar
         document.getElementById('fotoPerfil').addEventListener('change', function (e) {
             const file = e.target.files[0];
@@ -432,5 +605,4 @@ $ultimoLogin = !empty($datosUsuario['ultimo_login']) ? date("d/m/Y H:i", strtoti
         });
     </script>
 </body>
-
 </html>

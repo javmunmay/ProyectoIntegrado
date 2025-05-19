@@ -49,6 +49,17 @@ $es_propietario = ($imagen['usuario_id'] == $usuario_id);
             padding: 1rem 0;
             text-align: center;
         }
+
+        .btn-outline-danger {
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
     </style>
 
 </head>

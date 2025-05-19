@@ -4,7 +4,7 @@ require_once '../../php/conexion.php';
 
 // Verificar si el usuario está logueado y es administrador
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_admin']) || $_SESSION['user_admin'] != 1) {
-    header("Location: ../InicioSesion/inicioSesion.php");
+    header("Location: https://41183897.servicio-online.net/InicioSesion/inicioSesion.php");
     exit();
 }
 

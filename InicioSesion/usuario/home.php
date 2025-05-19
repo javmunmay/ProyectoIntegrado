@@ -4,7 +4,7 @@ require_once '../../php/conexion.php';
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../inicioSesion.php");
+    header("Location: https://41183897.servicio-online.net/InicioSesion/inicioSesion.php");
     exit();
 }
 
@@ -27,7 +27,12 @@ $sql_total_images = "SELECT COUNT(*) as total FROM imagenes WHERE estado = 'acti
 $result_total = $conn->query($sql_total_images);
 $total_images = $result_total->fetch_assoc()['total'];
 
-// 3. Obtener imágenes para el feed (últimas 20 imágenes activas)
+// 3. Obtener información del concurso activo
+$sql_concurso = "SELECT * FROM bases_concurso ORDER BY id DESC LIMIT 1";
+$result_concurso = $conn->query($sql_concurso);
+$concurso = $result_concurso->fetch_assoc();
+
+// 4. Obtener imágenes para el feed (últimas 20 imágenes activas)
 $sql_feed = "SELECT i.id, i.nombre_archivo, i.ruta, i.titulo, i.descripcion, 
              u.nombre as usuario_nombre, u.foto_perfil as usuario_foto, i.likes
              FROM imagenes i
@@ -345,7 +350,35 @@ $conn->close();
             padding: 1rem 0;
             text-align: center;
             z-index: 1000;
-            /* Para que no se oculte debajo de otros elementos */
+        }
+        
+        /* Estilos para el modal del concurso */
+        .modal-concurso .modal-header {
+            background-color: #090643;
+            color: white;
+        }
+        
+        .modal-concurso .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-concurso .info-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-concurso .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .modal-concurso .info-label {
+            font-weight: 600;
+            color: #090643;
+        }
+        
+        .modal-concurso .info-value {
+            color: #555;
         }
     </style>
 </head>
@@ -432,7 +465,7 @@ $conn->close();
                     <h4>Total en pixFly</h4>
                     <h2 class="textinfo"><?php echo $total_images; ?></h2>
                     <p class="text-muted">imágenes compartidas</p>
-                    <a href="../votacion.php" class="btninfo btn-sm">
+                    <a href="votacion.php" class="btninfo btn-sm">
                         <i class="bi bi-grid me-1"></i> Explorar
                     </a>
                 </div>
@@ -446,16 +479,71 @@ $conn->close();
                     <h4>Concurso activo</h4>
                     <h2 class="textinfo">Jun - Ago</h2>
                     <p class="text-muted">participa y gana</p>
-                    <a href="../votacion.php" class="btninfo btn-sm">
+                    <button type="button" class="btninfo btn-sm" data-bs-toggle="modal" data-bs-target="#concursoModal">
                         <i class="bi bi-arrow-right me-1"></i> Más información
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-
-
+    <!-- Modal del Concurso -->
+    <div class="modal fade modal-concurso" id="concursoModal" tabindex="-1" aria-labelledby="concursoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="concursoModalLabel">Bases del Concurso Fotográfico</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="info-item">
+                        <div class="info-label">Período del concurso:</div>
+                        <div class="info-value">
+                            <?php 
+                                echo date('d/m/Y', strtotime($concurso['fecha_inicio_concurso'])) . 
+                                ' - ' . date('d/m/Y', strtotime($concurso['fecha_fin_concurso']));
+                            ?>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Imágenes permitidas por usuario:</div>
+                        <div class="info-value"><?php echo $concurso['max_imagenes_por_usuario']; ?></div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Formatos aceptados:</div>
+                        <div class="info-value"><?php echo strtoupper(str_replace(',', ', ', $concurso['extensiones_permitidas'])); ?></div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Tamaño máximo por imagen:</div>
+                        <div class="info-value"><?php echo $concurso['tamano_maximo_mb']; ?> MB</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Premios:</div>
+                        <div class="info-value">
+                            <ul>
+                                <li>1er puesto: $500 + Kit fotográfico profesional</li>
+                                <li>2do puesto: $300 + Curso avanzado de fotografía</li>
+                                <li>3er puesto: $200 + Membresía premium por 1 año</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Temática:</div>
+                        <div class="info-value">"La belleza en los detalles cotidianos"</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <a href="votacion.php" class="btn btn-primary">Participar ahora</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <?php include '../../php/footer.php'; ?>
 
