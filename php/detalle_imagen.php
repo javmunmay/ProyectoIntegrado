@@ -49,6 +49,10 @@ $es_propietario = ($imagen['usuario_id'] == $usuario_id);
             padding: 1rem 0;
             text-align: center;
         }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
 
         .btn-outline-danger {
             border-radius: 20px;
@@ -60,6 +64,11 @@ $es_propietario = ($imagen['usuario_id'] == $usuario_id);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
     </style>
 
 </head>

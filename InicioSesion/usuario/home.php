@@ -350,6 +350,10 @@ $conn->close();
             padding: 1rem 0;
             text-align: center;
             z-index: 1000;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
         }
         
         /* Estilos para el modal del concurso */
@@ -379,6 +383,12 @@ $conn->close();
         
         .modal-concurso .info-value {
             color: #555;
+<<<<<<< HEAD
+=======
+=======
+            /* Para que no se oculte debajo de otros elementos */
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
         }
     </style>
 </head>
@@ -465,7 +475,15 @@ $conn->close();
                     <h4>Total en pixFly</h4>
                     <h2 class="textinfo"><?php echo $total_images; ?></h2>
                     <p class="text-muted">imágenes compartidas</p>
+<<<<<<< HEAD
                     <a href="votacion.php" class="btninfo btn-sm">
+=======
+<<<<<<< HEAD
+                    <a href="votacion.php" class="btninfo btn-sm">
+=======
+                    <a href="../votacion.php" class="btninfo btn-sm">
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
                         <i class="bi bi-grid me-1"></i> Explorar
                     </a>
                 </div>
@@ -479,14 +497,30 @@ $conn->close();
                     <h4>Concurso activo</h4>
                     <h2 class="textinfo">Jun - Ago</h2>
                     <p class="text-muted">participa y gana</p>
+<<<<<<< HEAD
                     <button type="button" class="btninfo btn-sm" data-bs-toggle="modal" data-bs-target="#concursoModal">
                         <i class="bi bi-arrow-right me-1"></i> Más información
                     </button>
+=======
+<<<<<<< HEAD
+                    <button type="button" class="btninfo btn-sm" data-bs-toggle="modal" data-bs-target="#concursoModal">
+                        <i class="bi bi-arrow-right me-1"></i> Más información
+                    </button>
+=======
+                    <a href="../votacion.php" class="btninfo btn-sm">
+                        <i class="bi bi-arrow-right me-1"></i> Más información
+                    </a>
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
                 </div>
             </div>
         </div>
     </div>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
     <!-- Modal del Concurso -->
     <div class="modal fade modal-concurso" id="concursoModal" tabindex="-1" aria-labelledby="concursoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -544,6 +578,13 @@ $conn->close();
             </div>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+=======
+
+
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
 
     <?php include '../../php/footer.php'; ?>
 
