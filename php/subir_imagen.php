@@ -20,9 +20,18 @@ $sql_bases = "SELECT * FROM bases_concurso
               ORDER BY id DESC LIMIT 1";
 
 $result_bases = $conn->query($sql_bases);
+<<<<<<< HEAD
+=======
+
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+>>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
 $concurso_activo = ($result_bases->num_rows > 0);
 
 
+<<<<<<< HEAD
 // Valores por defecto (cuando no hay concurso activo)
 $max_imagenes = 5;
 $extensiones_permitidas = ['jpg', 'jpeg', 'png'];
@@ -30,12 +39,21 @@ $tamano_maximo = 10 * 1024 * 1024; // 10MB en bytes
 
 if ($concurso_activo) {
     //echo "Prueba de curso activo";
+=======
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+if ($result_bases->num_rows > 0) {
+>>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
     $bases = $result_bases->fetch_assoc();
     $max_imagenes = (int)$bases['max_imagenes_por_usuario'];
     $extensiones_permitidas = explode(',', $bases['extensiones_permitidas']);
     $tamano_maximo = (int)$bases['tamano_maximo_mb'] * 1024 * 1024;
 }
 
+<<<<<<< HEAD
 // Verificar imágenes subidas (siempre con consulta fresca)
 $sql_imagenes_usuario = "SELECT COUNT(*) as total FROM imagenes 
     WHERE usuario_id = ? AND estado IN ('activo', 'pendiente')";
@@ -45,15 +63,95 @@ $stmt_imagenes->execute();
 $result_imagenes = $stmt_imagenes->get_result();
 $imagenes_subidas = (int)$result_imagenes->fetch_assoc()['total'];
 $stmt_imagenes->close();
+=======
+    // Verificar cuántas imágenes ha subido el usuario (activas y pendientes)
+    $sql_imagenes_usuario = "SELECT COUNT(*) as total FROM imagenes 
+        WHERE usuario_id = ? AND estado IN ('activo', 'pendiente')";
+=======
+<<<<<<< HEAD
+    $tamano_maximo = $bases['tamano_maximo_mb'] * 1024 * 1024;
+
+    // Verificar cuántas imágenes ha subido el usuario (activas y pendientes)
+    $sql_imagenes_usuario = "SELECT COUNT(*) as total FROM imagenes 
+        WHERE usuario_id = ? AND estado IN ('activo', 'pendiente')";
+=======
+    $tamano_maximo = $bases['tamano_maximo_mb'] * 1024 * 1024; // Convertir MB a bytes
+    
+    // Verificar cuántas imágenes ha subido el usuario (sin importar el estado)
+    $sql_imagenes_usuario = "SELECT COUNT(*) as total FROM imagenes 
+                            WHERE usuario_id = ?";
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+    $stmt_imagenes = $conn->prepare($sql_imagenes_usuario);
+    $stmt_imagenes->bind_param("i", $usuario_id);
+    $stmt_imagenes->execute();
+    $result_imagenes = $stmt_imagenes->get_result();
+    $imagenes_subidas = $result_imagenes->fetch_assoc()['total'];
+    $stmt_imagenes->close();
+<<<<<<< HEAD
+>>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
 
 // Calcular disponibilidad
 $imagenes_restantes = $max_imagenes - $imagenes_subidas;
 $puede_subir = ($imagenes_restantes > 0);
 
+<<<<<<< HEAD
 if (!$puede_subir) {
     $mensaje_error = $concurso_activo
         ? "Has alcanzado el límite máximo de $max_imagenes imágenes para este concurso."
         : "Tienes $imagenes_subidas imágenes. Por favor, elimina algunas antes de subir más.";
+=======
+=======
+<<<<<<< HEAD
+
+    $imagenes_restantes = $max_imagenes - $imagenes_subidas;
+
+=======
+    
+    $imagenes_restantes = $max_imagenes - $imagenes_subidas;
+    
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+    if ($imagenes_restantes <= 0) {
+        $puede_subir = false;
+        $mensaje_error = "Has alcanzado el límite máximo de $max_imagenes imágenes para este concurso.";
+    }
+} else {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+    // Si no hay concurso activo, verificar si hay más de 5 imágenes para mostrar advertencia
+    $sql_total_imagenes = "SELECT COUNT(*) as total FROM imagenes 
+        WHERE usuario_id = ? AND estado IN ('activo', 'pendiente')";
+    $stmt_total = $conn->prepare($sql_total_imagenes);
+    $stmt_total->bind_param("i", $usuario_id);
+    $stmt_total->execute();
+    $result_total = $stmt_total->get_result();
+    $total_imagenes = $result_total->fetch_assoc()['total'];
+    $stmt_total->close();
+
+    if ($total_imagenes > 5) {
+        $puede_subir = false;
+        $mensaje_error = "Tienes $total_imagenes imágenes. Por favor, elimina algunas antes de subir más.";
+    } else {
+        // Si no hay concurso y tiene menos de 5 imágenes, permitir subida sin límites
+        $max_imagenes = 0;
+        $imagenes_restantes = 1;
+        $extensiones_permitidas = ['jpg', 'jpeg', 'png'];
+        $tamano_maximo = 10 * 1024 * 1024;
+    }
+<<<<<<< HEAD
+=======
+=======
+    // Si no hay concurso activo, permitir subida sin límites
+    $max_imagenes = 0;
+    $imagenes_restantes = 1; // Para que siempre muestre que puede subir
+    $extensiones_permitidas = ['jpg', 'jpeg', 'png'];
+    $tamano_maximo = 10 * 1024 * 1024; // 10MB por defecto
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+>>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $puede_subir) {
@@ -77,6 +175,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $puede_subir) {
             $max_mb = $bases['tamano_maximo_mb'] ?? 10;
             $mensaje_error = "El archivo excede el tamaño máximo permitido de {$max_mb}MB.";
         } else {
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+        } else {
+=======
+        }
+        else {
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+>>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
             // Crear directorio si no existe
             $directorio = '../fotosDeUsuarios/';
             if (!file_exists($directorio)) {
@@ -186,6 +295,17 @@ $conn->close();
         .quota-badge {
             background-color:
                 <?php echo ($imagenes_restantes > 0) ? '#28a745' : '#dc3545'; ?>;
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+            background-color:
+                <?php echo ($imagenes_restantes > 0) ? '#28a745' : '#dc3545'; ?>;
+=======
+            background-color: <?php echo ($imagenes_restantes > 0) ? '#28a745' : '#dc3545'; ?>;
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+>>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
             color: white;
             padding: 8px 15px;
             border-radius: 20px;
@@ -289,6 +409,61 @@ $conn->close();
             flex: 0 0 auto;
             /* Evita que las imágenes se estiren o encojan */
         }
+
+        /* Estilos para el modal de advertencia */
+        .modal-advertencia .modal-header {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .imagen-eliminar {
+            position: relative;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            transition: all 0.3s;
+        }
+
+        .imagen-eliminar img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+
+        .imagen-eliminar .form-check {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .imagen-eliminar .titulo {
+            margin-top: 5px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .contador-eliminar {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+        .imagen-seleccionada {
+            border-color: #dc3545;
+            background-color: #fff5f5;
+        }
+
+        .btn-subir-deshabilitado {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .nav-link.disabled {
+            color: #6c757d !important;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -296,6 +471,16 @@ $conn->close();
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="../InicioSesion/usuario/home.php">
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+            <a class="navbar-brand" href="../InicioSesion/usuario/home.php">
+=======
+            <a class="navbar-brand" href="home.php">
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+>>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
                 <img src="../assets/logo.png" alt="Logo pixFly" style="height: 50px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -316,6 +501,17 @@ $conn->close();
                     <li class="nav-item">
                         <a class="nav-link <?php echo !$puede_subir ? 'disabled' : ''; ?>"
                             href="votacion.php">Votación</a>
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+                        <a class="nav-link <?php echo !$puede_subir ? 'disabled' : ''; ?>"
+                            href="votacion.php">Votación</a>
+=======
+                        <a class="nav-link" href="votacion.php">Votación</a>
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+>>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="../InicioSesion/usuario/contacto.php">Contacto</a>
@@ -349,10 +545,62 @@ $conn->close();
                         <?php if ($mensaje_error): ?>
                             <div class="alert alert-danger">
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo $mensaje_error; ?>
+<<<<<<< HEAD
                             </div>
                         <?php endif; ?>
 
 
+=======
+=======
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($mensaje_error): ?>
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i><?php echo $mensaje_error; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="quota-badge mb-4">
+                            <i class="bi bi-images"></i>
+                            <?php if ($imagenes_restantes > 0): ?>
+                                Puedes subir <?php echo $imagenes_restantes; ?> de <?php echo $max_imagenes; ?> imágenes permitidas
+                                <?php echo $concurso_activo ? 'para el concurso' : ''; ?>
+                            <?php else: ?>
+                                Límite <?php echo $concurso_activo ? 'del concurso' : 'general'; ?> alcanzado: <?php echo $max_imagenes; ?> imágenes
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if ($puede_subir): ?>
+                            <form action="subir_imagen.php" method="POST" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="imagen" class="form-label">Seleccionar imagen</label>
+                                    <input class="form-control" type="file" id="imagen" name="imagen" accept="image/*"
+                                        required>
+                                    <div class="form-text">
+                                        Formatos permitidos: <?php echo implode(', ', $extensiones_permitidas); ?>.
+                                        Tamaño máximo:
+                                        <?php echo isset($bases['tamano_maximo_mb']) ? $bases['tamano_maximo_mb'] : 10; ?>MB.
+                                    </div>
+                                </div>
+<<<<<<< HEAD
+
+=======
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+                            </div>
+                        <?php endif; ?>
+
+<<<<<<< HEAD
+                        <div class="quota-badge mb-4">
+                            <i class="bi bi-images"></i>
+                            <?php if ($imagenes_restantes > 0): ?>
+                                Puedes subir <?php echo $imagenes_restantes; ?> de <?php echo $max_imagenes; ?> imágenes permitidas
+                                <?php echo $concurso_activo ? 'para el concurso' : ''; ?>
+                            <?php else: ?>
+                                Límite <?php echo $concurso_activo ? 'del concurso' : 'general'; ?> alcanzado: <?php echo $max_imagenes; ?> imágenes
+                            <?php endif; ?>
+                        </div>
+>>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
 
                         <?php if ($puede_subir): ?>
                             <form action="subir_imagen.php" method="POST" enctype="multipart/form-data">
@@ -367,11 +615,14 @@ $conn->close();
                                     </div>
                                 </div>
 
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
                                 <div class="mb-3">
                                     <label for="titulo" class="form-label">Título</label>
                                     <input type="text" class="form-control" id="titulo" name="titulo" required
                                         maxlength="100">
                                 </div>
+<<<<<<< HEAD
+=======
 
                                 <div class="mb-3">
                                     <label for="descripcion" class="form-label">Descripción</label>
@@ -390,6 +641,35 @@ $conn->close();
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
                                 No puedes subir más imágenes para este concurso. Por favor borra las imágenes necesarias para subir más imágenes.
                             </div>
+<<<<<<< HEAD
+=======
+=======
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="titulo" name="titulo" required maxlength="100">
+                            </div>
+>>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
+
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label">Descripción</label>
+                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
+                                        maxlength="500"></textarea>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btnSubirImagen">
+                                        <i class="bi bi-cloud-arrow-up me-1"></i> Subir Imagen
+                                    </button>
+                                </div>
+                            </form>
+                        <?php else: ?>
+                            <div class="alert alert-warning">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                No puedes subir más imágenes para este concurso. El límite es <?php echo $max_imagenes; ?>
+                                imágenes por usuario.
+                            </div>
+>>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+>>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
                             <a href="../InicioSesion/usuario/misImagenes.php" class="btn btn-outline-primary">
                                 <i class="bi bi-images me-1"></i> Ver mis imágenes
                             </a>
