@@ -46,25 +46,25 @@ if (isset($_GET['success'])) {
     <link rel="stylesheet" type="text/css" href="css/stylesContacto.css">
 
     <style>
-        .btn-registrarse{
+        .btn-registrarse {
             background-color: #090643;
             color: white;
             padding: 7px;
         }
 
-        .btn-registrarse:hover{
-            background-color:rgb(12, 8, 89);
+        .btn-registrarse:hover {
+            background-color: rgb(12, 8, 89);
             color: white;
         }
 
-        .btn-iniciosesion{
+        .btn-iniciosesion {
             background-color: white;
             border: solid 1px #090643;
             color: #090643;
             padding: 7px;
         }
 
-        .btn-iniciosesion:hover{
+        .btn-iniciosesion:hover {
             background-color: #090643;
             color: white;
         }
@@ -72,49 +72,8 @@ if (isset($_GET['success'])) {
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="assets/logo.png" alt="Logo PixFly" style="height: 50px;">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="votacion.php">Votación</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="ganadores.php">Ganadores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="contacto.php">Contacto</a>
-                    </li>
-                    <?php if ($usuario_logueado): ?>
-                        <li class="nav-item ms-lg-2">
-                            <a class="btn btn-outline-primary" href="perfil.php">
-                                Mi Perfil
-                            </a>
-                        </li>
-                    <?php else: ?>
-                         <li class="nav-item ms-lg-2">
-                            <a class="btn btn-registrarse" href="InicioSesion/registro.php">Registrarse</a>
-                        </li>
-                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                            <a class="btn btn-iniciosesion" href="InicioSesion/inicioSesion.php">
-                                Iniciar Sesión <i class="bi bi-box-arrow-in-right"></i>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <?php include 'php/nav.php'; ?>
+
 
     <main class="container-contacto">
         <?php if ($mensaje): ?>
@@ -170,7 +129,8 @@ if (isset($_GET['success'])) {
 
                 <div class="form-group form-check">
                     <input type="checkbox" id="politica" name="politica" class="form-check-input" required>
-                    <label for="politica" class="form-check-label">Acepto la <a href="politica-privacidad.php" target="_blank">política de privacidad</a></label>
+                    <label for="politica" class="form-check-label">Acepto la <a href="politica-privacidad.php"
+                            target="_blank">política de privacidad</a></label>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Enviar mensaje</button>

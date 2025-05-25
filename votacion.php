@@ -2,9 +2,6 @@
 session_start();
 require_once 'php/conexion.php';
 
-// Verificar si el usuario está logueado
-$usuario_logueado = isset($_SESSION['user_id']);
-
 // Consulta para obtener las imágenes activas con información del usuario
 $sql_imagenes = "SELECT 
                 i.id AS imagen_id,
@@ -31,28 +28,6 @@ if ($result_imagenes->num_rows > 0) {
         $imagenes[] = $row;
     }
 }
-
-// Procesar votos si se envía el formulario
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
-    if ($usuario_logueado) {
-        $imagen_id = intval($_POST['imagen_id']);
-        
-        // Actualizar los likes en la base de datos
-        $sql_votar = "UPDATE imagenes SET likes = likes + 1 WHERE id = ?";
-        $stmt = $conn->prepare($sql_votar);
-        $stmt->bind_param("i", $imagen_id);
-        
-        if ($stmt->execute()) {
-            // Actualizar la lista de imágenes después del voto
-            header("Location: votacion.php");
-            exit();
-        } else {
-            $error_voto = "Error al registrar el voto";
-        }
-    } else {
-        $error_voto = "Debes iniciar sesión para votar";
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -70,12 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
             height: 50vh;
             min-height: 400px;
             overflow: hidden;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('assets/foto-votacion.jpg');
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('assets/foto-votacion.jpg');
             background-size: cover;
             background-position: center;
             color: white;
         }
-        
+
         .hero-content {
             position: absolute;
             top: 50%;
@@ -84,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
             text-align: center;
             width: 80%;
         }
-        
+
         .categoria-titulo {
             font-weight: 700;
             color: #2c3e50;
@@ -92,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
             padding-bottom: 10px;
             margin-bottom: 30px;
         }
-        
+
         .categoria-titulo:after {
             content: "";
             position: absolute;
@@ -101,46 +76,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
             transform: translateX(-50%);
             width: 100px;
             height: 3px;
-            background: linear-gradient(90deg, #3498db, #9b59b6);
+            background: linear-gradient(90deg, #090643,rgb(186, 29, 29));
         }
-        
+
         .foto-card {
             border: none;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
             margin-bottom: 25px;
         }
-        
+
         .foto-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
-        
+
         .foto-img-container {
             height: 250px;
             overflow: hidden;
             position: relative;
         }
-        
+
         .foto-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
-        
+
         .foto-card:hover .foto-img {
             transform: scale(1.05);
         }
-        
+
         .user-info {
             display: flex;
             align-items: center;
             margin-top: 15px;
         }
-        
+
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -149,125 +124,90 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
             margin-right: 10px;
             border: 2px solid #eee;
         }
-        
-        .votar-btn {
-            background: linear-gradient(90deg, #3498db, #9b59b6);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        
-        .votar-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-        }
-        
-        .votar-btn:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-        }
-        
+
         .likes-count {
             font-weight: bold;
             color: #2c3e50;
             margin-left: 5px;
         }
-        
-        .login-alert {
+
+        .likes-container {
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .likes-container:hover {
+            background: #e9ecef;
+        }
+
+        .login-required-alert {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            z-index: 1000;
-            animation: slideIn 0.5s forwards;
+            z-index: 1100;
+            animation: slideIn 0.3s forwards;
+            max-width: 300px;
         }
-        
+
         @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
-        
+
         @media (max-width: 768px) {
             .hero-section {
                 height: 40vh;
             }
-            
+
             .foto-img-container {
                 height: 200px;
             }
         }
 
-        .btn-registrarse{
+        .btn-registrarse {
             background-color: #090643;
             color: white;
             padding: 7px;
         }
 
-        .btn-registrarse:hover{
-            background-color:rgb(12, 8, 89);
+        .btn-registrarse:hover {
+            background-color: rgb(12, 8, 89);
             color: white;
         }
 
-        .btn-iniciosesion{
+        .btn-iniciosesion {
             background-color: white;
             border: solid 1px #090643;
             color: #090643;
             padding: 7px;
         }
 
-        .btn-iniciosesion:hover{
+        .btn-iniciosesion:hover {
             background-color: #090643;
             color: white;
+        }
+
+        .bg-logo{
+            background-color: #090643;
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="assets/logo.png" alt="Logo PixFly" style="height: 50px;">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="votacion.php">Votación</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="ganadores.php">Ganadores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contacto.php">Contacto</a>
-                    </li>
-                    <?php if ($usuario_logueado): ?>
-                        <li class="nav-item ms-lg-2">
-                            <a class="btn btn-outline-primary" href="perfil.php">
-                                Mi Perfil
-                            </a>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item ms-lg-2">
-                            <a class="btn btn-registrarse" href="InicioSesion/registro.php">Registrarse</a>
-                        </li>
-                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                            <a class="btn btn-iniciosesion" href="InicioSesion/inicioSesion.php">
-                                Iniciar Sesión <i class="bi bi-box-arrow-in-right"></i>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <?php include 'php/nav.php'; ?>
+
 
     <section class="hero-section">
         <div class="hero-content">
@@ -279,37 +219,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
 
     <section class="container py-5" id="fotos">
         <h2 class="text-center categoria-titulo">Fotografías en concurso</h2>
-        
-        <?php if (isset($error_voto)): ?>
-            <div class="alert alert-danger"><?php echo $error_voto; ?></div>
-        <?php endif; ?>
-        
+
         <div class="row">
             <?php if (!empty($imagenes)): ?>
                 <?php foreach ($imagenes as $imagen): ?>
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card foto-card">
                             <div class="foto-img-container">
-                                <img src="<?php echo htmlspecialchars($imagen['ruta']); ?>" class="foto-img" alt="<?php echo htmlspecialchars($imagen['titulo']); ?>">
+                                <img src="<?php echo htmlspecialchars($imagen['ruta']); ?>" class="foto-img"
+                                    alt="<?php echo htmlspecialchars($imagen['titulo']); ?>">
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo htmlspecialchars($imagen['titulo']); ?></h5>
                                 <p class="card-text text-muted"><?php echo htmlspecialchars($imagen['descripcion']); ?></p>
-                                
+
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <div class="user-info">
-                                        <img src="assets/<?php echo $imagen['foto_perfil'] ? htmlspecialchars($imagen['foto_perfil']) : 'assets/user-default.jpg'; ?>" 
-                                             alt="<?php echo htmlspecialchars($imagen['usuario_nombre']); ?>" class="user-avatar">
+                                        <img src="assets/<?php echo $imagen['foto_perfil'] ? htmlspecialchars($imagen['foto_perfil']) : 'assets/user-default.jpg'; ?>"
+                                            alt="<?php echo htmlspecialchars($imagen['usuario_nombre']); ?>"
+                                            class="user-avatar">
                                         <span><?php echo htmlspecialchars($imagen['usuario_nombre']); ?></span>
                                     </div>
-                                    
-                                    <form method="POST" action="votacion.php">
-                                        <input type="hidden" name="imagen_id" value="<?php echo $imagen['imagen_id']; ?>">
-                                        <button type="submit" name="votar" class="votar-btn" <?php echo !$usuario_logueado ? 'disabled' : ''; ?>>
-                                            <i class="bi bi-heart-fill"></i> 
-                                            <span class="likes-count"><?php echo $imagen['likes']; ?></span>
-                                        </button>
-                                    </form>
+
+                                    <div class="likes-container" onclick="mostrarLoginRequired()">
+                                        <i class="bi bi-heart-fill text-danger"></i>
+                                        <span class="likes-count" data-imagen-id="<?php echo $imagen['imagen_id']; ?>">
+                                            <?php echo $imagen['likes']; ?>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -334,33 +271,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center p-4">
-                            <div class="bg-primary bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; margin-bottom: 1rem;">
+                            <div class="bg-logo bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                                style="width: 60px; height: 60px; margin-bottom: 1rem;">
                                 <i class="bi bi-camera fs-4"></i>
                             </div>
                             <h4>Sube tus fotos</h4>
-                            <p class="text-muted">Regístrate y comparte tus mejores fotografías para participar en el concurso.</p>
+                            <p class="text-muted">Regístrate y comparte tus mejores fotografías para participar en el
+                                concurso.</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center p-4">
-                            <div class="bg-primary bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; margin-bottom: 1rem;">
+                            <div class="bg-logo bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                                style="width: 60px; height: 60px; margin-bottom: 1rem;">
                                 <i class="bi bi-heart fs-4"></i>
                             </div>
                             <h4>Recibe votos</h4>
-                            <p class="text-muted">La comunidad votará por las fotos que más les gusten. ¡Entre más votos, más posibilidades de ganar!</p>
+                            <p class="text-muted">La comunidad votará por las fotos que más les gusten. ¡Entre más
+                                votos, más posibilidades de ganar!</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center p-4">
-                            <div class="bg-primary bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; margin-bottom: 1rem;">
+                            <div class="bg-logo bg-gradient text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                                style="width: 60px; height: 60px; margin-bottom: 1rem;">
                                 <i class="bi bi-trophy fs-4"></i>
                             </div>
                             <h4>Gana premios</h4>
-                            <p class="text-muted">Las fotos con más votos al final del concurso ganarán increíbles premios.</p>
+                            <p class="text-muted">Las fotos con más votos al final del concurso ganarán increíbles
+                                premios.</p>
                         </div>
                     </div>
                 </div>
@@ -370,40 +313,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['votar'])) {
 
     <?php include 'php/footer.php'; ?>
 
-    <?php if (!$usuario_logueado): ?>
-        <div class="login-alert alert alert-warning alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            <strong>Inicia sesión</strong> para poder votar por tus fotos favoritas.
-            <a href="InicioSesion/inicioSesion.php" class="alert-link">Ingresar ahora</a>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <?php endif; ?>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Efecto suave al hacer clic en votar
-        document.querySelectorAll('.votar-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (!this.disabled) {
-                    this.innerHTML = '<i class="bi bi-heart-fill"></i> Gracias!';
-                    this.classList.add('btn-success');
-                    this.classList.remove('bg-gradient');
-                    
-                    // Actualizar contador
-                    const countElement = this.querySelector('.likes-count');
-                    let count = parseInt(countElement.textContent);
-                    countElement.textContent = count + 1;
-                    
-                    // Deshabilitar después de votar
-                    this.disabled = true;
+        // Función para mostrar mensaje de login requerido
+        function mostrarLoginRequired() {
+            // Eliminar notificaciones anteriores
+            const oldAlerts = document.querySelectorAll('.login-required-alert');
+            oldAlerts.forEach(alert => alert.remove());
+
+            // Crear nueva notificación
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-warning login-required-alert alert-dismissible fade show';
+            alertDiv.role = 'alert';
+            alertDiv.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <div>Debes iniciar sesión para votar</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="mt-2">
+                    <a href="InicioSesion/inicioSesion.php" class="btn btn-sm btn-primary">Iniciar Sesión</a>
+                </div>
+            `;
+
+            document.body.appendChild(alertDiv);
+
+            // Eliminar automáticamente después de 5 segundos
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Función para actualizar los likes
+        async function actualizarLikes() {
+            try {
+                const response = await fetch('php/obtener_likes.php');
+                const data = await response.json();
+
+                if (data.success) {
+                    // Actualizar todos los contadores de likes
+                    data.likes.forEach(imagen => {
+                        const likeElement = document.querySelector(`.likes-count[data-imagen-id="${imagen.id}"]`);
+                        if (likeElement) {
+                            likeElement.textContent = imagen.likes;
+                        }
+                    });
                 }
-            });
-        });
-        
-        // Cerrar alerta de login
-        document.querySelector('.btn-close')?.addEventListener('click', function() {
-            this.closest('.alert').style.display = 'none';
-        });
+            } catch (error) {
+                console.error('Error al actualizar likes:', error);
+            }
+        }
+
+        // Actualizar likes cada 5 segundos
+        setInterval(actualizarLikes, 5000);
+
+        // También actualizar al cargar la página
+        document.addEventListener('DOMContentLoaded', actualizarLikes);
     </script>
 </body>
+
 </html>

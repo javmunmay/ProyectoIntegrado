@@ -76,6 +76,28 @@ $sql_top5 = "SELECT
         LIMIT 5";
 $result_top5 = $conn->query($sql_top5);
 $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
+
+
+// Consulta para obtener los premios del concurso
+$sql_premios = "SELECT primero, segundo, tercero, importe_primero, importe_segundo, importe_tercero 
+                FROM premios_concurso 
+                ORDER BY id DESC 
+                LIMIT 1";
+$result_premios = $conn->query($sql_premios);
+$premios = $result_premios->fetch_assoc();
+
+// Si no hay premios configurados, usamos unos por defecto
+if (!$premios) {
+    $premios = [
+        'primero' => 'Cámara profesional Nikon Z6 II con lente 24-70mm',
+        'segundo' => 'Ordenador MacBook Pro para edición de fotos',
+        'tercero' => 'Billetes de avión para un viaje en pareja a Europa',
+        'importe_primero' => '2800.00',
+        'importe_segundo' => '1999.00',
+        'importe_tercero' => '1200.00'
+    ];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -132,7 +154,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
             transform: translateX(-50%);
             width: 100px;
             height: 3px;
-            background: linear-gradient(90deg, #3498db, #9b59b6);
+            background: linear-gradient(90deg, #090643, rgb(186, 29, 29));
         }
 
         .logo {
@@ -157,8 +179,13 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
 
         .premio-icon {
             font-size: 2.5rem;
-            color: #3498db;
+            color: #090643;
             margin-bottom: 1rem;
+        }
+
+        .text-euros {
+            color: #090643;
+            font-weight: bold;
         }
 
         .ganador-card {
@@ -220,7 +247,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
 
         .stat-icon {
             font-size: 2rem;
-            color:rgb(223, 36, 36);
+            color: rgb(223, 36, 36);
             margin-bottom: 15px;
         }
 
@@ -275,75 +302,37 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
             }
         }
 
-        .btn-registrarse{
+        .btn-registrarse {
             background-color: #090643;
             color: white;
             padding: 7px;
         }
 
-        .btn-registrarse:hover{
-            background-color:rgb(12, 8, 89);
+        .btn-registrarse:hover {
+            background-color: rgb(12, 8, 89);
             color: white;
         }
 
-        .btn-iniciosesion{
+        .btn-iniciosesion {
             background-color: white;
             border: solid 1px #090643;
             color: #090643;
             padding: 7px;
         }
 
-        .btn-iniciosesion:hover{
+        .btn-iniciosesion:hover {
             background-color: #090643;
             color: white;
+        }
+
+        .progress-bar {
+            background-color: #090643;
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="assets/logo.png" alt="Logo PixFly" style="height: 50px;">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="votacion.php">Votación</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="ganadores.php">Ganadores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contacto.php">Contacto</a>
-                    </li>
-                    <?php if ($usuario_logueado): ?>
-                        <li class="nav-item ms-lg-2">
-                            <a class="btn btn-outline-primary" href="perfil.php">
-                                Mi Perfil
-                            </a>
-                        </li>
-                    <?php else: ?>
-                         <li class="nav-item ms-lg-2">
-                            <a class="btn btn-registrarse" href="InicioSesion/registro.php">Registrarse</a>
-                        </li>
-                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                            <a class="btn btn-iniciosesion" href="InicioSesion/inicioSesion.php">
-                                Iniciar Sesión <i class="bi bi-box-arrow-in-right"></i>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <?php include 'php/nav.php'; ?>
 
     <section class="hero-section">
         <img src="assets/foto1.jpg" class="hero-bg" alt="Ganadores PixFly">
@@ -375,6 +364,9 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
         </div>
     </section>
 
+
+
+
     <section class="container py-5">
         <h2 class="text-center categoria-titulo">Premios del Concurso</h2>
         <div class="row">
@@ -383,8 +375,51 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                     <div class="card-body text-center py-4">
                         <i class="bi bi-trophy-fill premio-icon"></i>
                         <h3>1er Premio</h3>
+                        <p class="text-muted"><?php echo htmlspecialchars($premios['primero']); ?></p>
+                        <h4 class="text-euros"><?php echo number_format($premios['importe_primero'], 2, ',', '.'); ?>€
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card premio-card h-100">
+                    <div class="card-body text-center py-4">
+                        <i class="bi bi-laptop premio-icon"></i>
+                        <h3>2do Premio</h3>
+                        <p class="text-muted"><?php echo htmlspecialchars($premios['segundo']); ?></p>
+                        <h4 class="text-euros"><?php echo number_format($premios['importe_segundo'], 2, ',', '.'); ?>€
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card premio-card h-100">
+                    <div class="card-body text-center py-4">
+                        <i class="bi bi-airplane-engines premio-icon"></i>
+                        <h3>3er Premio</h3>
+                        <p class="text-muted"><?php echo htmlspecialchars($premios['tercero']); ?></p>
+                        <h4 class="text-euros"><?php echo number_format($premios['importe_tercero'], 2, ',', '.'); ?>€
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <!--<section class="container py-5">
+        <h2 class="text-center categoria-titulo">Premios del Concurso</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card premio-card h-100">
+                    <div class="card-body text-center py-4">
+                        <i class="bi bi-trophy-fill premio-icon"></i>
+                        <h3>1er Premio</h3>
                         <p class="text-muted">Cámara profesional Nikon Z6 II con lente 24-70mm</p>
-                        <h4 class="text-primary">2.800€</h4>
+                        <h4 class="text-euros">2.800€</h4>
                     </div>
                 </div>
             </div>
@@ -394,7 +429,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                         <i class="bi bi-laptop premio-icon"></i>
                         <h3>2do Premio</h3>
                         <p class="text-muted">Ordenador MacBook Pro para edición de fotos</p>
-                        <h4 class="text-primary">1.999€</h4>
+                        <h4 class="text-euros">1.999€</h4>
                     </div>
                 </div>
             </div>
@@ -404,12 +439,12 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                         <i class="bi bi-airplane-engines premio-icon"></i>
                         <h3>3er Premio</h3>
                         <p class="text-muted">Billetes de avión para un viaje en pareja a Europa</p>
-                        <h4 class="text-primary">1.200€</h4>
+                        <h4 class="text-euros">1.200€</h4>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </section>-->
 
     <section class="bg-light py-5">
         <div class="container">
@@ -497,9 +532,6 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                                         <small class="text-muted">Fotos</small>
                                     </div>
                                 </div>
-                                <a href="perfil.php?id=<?php echo $ganador['user_id']; ?>" class="btn btn-sm text-white" style="background-color: #090643;">
-                                    Ver Perfil <i class="bi bi-arrow-right"></i>
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -521,7 +553,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
-                            <div class="display-4 text-primary mb-3 fw-bold">1</div>
+                            <div class="display-4 text-euro mb-3 fw-bold">1</div>
                             <h4><?php echo date('d M Y', strtotime($fechas_concurso['fecha_inicio_concurso'])); ?></h4>
                             <p>Apertura del concurso</p>
                             <p class="small text-muted">Inicio del periodo para subir fotografías</p>
@@ -531,7 +563,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
-                            <div class="display-4 text-primary mb-3 fw-bold">2</div>
+                            <div class="display-4 text-euro mb-3 fw-bold">2</div>
                             <?php
                             $primer_reporte = date('Y-m-d', strtotime($fechas_concurso['fecha_inicio_concurso'] . ' +15 days'));
                             ?>
@@ -544,7 +576,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
-                            <div class="display-4 text-primary mb-3 fw-bold">3</div>
+                            <div class="display-4 text-euro mb-3 fw-bold">3</div>
                             <?php
                             $cierre_recepcion = date('Y-m-d', strtotime($fechas_concurso['fecha_fin_concurso'] . ' -15 days'));
                             ?>
@@ -557,7 +589,7 @@ $top5 = $result_top5->fetch_all(MYSQLI_ASSOC);
                 <div class="col-md-3 mb-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center">
-                            <div class="display-4 text-primary mb-3 fw-bold">4</div>
+                            <div class="display-4 text-euro mb-3 fw-bold">4</div>
                             <h4><?php echo date('d M Y', strtotime($fechas_concurso['fecha_fin_concurso'])); ?></h4>
                             <p>Anuncio de ganadores</p>
                             <p class="small text-muted">Fin del concurso y premiación</p>

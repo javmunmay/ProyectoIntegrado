@@ -4,7 +4,7 @@ require_once '../../php/conexion.php';
 
 // Verificar si el usuario está logueado y es administrador
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_admin']) || $_SESSION['user_admin'] != 1) {
-    header("Location: ../InicioSesion/inicioSesion.php");
+    header("Location: https://41183897.servicio-online.net/InicioSesion/inicioSesion.php");
     exit();
 }
 
@@ -12,13 +12,27 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_admin']) || $_SESSION
 $filtro = $_GET['filter'] ?? 'all';
 $where = '';
 switch ($filtro) {
-    case 'high': $where = "WHERE prioridad = 'alta'"; break;
-    case 'medium': $where = "WHERE prioridad = 'media'"; break;
-    case 'low': $where = "WHERE prioridad = 'baja'"; break;
-    case 'pending': $where = "WHERE estado = 'pendiente'"; break;
-    case 'process': $where = "WHERE estado = 'en_proceso'"; break;
-    case 'resolved': $where = "WHERE estado = 'resuelta'"; break;
-    default: $where = ''; break;
+    case 'high':
+        $where = "WHERE prioridad = 'alta'";
+        break;
+    case 'medium':
+        $where = "WHERE prioridad = 'media'";
+        break;
+    case 'low':
+        $where = "WHERE prioridad = 'baja'";
+        break;
+    case 'pending':
+        $where = "WHERE estado = 'pendiente'";
+        break;
+    case 'process':
+        $where = "WHERE estado = 'en_proceso'";
+        break;
+    case 'resolved':
+        $where = "WHERE estado = 'resuelta'";
+        break;
+    default:
+        $where = '';
+        break;
 }
 
 // Obtener incidencias
@@ -69,6 +83,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,30 +91,38 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/stylesIndex.css">
+    <link rel="icon" type="image/png" href="../../assets/logoIcon.png">
     <style>
         .badge-prioridad-alta {
             background-color: #dc3545;
         }
+
         .badge-prioridad-media {
             background-color: #ffc107;
             color: #000;
         }
+
         .badge-prioridad-baja {
             background-color: #0dcaf0;
             color: #000;
         }
+
         .badge-estado-pendiente {
             background-color: #0d6efd;
         }
+
         .badge-estado-en_proceso {
             background-color: #fd7e14;
         }
+
         .badge-estado-resuelta {
             background-color: #198754;
         }
+
         .badge-estado-cancelada {
             background-color: #6c757d;
         }
+
         .descripcion-incidencia {
             white-space: pre-wrap;
             background-color: #f8f9fa;
@@ -107,16 +130,42 @@ $conn->close();
             border-radius: 5px;
             border: 1px solid #dee2e6;
         }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* viewport height */
+        }
+
+        .container.mt-5 {
+            flex: 1;
+            /* Esto hace que el contenido principal ocupe todo el espacio disponible */
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 1rem 0;
+            margin-top: auto;
+            /* Empuja el footer hacia abajo */
+        }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="dashboard.php">
                 <img src="../../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -148,7 +197,7 @@ $conn->close();
 
     <div class="container mt-5">
         <h1 class="mb-4">Gestión de Incidencias</h1>
-        
+
         <?php if (isset($_GET['success'])): ?>
             <div class="alert alert-success">
                 <?php echo $_GET['success'] == 1 ? 'Estado actualizado' : 'Prioridad actualizada'; ?>
@@ -184,30 +233,27 @@ $conn->close();
                         </thead>
                         <tbody>
                             <?php foreach ($incidencias as $incidencia): ?>
-                            <tr>
-                                <td><?php echo $incidencia['id']; ?></td>
-                                <td><?php echo htmlspecialchars($incidencia['titulo']); ?></td>
-                                <td><?php echo htmlspecialchars($incidencia['nombre_contacto']); ?></td>
-                                <td>
-                                    <span class="badge <?php 
-                                        echo $incidencia['prioridad'] == 'alta' ? 'badge-prioridad-alta' : 
-                                             ($incidencia['prioridad'] == 'media' ? 'badge-prioridad-media' : 'badge-prioridad-baja');
-                                    ?>">
-                                        <?php echo ucfirst($incidencia['prioridad']); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge <?php 
-                                        echo $incidencia['estado'] == 'pendiente' ? 'badge-estado-pendiente' : 
-                                             ($incidencia['estado'] == 'en_proceso' ? 'badge-estado-en_proceso' : 
-                                             ($incidencia['estado'] == 'resuelta' ? 'badge-estado-resuelta' : 'badge-estado-cancelada'));
-                                    ?>">
-                                        <?php echo str_replace('_', ' ', ucfirst($incidencia['estado'])); ?>
-                                    </span>
-                                </td>
-                                <td><?php echo date('d/m/Y', strtotime($incidencia['fecha_creacion'])); ?></td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detalleIncidenciaModal" 
+                                <tr>
+                                    <td><?php echo $incidencia['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($incidencia['titulo']); ?></td>
+                                    <td><?php echo htmlspecialchars($incidencia['nombre_contacto']); ?></td>
+                                    <td>
+                                        <span class="badge <?php
+                                                            echo $incidencia['prioridad'] == 'alta' ? 'badge-prioridad-alta' : ($incidencia['prioridad'] == 'media' ? 'badge-prioridad-media' : 'badge-prioridad-baja');
+                                                            ?>">
+                                            <?php echo ucfirst($incidencia['prioridad']); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge <?php
+                                                            echo $incidencia['estado'] == 'pendiente' ? 'badge-estado-pendiente' : ($incidencia['estado'] == 'en_proceso' ? 'badge-estado-en_proceso' : ($incidencia['estado'] == 'resuelta' ? 'badge-estado-resuelta' : 'badge-estado-cancelada'));
+                                                            ?>">
+                                            <?php echo str_replace('_', ' ', ucfirst($incidencia['estado'])); ?>
+                                        </span>
+                                    </td>
+                                    <td><?php echo date('d/m/Y', strtotime($incidencia['fecha_creacion'])); ?></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detalleIncidenciaModal"
                                             onclick="cargarDatosModal(
                                                 <?php echo $incidencia['id']; ?>, 
                                                 '<?php echo htmlspecialchars($incidencia['titulo'], ENT_QUOTES); ?>', 
@@ -218,10 +264,10 @@ $conn->close();
                                                 '<?php echo date('d/m/Y H:i', strtotime($incidencia['fecha_creacion'])); ?>', 
                                                 `<?php echo htmlspecialchars($incidencia['descripcion'], ENT_QUOTES); ?>`
                                             )">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -274,25 +320,26 @@ $conn->close();
             document.getElementById('modalCorreo').textContent = correo;
             document.getElementById('modalFecha').textContent = fecha;
             document.getElementById('modalDescripcion').textContent = descripcion;
-            
+
             // Configurar prioridad
             const badgePrioridad = document.getElementById('modalPrioridad');
             badgePrioridad.textContent = prioridad.charAt(0).toUpperCase() + prioridad.slice(1);
             badgePrioridad.className = 'badge ' + (
-                prioridad === 'alta' ? 'badge-prioridad-alta' : 
+                prioridad === 'alta' ? 'badge-prioridad-alta' :
                 (prioridad === 'media' ? 'badge-prioridad-media' : 'badge-prioridad-baja')
             );
-            
+
             // Configurar estado
             const badgeEstado = document.getElementById('modalEstado');
             const estadoTexto = estado.replace('_', ' ');
             badgeEstado.textContent = estadoTexto.charAt(0).toUpperCase() + estadoTexto.slice(1);
             badgeEstado.className = 'badge ' + (
-                estado === 'pendiente' ? 'badge-estado-pendiente' : 
-                (estado === 'en_proceso' ? 'badge-estado-en_proceso' : 
-                (estado === 'resuelta' ? 'badge-estado-resuelta' : 'badge-estado-cancelada'))
+                estado === 'pendiente' ? 'badge-estado-pendiente' :
+                (estado === 'en_proceso' ? 'badge-estado-en_proceso' :
+                    (estado === 'resuelta' ? 'badge-estado-resuelta' : 'badge-estado-cancelada'))
             );
         }
     </script>
 </body>
+
 </html>

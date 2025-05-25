@@ -3,45 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Oops! Página perdida en la pista</title>
+    <title>Error 404 - Instantánea no encontrada</title>
     <link rel="icon" type="image/png" href="assets/logoIcon.png">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             text-align: center;
-            background-color: #222;
-            color: white;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
             margin: 0;
             padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .container {
-            margin-top: 10%;
+            max-width: 600px;
+            padding: 2rem;
+            background-color: rgba(0,0,0,0.7);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(100, 149, 237, 0.3);
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        img {
-            max-width: 200px;
+        .logo {
+            max-width: 180px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 10px rgba(100, 149, 237, 0.5));
         }
         h1 {
-            font-size: 2.5em;
+            font-size: 2.3rem;
+            margin-bottom: 1rem;
+            color: #64b5f6;
+            text-shadow: 0 0 10px rgba(100, 181, 246, 0.3);
         }
         p {
-            font-size: 1.2em;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
         }
-        a {
-            color: yellow;
+        .emoji {
+            font-size: 3rem;
+            margin: 1rem 0;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #2196F3, #00BCD4);
+            color: white;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 50px;
             text-decoration: none;
             font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
         }
-        a:hover {
-            text-decoration: underline;
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #2196F3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="https://41183897.servicio-online.net/assets/logo.png" alt="Logo de Derrapix">
-        <h1>¡Oops! Parece que nos hemos salido de la pista</h1>
-        <p>La página que buscas no está aquí. Tal vez el copiloto nos dio mal las indicaciones...</p>
-        <p>Vuelve al <a href="/">inicio</a> antes de que nos caiga una penalización de tiempo.</p>
+        <img src="https://41183897.servicio-online.net/assets/logo.png" alt="Concurso Fotográfico" class="logo">
+        <span class="emoji">📷❌</span>
+        <h1>¡Flash! Esta foto se escapó del álbum</h1>
+        <p>El momento que buscas no ha sido capturado o quizás nunca estuvo en el encuadre. <br>
+        Tal vez el obturador no se activó a tiempo o la imagen quedó fuera de foco.</p>
+        
+        <div>
+            <a href="/" class="btn">Volver al inicio</a>
+        </div>
+        
+        <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.8;">
+            Error 404 - La creatividad no tiene límites, pero esta página sí
+        </p>
     </div>
 </body>
 </html>

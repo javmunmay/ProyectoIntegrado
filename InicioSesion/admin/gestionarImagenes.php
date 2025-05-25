@@ -4,7 +4,7 @@ require_once '../../php/conexion.php';
 
 // Verificar si el usuario está logueado y es administrador
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_admin']) || $_SESSION['user_admin'] != 1) {
-    header("Location: ../InicioSesion/inicioSesion.php");
+    header("Location: https://41183897.servicio-online.net/InicioSesion/inicioSesion.php");
     exit();
 }
 
@@ -101,6 +101,7 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/stylesIndex.css">
+    <link rel="icon" type="image/png" href="../../assets/logoIcon.png">
     <style>
         .modal-img-preview {
             max-width: 100%;
@@ -114,6 +115,27 @@ $conn->close();
         .action-buttons .btn:last-child {
             margin-right: 0;
         }
+
+        html, body {
+        height: 100%;
+        margin: 0;
+    }
+    
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* viewport height */
+    }
+    
+    .container.mt-5 {
+        flex: 1; /* Esto hace que el contenido principal ocupe todo el espacio disponible */
+    }
+    
+    .footer {
+        background-color: #f8f9fa;
+        padding: 1rem 0;
+        margin-top: auto; /* Empuja el footer hacia abajo */
+    }
     </style>
 </head>
 <body>

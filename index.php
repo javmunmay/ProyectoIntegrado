@@ -63,7 +63,7 @@ if (!$bases_concurso) {
             filter: brightness(0.6);
         }
 
-        
+
 
         .image-scroll-container {
             overflow-x: auto;
@@ -133,7 +133,7 @@ if (!$bases_concurso) {
             margin: 1.5rem 0;
             opacity: 0.2;
         }
-        
+
         .icon-square {
             width: 70px;
             height: 70px;
@@ -185,25 +185,25 @@ if (!$bases_concurso) {
             }
         }
 
-        .btn-registrarse{
+        .btn-registrarse {
             background-color: #090643;
             color: white;
             padding: 7px;
         }
 
-        .btn-registrarse:hover{
-            background-color:rgb(12, 8, 89);
+        .btn-registrarse:hover {
+            background-color: rgb(12, 8, 89);
             color: white;
         }
 
-        .btn-iniciosesion{
+        .btn-iniciosesion {
             background-color: white;
             border: solid 1px #090643;
             color: #090643;
             padding: 7px;
         }
 
-        .btn-iniciosesion:hover{
+        .btn-iniciosesion:hover {
             background-color: #090643;
             color: white;
         }
@@ -212,49 +212,8 @@ if (!$bases_concurso) {
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="assets/logo.png" alt="Logo PixFly" style="height: 50px;">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="votacion.php">Votación</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="ganadores.php">Ganadores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contacto.php">Contacto</a>
-                    </li>
-                    <?php if ($usuario_logueado): ?>
-                        <li class="nav-item ms-lg-2">
-                            <a class="btn btn-outline-primary" href="perfil.php">
-                                Mi Perfil
-                            </a>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item ms-lg-2">
-                            <a class="btn btn-registrarse" href="InicioSesion/registro.php">Registrarse</a>
-                        </li>
-                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                            <a class="btn btn-iniciosesion" href="InicioSesion/inicioSesion.php">
-                                Iniciar Sesión <i class="bi bi-box-arrow-in-right"></i>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <?php include 'php/nav.php'; ?>
+
 
     <section id="inicio" class="hero-section">
         <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -275,7 +234,8 @@ if (!$bases_concurso) {
             <h1>Concurso de Fotografía PixFly 2025</h1>
             <p>Captura momentos extraordinarios y comparte tu visión del mundo. <br><br> Participa por increíbles
                 premios y exposición internacional.</p>
-            <a href="InicioSesion/registro.php" class="btn text-white" style="background-color: #090643;">Participa Ahora</a>
+            <a href="InicioSesion/registro.php" class="btn text-white" style="background-color: #090643;">Participa
+                Ahora</a>
         </div>
     </section>
 
@@ -392,7 +352,7 @@ if (!$bases_concurso) {
                                         foreach ($formatos as $formato):
                                             ?>
                                             <span
-                                                class="badge bg-info text-dark" ><?php echo strtoupper(trim($formato)); ?></span>
+                                                class="badge bg-info text-dark"><?php echo strtoupper(trim($formato)); ?></span>
                                         <?php endforeach; ?>
                                     </div>
                                 </div>
@@ -445,7 +405,8 @@ if (!$bases_concurso) {
                 <!-- Tarjeta de criterios de evaluación con diseño de acordeón -->
                 <div class="card mb-5 border-0 shadow-lg">
                     <div class="card-header">
-                        <h4 class="mb-0 text-white"><i class="bi bi-clipboard-check me-2"></i> Criterios de Evaluación</h4>
+                        <h4 class="mb-0 text-white"><i class="bi bi-clipboard-check me-2"></i> Criterios de Evaluación
+                        </h4>
                     </div>
                     <div class="card-body">
                         <div class="accordion" id="criteriosAccordion">
@@ -526,7 +487,8 @@ if (!$bases_concurso) {
                             <h3 class="mb-4">¿Listo para participar?</h3>
                             <p class="lead mb-4">Regístrate ahora y sube tus mejores fotografías para tener la
                                 oportunidad de ganar increíbles premios.</p>
-                            <a href="InicioSesion/registro.php" class="btn btn-lg px-4 text-white" style="background-color: #090643;">
+                            <a href="InicioSesion/registro.php" class="btn btn-lg px-4 text-white"
+                                style="background-color: #090643;">
                                 <i class="bi bi-camera-fill me-2"></i> Participar en el Concurso
                             </a>
                         </div>

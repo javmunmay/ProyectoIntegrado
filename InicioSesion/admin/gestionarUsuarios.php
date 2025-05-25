@@ -4,7 +4,7 @@ require_once '../../php/conexion.php';
 
 // Verificar si el usuario está logueado y es administrador
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_admin']) || $_SESSION['user_admin'] != 1) {
-    header("Location: ../InicioSesion/inicioSesion.php");
+    header("Location: https://41183897.servicio-online.net/InicioSesion/inicioSesion.php");
     exit();
 }
 
@@ -88,6 +88,7 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/stylesIndex.css">
+    <link rel="icon" type="image/png" href="../../assets/logoIcon.png">
     <style>
         .action-buttons .btn {
             margin-right: 5px;

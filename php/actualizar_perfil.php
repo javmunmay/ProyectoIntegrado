@@ -26,7 +26,7 @@ if (isset($_FILES['fotoPerfil']) && $_FILES['fotoPerfil']['error'] === UPLOAD_ER
     $permitidos = array("image/jpeg", "image/png", "image/gif");
     if (in_array($tipo_archivo, $permitidos)) {
         // Mover el archivo a la carpeta de perfiles
-        $ruta_perfil = '../assets/perfiles/' . $usuario_id . '_' . time() . '_' . $nombre_archivo;
+        $ruta_perfil = '../assets/' . $usuario_id . '_' . time() . '_' . $nombre_archivo;
         if (move_uploaded_file($temp_archivo, $ruta_perfil)) {
             $foto_perfil = $ruta_perfil;
             

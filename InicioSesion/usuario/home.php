@@ -4,7 +4,7 @@ require_once '../../php/conexion.php';
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../inicioSesion.php");
+    header("Location: https://41183897.servicio-online.net/InicioSesion/inicioSesion.php");
     exit();
 }
 
@@ -63,7 +63,7 @@ $conn->close();
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="../../css/stylesIndex.css">
+    
     <link rel="icon" type="image/png" href="../../assets/logoIcon.png">
     <style>
         :root {
@@ -80,7 +80,7 @@ $conn->close();
             color: #333;
         }
 
-        .btnSubir{
+        .btnSubir {
             background-color: #090643;
             padding-left: 25px;
             padding-right: 25px;
@@ -322,20 +322,20 @@ $conn->close();
             }
         }
 
-        .nombreBienvenida{
+        .nombreBienvenida {
             color: #090643;
             font-weight: bold;
         }
 
-        .textinfo{
+        .textinfo {
             color: #090643;
             font-weight: bold;
         }
 
-        .btninfo{
+        .btninfo {
             color: #090643;
             font-weight: bold;
-            background-color:rgb(255, 255, 255);
+            background-color: rgb(255, 255, 255);
             border: solid 2px #090643;
             border-radius: 30px;
             padding: 7px;
@@ -350,39 +350,71 @@ $conn->close();
             padding: 1rem 0;
             text-align: center;
             z-index: 1000;
-<<<<<<< HEAD
         }
-        
+
         /* Estilos para el modal del concurso */
         .modal-concurso .modal-header {
             background-color: #090643;
             color: white;
         }
-        
+
         .modal-concurso .modal-body {
             padding: 20px;
         }
-        
+
         .modal-concurso .info-item {
             margin-bottom: 15px;
             padding-bottom: 15px;
             border-bottom: 1px solid #eee;
         }
-        
+
         .modal-concurso .info-item:last-child {
             border-bottom: none;
         }
-        
+
         .modal-concurso .info-label {
             font-weight: 600;
             color: #090643;
         }
-        
+
         .modal-concurso .info-value {
             color: #555;
-=======
-            /* Para que no se oculte debajo de otros elementos */
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
+        }
+
+        .carousel-item img {
+            object-fit: cover;
+            height: 100vh;
+            min-height: 600px;
+            filter: brightness(0.6);
+        }
+
+        .image-scroll-container {
+            overflow-x: auto;
+            padding: 15px 0;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+            /* Para un scroll suave en móviles */
+        }
+
+        .image-scroll {
+            display: flex;
+            gap: 15px;
+            padding: 0 15px;
+            /* Añade padding para que no pegue a los bordes */
+        }
+
+        .image-scroll img {
+            height: 250px;
+            min-width: auto;
+            /* Evita que las imágenes se compriman */
+            max-width: none;
+            /* Permite que las imágenes mantengan su proporción */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+            /* Asegura que las imágenes mantengan su relación de aspecto */
+            flex: 0 0 auto;
+            /* Evita que las imágenes se estiren o encojan */
         }
     </style>
 </head>
@@ -393,7 +425,7 @@ $conn->close();
             <a class="navbar-brand" href="home.php">
                 <img src="../../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
-             <a href="../../php/subir_imagen.php" class="btnSubir  ms-auto me-3">
+            <a href="../../php/subir_imagen.php" class="btnSubir  ms-auto me-3">
                 <i class="bi bi-cloud-arrow-up"></i> Subir
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -469,11 +501,7 @@ $conn->close();
                     <h4>Total en pixFly</h4>
                     <h2 class="textinfo"><?php echo $total_images; ?></h2>
                     <p class="text-muted">imágenes compartidas</p>
-<<<<<<< HEAD
                     <a href="votacion.php" class="btninfo btn-sm">
-=======
-                    <a href="../votacion.php" class="btninfo btn-sm">
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
                         <i class="bi bi-grid me-1"></i> Explorar
                     </a>
                 </div>
@@ -487,21 +515,30 @@ $conn->close();
                     <h4>Concurso activo</h4>
                     <h2 class="textinfo">Jun - Ago</h2>
                     <p class="text-muted">participa y gana</p>
-<<<<<<< HEAD
                     <button type="button" class="btninfo btn-sm" data-bs-toggle="modal" data-bs-target="#concursoModal">
                         <i class="bi bi-arrow-right me-1"></i> Más información
                     </button>
-=======
-                    <a href="../votacion.php" class="btninfo btn-sm">
-                        <i class="bi bi-arrow-right me-1"></i> Más información
-                    </a>
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
                 </div>
             </div>
         </div>
     </div>
 
-<<<<<<< HEAD
+    <section id="destacadas" class="container mt-5">
+        <h2 class="text-center mb-4 categoria-titulo">Ganadores de otros años</h2>
+        <div class="image-scroll-container">
+            <div class="image-scroll">
+                <!-- PHP incluiría las imágenes más votadas -->
+                <img src="../../assets/foto1.jpg" alt="Fotografía destacada 1">
+                <img src="../../assets/foto2.jpg" alt="Fotografía destacada 2">
+                <img src="../../assets/foto3.jpg" alt="Fotografía destacada 3">
+                <img src="../../assets/foto4.jpg" alt="Fotografía destacada 4">
+                <img src="../../assets/foto5.jpg" alt="Fotografía destacada 5">
+            </div>
+        </div>
+    </section>
+
+    <br><br>
+
     <!-- Modal del Concurso -->
     <div class="modal fade modal-concurso" id="concursoModal" tabindex="-1" aria-labelledby="concursoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -514,28 +551,28 @@ $conn->close();
                     <div class="info-item">
                         <div class="info-label">Período del concurso:</div>
                         <div class="info-value">
-                            <?php 
-                                echo date('d/m/Y', strtotime($concurso['fecha_inicio_concurso'])) . 
+                            <?php
+                            echo date('d/m/Y', strtotime($concurso['fecha_inicio_concurso'])) .
                                 ' - ' . date('d/m/Y', strtotime($concurso['fecha_fin_concurso']));
                             ?>
                         </div>
                     </div>
-                    
+
                     <div class="info-item">
                         <div class="info-label">Imágenes permitidas por usuario:</div>
                         <div class="info-value"><?php echo $concurso['max_imagenes_por_usuario']; ?></div>
                     </div>
-                    
+
                     <div class="info-item">
                         <div class="info-label">Formatos aceptados:</div>
                         <div class="info-value"><?php echo strtoupper(str_replace(',', ', ', $concurso['extensiones_permitidas'])); ?></div>
                     </div>
-                    
+
                     <div class="info-item">
                         <div class="info-label">Tamaño máximo por imagen:</div>
                         <div class="info-value"><?php echo $concurso['tamano_maximo_mb']; ?> MB</div>
                     </div>
-                    
+
                     <div class="info-item">
                         <div class="info-label">Premios:</div>
                         <div class="info-value">
@@ -546,7 +583,7 @@ $conn->close();
                             </ul>
                         </div>
                     </div>
-                    
+
                     <div class="info-item">
                         <div class="info-label">Temática:</div>
                         <div class="info-value">"La belleza en los detalles cotidianos"</div>
@@ -559,10 +596,6 @@ $conn->close();
             </div>
         </div>
     </div>
-=======
-
-
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
 
     <?php include '../../php/footer.php'; ?>
 
@@ -570,7 +603,7 @@ $conn->close();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Image Modal
-        $('#imageModal').on('show.bs.modal', function (event) {
+        $('#imageModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var imageSrc = button.data('image');
             var imageTitle = button.data('title');
@@ -583,7 +616,7 @@ $conn->close();
         });
 
         // Like functionality with AJAX
-        $('.like-btn').click(function () {
+        $('.like-btn').click(function() {
             var icon = $(this);
             var imageId = icon.data('image-id');
             var likesCount = icon.siblings('.likes-count');
@@ -591,7 +624,9 @@ $conn->close();
 
             if (icon.hasClass('bi-heart-fill')) {
                 // Unlike
-                $.post('../../php/unlike_image.php', { image_id: imageId }, function (response) {
+                $.post('../../php/unlike_image.php', {
+                    image_id: imageId
+                }, function(response) {
                     if (response.success) {
                         icon.removeClass('bi-heart-fill text-danger').addClass('bi-heart');
                         likesCount.text(currentLikes - 1);
@@ -599,7 +634,9 @@ $conn->close();
                 });
             } else {
                 // Like
-                $.post('../../php/like_image.php', { image_id: imageId }, function (response) {
+                $.post('../../php/like_image.php', {
+                    image_id: imageId
+                }, function(response) {
                     if (response.success) {
                         icon.removeClass('bi-heart').addClass('bi-heart-fill text-danger');
                         likesCount.text(currentLikes + 1);
@@ -610,7 +647,7 @@ $conn->close();
 
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'

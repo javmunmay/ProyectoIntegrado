@@ -4,7 +4,7 @@ require_once '../../php/conexion.php';
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../inicioSesion.php");
+    header("Location: https://41183897.servicio-online.net/InicioSesion/inicioSesion.php");
     exit();
 }
 
@@ -307,9 +307,9 @@ $conn->close();
                         <i class="bi bi-images fs-1 text-muted"></i>
                         <h4 class="mt-3">No tienes imágenes subidas</h4>
                         <p class="text-muted">Comienza compartiendo tus fotografías con la comunidad</p>
-                        <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#subirImagenModal">
+                        <a href="../../php/subir_imagen.php" class="btn btn-primary mt-2">
                             <i class="bi bi-cloud-arrow-up"></i> Subir mi primera imagen
-                        </button>
+                        </a>
                     </div>
                 </div>
             <?php else: 

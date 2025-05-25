@@ -1,12 +1,11 @@
 <?php
-<<<<<<< HEAD
 session_start();
 require_once '../../php/conexion.php';
 require_once '../../php/funciones.php';
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../InicioSesion/inicioSesion.php");
+    header("Location: https://41183897.servicio-online.net/InicioSesion/inicioSesion.php");
     exit();
 }
 
@@ -44,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajax']) && isset($_POS
     header('Content-Type: application/json');
     $imagen_id = intval($_POST['imagen_id']);
     $response = ['success' => false];
-    
+
     $conn->begin_transaction();
     try {
         // Verificar si ya votó
@@ -54,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajax']) && isset($_POS
         $stmt_verificar->execute();
         $ya_votado = $stmt_verificar->get_result()->num_rows > 0;
         $stmt_verificar->close();
-        
+
         if ($ya_votado) {
             // Quitar el voto
             $sql_quitar = "DELETE FROM votos WHERE usuario_id = ? AND imagen_id = ?";
@@ -62,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajax']) && isset($_POS
             $stmt_quitar->bind_param("ii", $usuario_id, $imagen_id);
             $stmt_quitar->execute();
             $stmt_quitar->close();
-            
+
             $sql_actualizar = "UPDATE imagenes SET likes = likes - 1 WHERE id = ?";
             $nuevo_estado = false;
         } else {
@@ -72,16 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajax']) && isset($_POS
             $stmt_añadir->bind_param("ii", $usuario_id, $imagen_id);
             $stmt_añadir->execute();
             $stmt_añadir->close();
-            
+
             $sql_actualizar = "UPDATE imagenes SET likes = likes + 1 WHERE id = ?";
             $nuevo_estado = true;
         }
-        
+
         // Actualizar contador
         $stmt_actualizar = $conn->prepare($sql_actualizar);
         $stmt_actualizar->bind_param("i", $imagen_id);
         $stmt_actualizar->execute();
-        
+
         // Obtener nuevo conteo
         $sql_count = "SELECT likes FROM imagenes WHERE id = ?";
         $stmt_count = $conn->prepare($sql_count);
@@ -89,9 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajax']) && isset($_POS
         $stmt_count->execute();
         $result = $stmt_count->get_result();
         $likes = $result->fetch_assoc()['likes'];
-        
+
         $conn->commit();
-        
+
         $response = [
             'success' => true,
             'likes' => $likes,
@@ -101,137 +100,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajax']) && isset($_POS
         $conn->rollback();
         $response['error'] = $e->getMessage();
     }
-    
+
     echo json_encode($response);
     exit();
 }
-=======
-// Iniciar la sesión para poder trabajar con los usuarios
-session_start();
-
-// Incluir el archivo de conexión a la base de datos
-require_once '../../php/conexion.php'; // Asegúrate de que la ruta sea correcta
-
-// Asegurarse de que el ID de la imagen es pasado por GET
-if (!isset($_GET['imagen_id']) || !is_numeric($_GET['imagen_id'])) {
-    die("Imagen no válida.");
-}
-
-$imagen_id = $_GET['imagen_id'];
-
-// Obtener la imagen desde la base de datos
-$sql = "SELECT * FROM imagenes WHERE id = $imagen_id";
-$result = $conn->query($sql);
-
-if ($result->num_rows == 0) {
-    die("Imagen no encontrada.");
-}
-
-$imagen = $result->fetch_assoc();
-
-// Comprobar si el usuario ya ha votado
-$usuario_id = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : null;
-
-if ($usuario_id) {
-    $sql_check_vote = "SELECT * FROM votos WHERE usuario_id = $usuario_id AND imagen_id = $imagen_id";
-    $check_vote_result = $conn->query($sql_check_vote);
-
-    // Si ya votó, no permitimos votar de nuevo (descomenta esto si deseas bloquear votos duplicados)
-    // if ($check_vote_result->num_rows > 0) {
-    //     die("Ya has votado por esta imagen.");
-    // }
-}
-
-// Procesar el voto (positivo o negativo)
-if (isset($_POST['vote'])) {
-    $vote_type = $_POST['vote']; // "like" o "dislike"
-
-    if ($vote_type === 'like') {
-        $sql_update = "UPDATE imagenes SET likes = likes + 1 WHERE id = $imagen_id";
-    } elseif ($vote_type === 'dislike') {
-        $sql_update = "UPDATE imagenes SET dislikes = dislikes + 1 WHERE id = $imagen_id";
-    } else {
-        die("Voto no válido.");
-    }
-
-    if ($conn->query($sql_update) === TRUE) {
-        // Guardar el voto en la tabla de votos
-        if ($usuario_id) {
-            $sql_insert_vote = "INSERT INTO votos (usuario_id, imagen_id, voto) VALUES ($usuario_id, $imagen_id, '$vote_type')";
-            $conn->query($sql_insert_vote);
-        }
-
-        // Redirigir para evitar reenvío de formulario
-        header("Location: votacion.php?imagen_id=$imagen_id");
-        exit();
-    } else {
-        echo "Error al actualizar el voto: " . $conn->error;
-    }
-}
-
-// Mostrar los votos de la imagen
-$likes = $imagen['likes'];
-$dislikes = $imagen['dislikes'];
-
-// Cerrar la conexión a la base de datos
-$conn->close();
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
     <title>Votación | PixFly</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="css/stylesIndex.css">
-    <link rel="icon" type="image/png" href="assets/logoIcon.png">
+    <link rel="icon" type="image/png" href="../../assets/logoIcon.png">
     <style>
         .hero-section {
-            background: linear-gradient(rgba(9, 6, 67, 0.9), rgba(9, 6, 67, 0.9)), 
-                        url('assets/foto-votacion.jpg') center/cover;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../../assets/foto-votacion.jpg') center/cover;
             color: white;
             padding: 100px 0;
         }
-        
+
         .card-imagen {
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
             border: none;
         }
-        
+
         .card-imagen:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
-        
+
         .img-container {
             height: 250px;
             overflow: hidden;
         }
-        
+
         .img-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
-        
+
         .card-imagen:hover .img-container img {
             transform: scale(1.05);
         }
-        
+
         .user-info {
             display: flex;
             align-items: center;
             margin-top: 15px;
         }
-        
+
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -240,7 +167,7 @@ $conn->close();
             margin-right: 10px;
             border: 2px solid #eee;
         }
-        
+
         .btn-votar {
             background-color: #090643;
             color: white;
@@ -249,30 +176,34 @@ $conn->close();
             padding: 8px 20px;
             transition: all 0.3s;
         }
-        
+
+        .bg-logos {
+            background-color: #090643;
+        }
+
         .btn-votar:hover {
             background-color: #120d6b;
             transform: translateY(-2px);
         }
-        
+
         .btn-votado {
             background-color: #28a745;
         }
-        
+
         .btn-votado:hover {
             background-color: #218838;
         }
-        
+
         .badge-likes {
             font-size: 0.9rem;
         }
-        
+
         .section-title {
             position: relative;
             padding-bottom: 15px;
             margin-bottom: 30px;
         }
-        
+
         .section-title:after {
             content: "";
             position: absolute;
@@ -295,7 +226,7 @@ $conn->close();
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .btnSubir{
+        .btnSubir {
             background-color: #090643;
             padding-left: 25px;
             padding-right: 25px;
@@ -305,48 +236,11 @@ $conn->close();
             border-radius: 6px;
             font-size: 19px;
             text-decoration: none;
-=======
-    <title>Votación Concurso</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            text-align: center;
-        }
-        .imagen-container {
-            margin: 20px auto;
-            max-width: 600px;
-        }
-        .imagen {
-            width: 100%;
-            max-width: 500px;
-        }
-        .botones-voto {
-            margin-top: 10px;
-        }
-        .botones-voto button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-            cursor: pointer;
-        }
-        .botones-voto .like {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .botones-voto .dislike {
-            background-color: #f44336;
-            color: white;
-        }
-        .votos {
-            margin-top: 20px;
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
         }
     </style>
 </head>
+
 <body>
-<<<<<<< HEAD
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="home.php">
@@ -362,7 +256,7 @@ $conn->close();
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="home.php">Inicio</a>
+                        <a class="nav-link" href="home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="miPerfil.php">Mi Perfil</a>
@@ -371,7 +265,7 @@ $conn->close();
                         <a class="nav-link" href="misImagenes.php">Mis Imágenes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="votacion.php">Votación</a>
+                        <a class="nav-link active" href="votacion.php">Votación</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contacto.php">Contacto</a>
@@ -399,33 +293,35 @@ $conn->close();
     <section class="py-5" id="galeria">
         <div class="container">
             <h2 class="text-center section-title">Fotografías en concurso</h2>
-            
+
             <div class="row g-4">
                 <?php if (!empty($imagenes)): ?>
                     <?php foreach ($imagenes as $imagen): ?>
                         <div class="col-lg-4 col-md-6">
                             <div class="card card-imagen h-100">
                                 <div class="img-container">
-                                    <img src="/../../<?php echo htmlspecialchars($imagen['ruta']); ?>" 
-                                         alt="<?php echo htmlspecialchars($imagen['titulo']); ?>">
+                                    <img src="/../../<?php echo htmlspecialchars($imagen['ruta']); ?>"
+                                        alt="<?php echo htmlspecialchars($imagen['titulo']); ?>">
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title"><?php echo htmlspecialchars($imagen['titulo']); ?></h5>
                                     <p class="card-text text-muted"><?php echo htmlspecialchars($imagen['descripcion']); ?></p>
-                                    
+
                                     <div class="d-flex justify-content-between align-items-center mt-3">
                                         <div class="user-info">
-                                            <img src="/../../assets/<?php echo htmlspecialchars($imagen['foto_perfil'] ?? 'user-default.jpg'); ?>" 
-                                                 alt="<?php echo htmlspecialchars($imagen['usuario_nombre']); ?>" 
-                                                 class="user-avatar">
+                                            <img src="/../../assets/<?php echo htmlspecialchars($imagen['foto_perfil'] ?? 'user-default.jpg'); ?>"
+                                                alt="<?php echo htmlspecialchars($imagen['usuario_nombre']); ?>"
+                                                class="user-avatar">
                                             <span><?php echo htmlspecialchars($imagen['usuario_nombre']); ?></span>
                                         </div>
-                                        
-                                        <button type="button" 
-                                                class="btn-votar <?php echo $imagen['ya_votado'] ? 'btn-votado' : ''; ?> votar-btn"
-                                                data-imagen-id="<?php echo $imagen['imagen_id']; ?>">
-                                            <i class="bi <?php echo $imagen['ya_votado'] ? 'bi-check-circle-fill' : 'bi-heart-fill'; ?> me-1"></i>
-                                            <span class="badge badge-likes ms-1 likes-count"><?php echo $imagen['likes']; ?></span>
+
+                                        <button type="button"
+                                            class="btn-votar <?php echo $imagen['ya_votado'] ? 'btn-votado' : ''; ?> votar-btn"
+                                            data-imagen-id="<?php echo $imagen['imagen_id']; ?>">
+                                            <i
+                                                class="bi <?php echo $imagen['ya_votado'] ? 'bi-check-circle-fill' : 'bi-heart-fill'; ?> me-1"></i>
+                                            <span
+                                                class="badge badge-likes ms-1 likes-count"><?php echo $imagen['likes']; ?></span>
                                         </button>
                                     </div>
                                 </div>
@@ -448,13 +344,13 @@ $conn->close();
     <section class="bg-light py-5">
         <div class="container">
             <h2 class="text-center section-title">Cómo funciona la votación</h2>
-            
+
             <div class="row g-4 mt-4">
                 <div class="col-md-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center p-4">
-                            <div class="bg-primary text-white rounded-circle mx-auto mb-3" 
-                                 style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                            <div class="bg-logos text-white rounded-circle mx-auto mb-3"
+                                style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
                                 <i class="bi bi-check-circle fs-4"></i>
                             </div>
                             <h4>Un voto por imagen</h4>
@@ -462,25 +358,26 @@ $conn->close();
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center p-4">
-                            <div class="bg-primary text-white rounded-circle mx-auto mb-3" 
-                                 style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                            <div class="bg-logos text-white rounded-circle mx-auto mb-3"
+                                style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
                                 <i class="bi bi-graph-up fs-4"></i>
                             </div>
                             <h4>Las más votadas ganan</h4>
-                            <p class="text-muted">Las fotografías con más votos al final del periodo ganarán premios.</p>
+                            <p class="text-muted">Las fotografías con más votos al final del periodo ganarán premios.
+                            </p>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-md-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body text-center p-4">
-                            <div class="bg-primary text-white rounded-circle mx-auto mb-3" 
-                                 style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                            <div class="bg-logos text-white rounded-circle mx-auto mb-3"
+                                style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
                                 <i class="bi bi-calendar-check fs-4"></i>
                             </div>
                             <h4>Fechas importantes</h4>
@@ -497,71 +394,52 @@ $conn->close();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-    $(document).ready(function() {
-        $('.votar-btn').click(function() {
-            const btn = $(this);
-            const imagen_id = btn.data('imagen-id');
-            
-            // Deshabilitar botón temporalmente para evitar múltiples clicks
-            btn.prop('disabled', true);
-            
-            $.ajax({
-                url: 'votacion.php',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    ajax: true,
-                    imagen_id: imagen_id
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // Actualizar contador
-                        btn.find('.likes-count').text(response.likes);
-                        
-                        // Cambiar estado visual
-                        if (response.nuevo_estado) {
-                            btn.addClass('btn-votado');
-                            btn.find('i').removeClass('bi-heart-fill').addClass('bi-check-circle-fill');
+        $(document).ready(function () {
+            $('.votar-btn').click(function () {
+                const btn = $(this);
+                const imagen_id = btn.data('imagen-id');
+
+                // Deshabilitar botón temporalmente para evitar múltiples clicks
+                btn.prop('disabled', true);
+
+                $.ajax({
+                    url: 'votacion.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        ajax: true,
+                        imagen_id: imagen_id
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Actualizar contador
+                            btn.find('.likes-count').text(response.likes);
+
+                            // Cambiar estado visual
+                            if (response.nuevo_estado) {
+                                btn.addClass('btn-votado');
+                                btn.find('i').removeClass('bi-heart-fill').addClass('bi-check-circle-fill');
+                            } else {
+                                btn.removeClass('btn-votado');
+                                btn.find('i').removeClass('bi-check-circle-fill').addClass('bi-heart-fill');
+                            }
                         } else {
-                            btn.removeClass('btn-votado');
-                            btn.find('i').removeClass('bi-check-circle-fill').addClass('bi-heart-fill');
+                            console.error('Error:', response.error || 'Error desconocido');
+                            alert('Ocurrió un error al procesar tu voto');
                         }
-                    } else {
-                        console.error('Error:', response.error || 'Error desconocido');
-                        alert('Ocurrió un error al procesar tu voto');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                        alert('Error de conexión. Intenta nuevamente.');
+                    },
+                    complete: function () {
+                        // Rehabilitar botón después de la respuesta
+                        btn.prop('disabled', false);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error:', status, error);
-                    alert('Error de conexión. Intenta nuevamente.');
-                },
-                complete: function() {
-                    // Rehabilitar botón después de la respuesta
-                    btn.prop('disabled', false);
-                }
+                });
             });
         });
-    });
     </script>
 </body>
+
 </html>
-=======
-
-    <div class="imagen-container">
-        <h2>Vota por esta imagen</h2>
-        <img src="/../../<?php echo $imagen['ruta_imagen']; ?>" alt="Imagen del concurso" class="imagen">
-        <div class="botones-voto">
-            <form method="post" action="">
-                <button type="submit" name="vote" value="like" class="like">Me gusta</button>
-                <button type="submit" name="vote" value="dislike" class="dislike">No me gusta</button>
-            </form>
-        </div>
-
-        <div class="votos">
-            <p>Me gusta: <?php echo $likes; ?> | No me gusta: <?php echo $dislikes; ?></p>
-        </div>
-    </div>
-
-</body>
-</html>
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
