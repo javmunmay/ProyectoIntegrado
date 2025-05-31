@@ -133,7 +133,7 @@ if (isset($_GET['success'])) {
                             target="_blank">política de privacidad</a></label>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+                <button type="submit" class="btn btn-registrarse">Enviar mensaje</button>
             </form>
         </section>
 
@@ -150,20 +150,10 @@ if (isset($_GET['success'])) {
             </div>
             <div class="contacto-item">
                 <i class="fas fa-map-marker-alt"></i>
-                <p>Calle Fotografía, 123, 28001 Madrid</p>
+                <p>Calle Fotografía, 111, 41013 Sevilla</p>
             </div>
         </section>
 
-
-        <section class="redes-sociales">
-            <h2>Síguenos en redes</h2>
-            <div class="social-icons">
-                <a href="#" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-            </div>
-        </section>
     </main>
 
     <?php include 'php/footer.php'; ?>

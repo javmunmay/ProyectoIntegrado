@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $titulo = $conn->real_escape_string($_POST['titulo']);
         $descripcion = $conn->real_escape_string($_POST['descripcion']);
         $fecha = date('Y-m-d H:i:s');
-        
+
         // Subir archivo
         $ruta = '../../fotosDeUsuarios/' . basename($_FILES['imagen']['name']);
         if (move_uploaded_file($_FILES['imagen']['tmp_name'], '../../' . $ruta)) {
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $id = intval($_POST['id']);
         $titulo = $conn->real_escape_string($_POST['titulo']);
         $descripcion = $conn->real_escape_string($_POST['descripcion']);
-        
+
         $query = "UPDATE imagenes SET titulo = ?, descripcion = ? WHERE id = ? AND usuario_id = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ssii", $titulo, $descripcion, $id, $usuario_id);
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (isset($_POST['eliminar_imagen'])) {
         // Procesar eliminación de imagen
         $id = intval($_POST['id']);
-        
+
         // Primero obtener la ruta para eliminar el archivo
         $query = "SELECT ruta FROM imagenes WHERE id = ? AND usuario_id = ?";
         $stmt = $conn->prepare($query);
@@ -76,20 +76,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
         $result = $stmt->get_result();
         $imagen = $result->fetch_assoc();
-        
+
         if ($imagen) {
             // Eliminar el archivo
             if (file_exists('../../' . $imagen['ruta'])) {
                 unlink('../../' . $imagen['ruta']);
             }
-            
+
             // Eliminar de la base de datos
             $query = "DELETE FROM imagenes WHERE id = ? AND usuario_id = ?";
             $stmt = $conn->prepare($query);
             $stmt->bind_param("ii", $id, $usuario_id);
             $stmt->execute();
         }
-        
+
         header("Location: misImagenes.php?success=3");
         exit();
     }
@@ -105,6 +105,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -120,38 +121,48 @@ $conn->close();
             cursor: pointer;
             transition: transform 0.3s;
         }
+
         .card-img-top:hover {
             transform: scale(1.03);
         }
+
         .modal-img {
             max-height: 70vh;
             object-fit: contain;
         }
+
         .badge-estado {
             font-size: 0.8rem;
         }
+
         .badge-pendiente {
             background-color: #ffc107;
             color: #000;
         }
+
         .badge-activo {
             background-color: #198754;
         }
+
         .badge-inactivo {
             background-color: #dc3545;
         }
+
         #contenedor-imagenes {
             min-height: 300px;
         }
+
         .empty-state {
             padding: 3rem;
             text-align: center;
             background-color: #f8f9fa;
             border-radius: 0.5rem;
         }
+
         .search-box {
             position: relative;
         }
+
         .search-box .btn {
             position: absolute;
             right: 0;
@@ -159,11 +170,11 @@ $conn->close();
             height: 100%;
         }
 
-        .nubeLike{
+        .nubeLike {
             background-color: #090643;
         }
 
-        .btnEditar{
+        .btnEditar {
             background-color: white;
             border: solid 2px #090643;
             border-radius: 10px;
@@ -171,14 +182,14 @@ $conn->close();
             margin-right: 7px;
         }
 
-        .btnEliminar{
+        .btnEliminar {
             background-color: white;
             border: solid 2px #EF0000;
             border-radius: 10px;
             transform: scale(1.10);
         }
 
-        .btnSubir{
+        .btnSubir {
             background-color: #090643;
             padding-left: 25px;
             padding-right: 25px;
@@ -201,11 +212,12 @@ $conn->close();
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .categoria-titulo{
+        .categoria-titulo {
             color: #090643;
         }
     </style>
 </head>
+
 <body>
     <!-- Barra de Navegación -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
@@ -234,7 +246,7 @@ $conn->close();
                     <li class="nav-item">
                         <a class="nav-link" href="contacto.php">Contacto</a>
                     </li>
-                   <li class="nav-item ms-lg-2">
+                    <li class="nav-item ms-lg-2">
                         <a class="btn btn-outline-danger" href="../../php/logout.php">
                             Cerrar Sesión
                         </a>
@@ -249,22 +261,30 @@ $conn->close();
     <div class="container mt-5">
         <?php if (isset($_GET['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show">
-                <?php 
-                switch($_GET['success']) {
-                    case 1: echo 'Imagen subida correctamente y en revisión'; break;
-                    case 2: echo 'Imagen actualizada correctamente'; break;
-                    case 3: echo 'Imagen eliminada correctamente'; break;
+                <?php
+                switch ($_GET['success']) {
+                    case 1:
+                        echo 'Imagen subida correctamente y en revisión';
+                        break;
+                    case 2:
+                        echo 'Imagen actualizada correctamente';
+                        break;
+                    case 3:
+                        echo 'Imagen eliminada correctamente';
+                        break;
                 }
                 ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
-        
+
         <?php if (isset($_GET['error'])): ?>
             <div class="alert alert-danger alert-dismissible fade show">
-                <?php 
-                switch($_GET['error']) {
-                    case 1: echo 'Error al subir la imagen'; break;
+                <?php
+                switch ($_GET['error']) {
+                    case 1:
+                        echo 'Error al subir la imagen';
+                        break;
                 }
                 ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -278,7 +298,7 @@ $conn->close();
                 <i class="bi bi-cloud-arrow-up"></i> Subir
             </a>
         </div>
-        
+
         <!-- Filtros y búsqueda -->
         <div class="row mb-4">
             <div class="col-md-6">
@@ -289,6 +309,7 @@ $conn->close();
                     </button>
                 </div>
             </div>
+            <!--
             <div class="col-md-6">
                 <select class="form-select" id="filtroOrden">
                     <option value="recientes">Más recientes primero</option>
@@ -297,6 +318,7 @@ $conn->close();
                     <option value="titulo-desc">Por título (Z-A)</option>
                 </select>
             </div>
+            -->
         </div>
 
         <!-- Contenedor de imágenes -->
@@ -312,53 +334,53 @@ $conn->close();
                         </a>
                     </div>
                 </div>
-            <?php else: 
-                foreach ($imagenesActivas as $imagen): 
+                <?php else:
+                foreach ($imagenesActivas as $imagen):
                     $rutaImagen = '../../' . htmlspecialchars($imagen['ruta']);
                     $fechaFormateada = date('d/m/Y', strtotime($imagen['fecha_subida']));
-            ?>
-                <div class="col-lg-4 col-md-6 imagen-card" 
-                     data-id="<?= $imagen['id'] ?>" 
-                     data-titulo="<?= htmlspecialchars(strtolower($imagen['titulo'])) ?>"
-                     data-fecha="<?= strtotime($imagen['fecha_subida']) ?>">
-                    <div class="card h-100 shadow-sm">
-                        <div class="position-relative">
-                            <img src="<?= $rutaImagen ?>" 
-                                 class="card-img-top" 
-                                 alt="<?= htmlspecialchars($imagen['titulo']) ?>"
-                                 data-bs-toggle="modal" 
-                                 data-bs-target="#verImagenModal"
-                                 onclick="cargarImagenModal('<?= $rutaImagen ?>', '<?= htmlspecialchars($imagen['titulo']) ?>')">
-                            <span class="nubeLike position-absolute top-0 end-0 text-white px-2 py-1 m-2 rounded-pill small">
-                                <i class="bi bi-heart-fill"></i> <?= $imagen['likes'] ?? 0 ?>
-                            </span>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title text-truncate"><?= htmlspecialchars($imagen['titulo']) ?></h5>
-                            <p class="card-text text-muted small"><?= htmlspecialchars($imagen['descripcion']) ?></p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">
-                                    <i class="bi bi-calendar"></i> <?= $fechaFormateada ?>
-                                </small>
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btnEditar" 
-                                            data-bs-toggle="modal" 
+                ?>
+                    <div class="col-lg-4 col-md-6 imagen-card"
+                        data-id="<?= $imagen['id'] ?>"
+                        data-titulo="<?= htmlspecialchars(strtolower($imagen['titulo'])) ?>"
+                        data-fecha="<?= strtotime($imagen['fecha_subida']) ?>">
+                        <div class="card h-100 shadow-sm">
+                            <div class="position-relative">
+                                <img src="<?= $rutaImagen ?>"
+                                    class="card-img-top"
+                                    alt="<?= htmlspecialchars($imagen['titulo']) ?>"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#verImagenModal"
+                                    onclick="cargarImagenModal('<?= $rutaImagen ?>', '<?= htmlspecialchars($imagen['titulo']) ?>')">
+                                <span class="nubeLike position-absolute top-0 end-0 text-white px-2 py-1 m-2 rounded-pill small">
+                                    <i class="bi bi-heart-fill"></i> <?= $imagen['likes'] ?? 0 ?>
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-truncate"><?= htmlspecialchars($imagen['titulo']) ?></h5>
+                                <p class="card-text text-muted small"><?= htmlspecialchars($imagen['descripcion']) ?></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar"></i> <?= $fechaFormateada ?>
+                                    </small>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btnEditar"
+                                            data-bs-toggle="modal"
                                             data-bs-target="#editarImagenModal"
                                             onclick="cargarEditarModal(<?= $imagen['id'] ?>, '<?= htmlspecialchars($imagen['titulo']) ?>', '<?= htmlspecialchars($imagen['descripcion']) ?>')">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="btnEliminar" 
-                                            data-bs-toggle="modal" 
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btnEliminar"
+                                            data-bs-toggle="modal"
                                             data-bs-target="#eliminarImagenModal"
                                             onclick="cargarEliminarModal(<?= $imagen['id'] ?>, '<?= htmlspecialchars($imagen['titulo']) ?>')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; 
+            <?php endforeach;
             endif; ?>
         </div>
     </div>
@@ -374,29 +396,32 @@ $conn->close();
                         <p class="text-muted mt-2">No hay imágenes en revisión</p>
                     </div>
                 </div>
-            <?php else: 
-                foreach ($imagenesPendientes as $imagen): 
+                <?php else:
+                foreach ($imagenesPendientes as $imagen):
                     $rutaImagen = '../../' . htmlspecialchars($imagen['ruta']);
-            ?>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="<?= $rutaImagen ?>" 
-                             class="card-img-top" 
-                             alt="<?= htmlspecialchars($imagen['titulo']) ?>"
-                             data-bs-toggle="modal" 
-                             data-bs-target="#verImagenModal"
-                             onclick="cargarImagenModal('<?= $rutaImagen ?>', '<?= htmlspecialchars($imagen['titulo']) ?>')">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($imagen['titulo']) ?></h5>
-                            <p class="card-text text-truncate"><?= htmlspecialchars($imagen['descripcion']) ?></p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted"><?= date("d/m/Y", strtotime($imagen['fecha_subida'])) ?></small>
-                                <span class="badge badge-estado badge-pendiente">En revisión</span>
+                ?>
+                    <div class="col-md-4 mb-4 imagen-card"
+                         data-id="<?= $imagen['id'] ?>"
+                         data-titulo="<?= htmlspecialchars(strtolower($imagen['titulo'])) ?>"
+                         data-fecha="<?= strtotime($imagen['fecha_subida']) ?>">
+                        <div class="card h-100 shadow-sm">
+                            <img src="<?= $rutaImagen ?>"
+                                class="card-img-top"
+                                alt="<?= htmlspecialchars($imagen['titulo']) ?>"
+                                data-bs-toggle="modal"
+                                data-bs-target="#verImagenModal"
+                                onclick="cargarImagenModal('<?= $rutaImagen ?>', '<?= htmlspecialchars($imagen['titulo']) ?>')">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= htmlspecialchars($imagen['titulo']) ?></h5>
+                                <p class="card-text text-truncate"><?= htmlspecialchars($imagen['descripcion']) ?></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted"><?= date("d/m/Y", strtotime($imagen['fecha_subida'])) ?></small>
+                                    <span class="badge badge-estado badge-pendiente">En revisión</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; 
+            <?php endforeach;
             endif; ?>
         </div>
     </section>
@@ -412,41 +437,43 @@ $conn->close();
                         <p class="text-muted mt-2">No hay imágenes rechazadas</p>
                     </div>
                 </div>
-            <?php else: 
-                foreach ($imagenesRechazadas as $imagen): 
+                <?php else:
+                foreach ($imagenesRechazadas as $imagen):
                     $rutaImagen = '../../' . htmlspecialchars($imagen['ruta']);
-            ?>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm border-danger">
-                        <div class="card-header bg-danger bg-opacity-10">
-                            <span class="badge badge-estado badge-inactivo">Rechazada</span>
-                        </div>
-                        <img src="<?= $rutaImagen ?>" 
-                             class="card-img-top" 
-                             alt="<?= htmlspecialchars($imagen['titulo']) ?>"
-                             data-bs-toggle="modal" 
-                             data-bs-target="#verImagenModal"
-                             onclick="cargarImagenModal('<?= $rutaImagen ?>', '<?= htmlspecialchars($imagen['titulo']) ?>')">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($imagen['titulo']) ?></h5>
-                            <p class="card-text text-truncate"><?= htmlspecialchars($imagen['descripcion']) ?></p>
-                            <?php if (!empty($imagen['motivo_rechazo'])): ?>
-                                <p class="text-danger"><small><strong>Motivo:</strong> <?= htmlspecialchars($imagen['motivo_rechazo']) ?></small></p>
-                            <?php endif; ?>
-                        </div>
-                        <div class="card-footer bg-transparent">
-                            <small class="text-muted">Subida el <?= date("d/m/Y", strtotime($imagen['fecha_subida'])) ?></small>
+                ?>
+                    <div class="col-md-4 mb-4 imagen-card"
+                         data-id="<?= $imagen['id'] ?>"
+                         data-titulo="<?= htmlspecialchars(strtolower($imagen['titulo'])) ?>"
+                         data-fecha="<?= strtotime($imagen['fecha_subida']) ?>">
+                        <div class="card h-100 shadow-sm border-danger">
+                            <div class="card-header bg-danger bg-opacity-10">
+                                <span class="badge badge-estado badge-inactivo">Rechazada</span>
+                            </div>
+                            <img src="<?= $rutaImagen ?>"
+                                class="card-img-top"
+                                alt="<?= htmlspecialchars($imagen['titulo']) ?>"
+                                data-bs-toggle="modal"
+                                data-bs-target="#verImagenModal"
+                                onclick="cargarImagenModal('<?= $rutaImagen ?>', '<?= htmlspecialchars($imagen['titulo']) ?>')">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= htmlspecialchars($imagen['titulo']) ?></h5>
+                                <p class="card-text text-truncate"><?= htmlspecialchars($imagen['descripcion']) ?></p>
+                                <?php if (!empty($imagen['motivo_rechazo'])): ?>
+                                    <p class="text-danger"><small><strong>Motivo:</strong> <?= htmlspecialchars($imagen['motivo_rechazo']) ?></small></p>
+                                <?php endif; ?>
+                            </div>
+                            <div class="card-footer bg-transparent">
+                                <small class="text-muted">Subida el <?= date("d/m/Y", strtotime($imagen['fecha_subida'])) ?></small>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; 
+            <?php endforeach;
             endif; ?>
         </div>
     </section>
 
     <!-- Footer -->
     <?php include '../../php/footer.php'; ?>
-
 
     <!-- Modal Ver Imagen -->
     <div class="modal fade" id="verImagenModal" tabindex="-1" aria-labelledby="verImagenModalLabel" aria-hidden="true">
@@ -478,12 +505,12 @@ $conn->close();
                     <div class="modal-body">
                         <input type="hidden" name="editar_imagen" value="1">
                         <input type="hidden" name="id" id="editarImagenId">
-                        
+
                         <div class="mb-3">
                             <label for="editarTitulo" class="form-label">Título</label>
                             <input type="text" class="form-control" id="editarTitulo" name="titulo" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="editarDescripcion" class="form-label">Descripción</label>
                             <textarea class="form-control" id="editarDescripcion" name="descripcion" rows="3" required></textarea>
@@ -530,75 +557,117 @@ $conn->close();
             document.getElementById('imagenModal').src = ruta;
             document.getElementById('verImagenModalLabel').textContent = titulo;
         }
-        
+
         // Función para cargar datos en el modal de edición
         function cargarEditarModal(id, titulo, descripcion) {
             document.getElementById('editarImagenId').value = id;
             document.getElementById('editarTitulo').value = titulo;
             document.getElementById('editarDescripcion').value = descripcion;
         }
-        
+
         // Función para cargar datos en el modal de eliminación
         function cargarEliminarModal(id, titulo) {
             document.getElementById('eliminarImagenId').value = id;
             document.getElementById('eliminarImagenTitulo').textContent = titulo;
         }
-        
-        // Vista previa de la imagen al seleccionarla
-        document.getElementById('imagen').addEventListener('change', function(e) {
-            const preview = document.getElementById('previewImagen');
-            const file = e.target.files[0];
-            
-            if (file) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.classList.remove('d-none');
-                }
-                
-                reader.readAsDataURL(file);
+
+        // Función para convertir fecha de texto a timestamp
+        function parsearFecha(textoFecha) {
+            // Formato dd/mm/yyyy
+            const partes = textoFecha.split('/');
+            if (partes.length === 3) {
+                return new Date(partes[2], partes[1] - 1, partes[0]).getTime();
             }
-        });
-        
-        // Filtro de búsqueda
-        document.getElementById('btnBuscar').addEventListener('click', function() {
-            const busqueda = document.getElementById('buscarImagen').value.toLowerCase();
+            return 0;
+        }
+
+        // Funcionalidad de búsqueda mejorada
+        function realizarBusqueda() {
+            const busqueda = document.getElementById('buscarImagen').value.toLowerCase().trim();
             const cards = document.querySelectorAll('.imagen-card');
             
+            if (busqueda === '') {
+                // Si no hay búsqueda, mostrar todas las imágenes
+                cards.forEach(card => card.style.display = 'block');
+                return;
+            }
+
             cards.forEach(card => {
                 const titulo = card.getAttribute('data-titulo');
-                if (titulo.includes(busqueda) || busqueda === '') {
+                const descripcion = card.querySelector('.card-text').textContent.toLowerCase();
+                
+                if (titulo.includes(busqueda) || descripcion.includes(busqueda)) {
                     card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
                 }
             });
+        }
+
+        // Evento de búsqueda al hacer clic en el botón
+        document.getElementById('btnBuscar').addEventListener('click', realizarBusqueda);
+
+        // Evento de búsqueda al presionar Enter en el input
+        document.getElementById('buscarImagen').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                realizarBusqueda();
+            }
         });
-        
-        // Filtro de orden
+
+        // Filtro de orden mejorado
         document.getElementById('filtroOrden').addEventListener('change', function() {
             const orden = this.value;
-            const container = document.getElementById('contenedor-imagenes');
-            const cards = Array.from(document.querySelectorAll('.imagen-card'));
-            
-            cards.sort((a, b) => {
-                switch(orden) {
-                    case 'recientes':
-                        return b.getAttribute('data-fecha') - a.getAttribute('data-fecha');
-                    case 'antiguas':
-                        return a.getAttribute('data-fecha') - b.getAttribute('data-fecha');
-                    case 'titulo-asc':
-                        return a.getAttribute('data-titulo').localeCompare(b.getAttribute('data-titulo'));
-                    case 'titulo-desc':
-                        return b.getAttribute('data-titulo').localeCompare(a.getAttribute('data-titulo'));
-                    default:
-                        return 0;
-                }
+            const secciones = [
+                'contenedor-imagenes', 
+                'revision-imagenes', 
+                'no-aceptadas-imagenes'
+            ];
+
+            secciones.forEach(seccionId => {
+                const container = document.getElementById(seccionId);
+                if (!container) return;
+
+                const row = container.querySelector('.row');
+                if (!row) return;
+
+                const cards = Array.from(row.querySelectorAll('.imagen-card'));
+
+                cards.sort((a, b) => {
+                    const tituloA = a.getAttribute('data-titulo') || 
+                                  a.querySelector('.card-title').textContent.toLowerCase();
+                    const tituloB = b.getAttribute('data-titulo') || 
+                                  b.querySelector('.card-title').textContent.toLowerCase();
+
+                    // Obtener fechas de los atributos data o del texto
+                    let fechaA, fechaB;
+                    
+                    if (a.hasAttribute('data-fecha')) {
+                        fechaA = parseInt(a.getAttribute('data-fecha'));
+                        fechaB = parseInt(b.getAttribute('data-fecha'));
+                    } else {
+                        const fechaTextA = a.querySelector('small.text-muted').textContent;
+                        const fechaTextB = b.querySelector('small.text-muted').textContent;
+                        fechaA = parsearFecha(fechaTextA);
+                        fechaB = parsearFecha(fechaTextB);
+                    }
+
+                    switch(orden) {
+                        case 'recientes':
+                            return fechaB - fechaA;
+                        case 'antiguas':
+                            return fechaA - fechaB;
+                        case 'titulo-asc':
+                            return tituloA.localeCompare(tituloB);
+                        case 'titulo-desc':
+                            return tituloB.localeCompare(tituloA);
+                        default:
+                            return 0;
+                    }
+                });
+
+                // Reordenar las cards en el DOM
+                cards.forEach(card => row.appendChild(card));
             });
-            
-            // Reordenar las cards en el DOM
-            cards.forEach(card => container.appendChild(card));
         });
     </script>
 </body>

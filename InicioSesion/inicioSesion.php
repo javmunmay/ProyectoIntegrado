@@ -170,7 +170,12 @@
                         }
                         ?>
                     </div>
+                <?php elseif (isset($_GET['logout']) && $_GET['logout'] == 'success'): ?>
+                    <div class="alert alert-success mt-3">
+                        Sesión cerrada correctamente
+                    </div>
                 <?php endif; ?>
+
 
                 <div class="mb-3">
                     <label for="correo" class="form-label">Correo Electrónico</label>

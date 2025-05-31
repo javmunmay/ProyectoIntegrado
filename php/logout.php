@@ -13,6 +13,6 @@ unset($_SESSION['foto_perfil']);
 session_destroy();
 
 // Redirigir a la página de inicio con mensaje
-header("Location: ../InicioSesion/inicioSesion.php?mensaje=sesion_cerrada");
+header("Location: ../InicioSesion/inicioSesion.php?logout=success");
 exit();
 ?>

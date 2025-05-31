@@ -47,6 +47,28 @@ if ($result_feed->num_rows > 0) {
         $feed_images[] = $row;
     }
 }
+
+
+// Consulta para obtener los premios del concurso
+$sql_premios = "SELECT primero, segundo, tercero, importe_primero, importe_segundo, importe_tercero 
+                FROM premios_concurso 
+                ORDER BY id DESC 
+                LIMIT 1";
+$result_premios = $conn->query($sql_premios);
+$premios = $result_premios->fetch_assoc();
+
+// Si no hay premios configurados, usamos unos por defecto
+if (!$premios) {
+    $premios = [
+        'primero' => 'Cámara profesional Nikon Z6 II con lente 24-70mm',
+        'segundo' => 'Ordenador MacBook Pro para edición de fotos',
+        'tercero' => 'Billetes de avión para un viaje en pareja a Europa',
+        'importe_primero' => '2800.00',
+        'importe_segundo' => '1999.00',
+        'importe_tercero' => '1200.00'
+    ];
+}
+
 $conn->close();
 ?>
 
@@ -350,13 +372,6 @@ $conn->close();
             padding: 1rem 0;
             text-align: center;
             z-index: 1000;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
         }
 
         /* Estilos para el modal del concurso */
@@ -386,7 +401,6 @@ $conn->close();
 
         .modal-concurso .info-value {
             color: #555;
-<<<<<<< HEAD
         }
 
         .carousel-item img {
@@ -423,14 +437,6 @@ $conn->close();
             /* Asegura que las imágenes mantengan su relación de aspecto */
             flex: 0 0 auto;
             /* Evita que las imágenes se estiren o encojan */
-=======
-<<<<<<< HEAD
-=======
-=======
-            /* Para que no se oculte debajo de otros elementos */
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
->>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
         }
     </style>
 </head>
@@ -518,16 +524,6 @@ $conn->close();
                     <h2 class="textinfo"><?php echo $total_images; ?></h2>
                     <p class="text-muted">imágenes compartidas</p>
                     <a href="votacion.php" class="btninfo btn-sm">
-<<<<<<< HEAD
-=======
-=======
-<<<<<<< HEAD
-                    <a href="votacion.php" class="btninfo btn-sm">
-=======
-                    <a href="../votacion.php" class="btninfo btn-sm">
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
->>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
                         <i class="bi bi-grid me-1"></i> Explorar
                     </a>
                 </div>
@@ -544,26 +540,11 @@ $conn->close();
                     <button type="button" class="btninfo btn-sm" data-bs-toggle="modal" data-bs-target="#concursoModal">
                         <i class="bi bi-arrow-right me-1"></i> Más información
                     </button>
-<<<<<<< HEAD
-=======
-=======
-<<<<<<< HEAD
-                    <button type="button" class="btninfo btn-sm" data-bs-toggle="modal" data-bs-target="#concursoModal">
-                        <i class="bi bi-arrow-right me-1"></i> Más información
-                    </button>
-=======
-                    <a href="../votacion.php" class="btninfo btn-sm">
-                        <i class="bi bi-arrow-right me-1"></i> Más información
-                    </a>
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
->>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
                 </div>
             </div>
         </div>
     </div>
 
-<<<<<<< HEAD
     <section id="destacadas" class="container mt-5">
         <h2 class="text-center mb-4 categoria-titulo">Ganadores de otros años</h2>
         <div class="image-scroll-container">
@@ -580,12 +561,6 @@ $conn->close();
 
     <br><br>
 
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
     <!-- Modal del Concurso -->
     <div class="modal fade modal-concurso" id="concursoModal" tabindex="-1" aria-labelledby="concursoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -624,17 +599,13 @@ $conn->close();
                         <div class="info-label">Premios:</div>
                         <div class="info-value">
                             <ul>
-                                <li>1er puesto: $500 + Kit fotográfico profesional</li>
-                                <li>2do puesto: $300 + Curso avanzado de fotografía</li>
-                                <li>3er puesto: $200 + Membresía premium por 1 año</li>
+                                <li>1er puesto: <?php echo htmlspecialchars($premios['primero']); ?> <br> (Valorado en <?php echo htmlspecialchars($premios['importe_primero']); ?>€)</li>
+                                <li>2do puesto: <?php echo htmlspecialchars($premios['segundo']); ?> <br> (Valorado en <?php echo htmlspecialchars($premios['importe_segundo']); ?>€)</li>
+                                <li>3er puesto: <?php echo htmlspecialchars($premios['tercero']); ?> <br> (Valorado en <?php echo htmlspecialchars($premios['importe_tercero']); ?>€)</li>
                             </ul>
                         </div>
                     </div>
 
-                    <div class="info-item">
-                        <div class="info-label">Temática:</div>
-                        <div class="info-value">"La belleza en los detalles cotidianos"</div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -643,16 +614,6 @@ $conn->close();
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-=======
-
-
->>>>>>> 97d5d9017f521a3eb44cb8284144212f6cac5a52
->>>>>>> 74bfcde31890af4f6ff0a444e1071ee52fa1fefb
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
 
     <?php include '../../php/footer.php'; ?>
 

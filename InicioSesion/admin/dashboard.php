@@ -74,6 +74,18 @@ $conn->close();
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
+        .btn-outline-corporativo {
+            background-color: white;
+            color: #090643;
+            padding: 10px;
+            border: 1px solid #090643;
+        }
+
+        .btn-outline-corporativo:hover {
+            background-color: #090643;
+            color: white;
+        }
+
         .stat-icon {
             font-size: 2.5rem;
             margin-bottom: 15px;
@@ -115,6 +127,15 @@ $conn->close();
             padding: 1rem 0;
             margin-top: auto;
             /* Empuja el footer hacia abajo */
+        }
+
+        .bg-tarjeta {
+            background-color: #090643;
+        }
+
+        .bg-bienvenida {
+            background-color: #090643;
+            border-radius: 20px;
         }
     </style>
 </head>
@@ -158,19 +179,20 @@ $conn->close();
 
     <section class="container mt-5">
         <h1 class="text-center mb-4 categoria-titulo">Panel de Administrador</h1>
-        <div class="row mb-4">
-            <div class="col-md-6 mx-auto text-center">
-                <div class="alert alert-info">
+        <div class="row mb-4 bg-bienvenida">
+            <div class="col-md-6 mx-auto text-center mx-3">
+                <div class="alert text-white" style="transform: scale(1.15)">
                     <i class="bi bi-info-circle-fill"></i> Bienvenido <?php echo htmlspecialchars($nombreUsuario); ?> al
                     panel de administración de pixFly
                 </div>
             </div>
         </div>
 
+
         <!-- Estadísticas -->
         <div class="row g-4 mb-5">
             <div class="col-md-3">
-                <div class="stat-card card bg-primary text-white p-4 text-center">
+                <div class="stat-card card bg-tarjeta text-white p-4 text-center">
                     <i class="bi bi-people-fill stat-icon"></i>
                     <h3 class="stat-number"><?php echo $stats['usuarios']; ?></h3>
                     <p>Usuarios registrados</p>
@@ -178,7 +200,7 @@ $conn->close();
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card card bg-success text-white p-4 text-center">
+                <div class="stat-card card bg-tarjeta text-white p-4 text-center">
                     <i class="bi bi-image-fill stat-icon"></i>
                     <h3 class="stat-number"><?php echo $stats['imagenes']; ?></h3>
                     <p>Imágenes activas</p>
@@ -186,19 +208,33 @@ $conn->close();
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card card bg-warning text-dark p-4 text-center">
+                <div class="stat-card card bg-tarjeta text-white p-4 text-center">
                     <i class="bi bi-exclamation-triangle-fill stat-icon"></i>
                     <h3 class="stat-number"><?php echo $stats['incidencias']; ?></h3>
                     <p>Incidencias pendientes</p>
-                    <a href="gestionarIncidencias.php" class="btn btn-dark btn-sm quick-action-btn">Revisar</a>
+                    <a href="gestionarIncidencias.php" class="btn btn-light btn-sm quick-action-btn">Revisar</a>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card card bg-danger text-white p-4 text-center">
+                <div class="stat-card card bg-tarjeta text-white p-4 text-center">
                     <i class="bi bi-ticket-fill stat-icon"></i>
                     <h3 class="stat-number"><?php echo $stats['reportes']; ?></h3>
                     <p>Tickets abiertos</p>
                     <a href="gestionarReportes.php" class="btn btn-light btn-sm quick-action-btn">Atender</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card card bg-tarjeta text-white p-4 text-center">
+                    <i class="bi bi-card-checklist stat-icon"></i>
+                    <p>Gestionar Bases del Concurso</p>
+                    <a href="gestionarBases.php" class="btn btn-light btn-sm quick-action-btn">Gestionar</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card card bg-tarjeta text-white p-4 text-center">
+                    <i class="bi bi-trophy-fill stat-icon"></i>
+                    <p>Gestionar Premios</p>
+                    <a href="gestionarPremios.php" class="btn btn-light btn-sm quick-action-btn">Gestionar</a>
                 </div>
             </div>
         </div>
@@ -208,20 +244,20 @@ $conn->close();
             <div class="col-12">
                 <h2 class="mb-4">Acciones rápidas</h2>
                 <div class="d-flex flex-wrap gap-3">
-                    <a href="gestionarUsuarios.php?action=create" class="btn btn-outline-primary quick-action-btn">
+                    <a href="gestionarUsuarios.php?showModal=create" class="btn btn-outline-corporativo quick-action-btn">
                         <i class="bi bi-person-plus"></i> Crear nuevo usuario
                     </a>
-                    <a href="gestionarImagenes.php?filter=pending" class="btn btn-outline-secondary quick-action-btn">
+                    <a href="gestionarImagenes.php?filter=pending" class="btn btn-outline-corporativo quick-action-btn">
                         <i class="bi bi-images"></i> Revisar imágenes pendientes
                     </a>
-                    <a href="gestionarIncidencias.php?filter=high" class="btn btn-outline-danger quick-action-btn">
+                    <a href="gestionarIncidencias.php?filter=high" class="btn btn-outline-corporativo quick-action-btn">
                         <i class="bi bi-exclamation-octagon"></i> Incidencias de alta prioridad
                     </a>
-                    <a href="gestionarReportes.php?filter=open" class="btn btn-outline-warning quick-action-btn">
+                    <a href="gestionarReportes.php?filter=open" class="btn btn-outline-corporativo quick-action-btn">
                         <i class="bi bi-ticket-detailed"></i> Reportes sin resolver
                     </a>
                     <!-- Nuevo botón para gestionar bases del concurso -->
-                    <a href="gestionarBases.php" class="btn btn-outline-info quick-action-btn">
+                    <a href="gestionarBases.php" class="btn btn-outline-corporativo quick-action-btn">
                         <i class="bi bi-journal-text"></i> Modificar bases del concurso
                     </a>
                 </div>

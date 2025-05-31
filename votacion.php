@@ -31,6 +31,7 @@ if ($result_imagenes->num_rows > 0) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -123,21 +124,13 @@ if ($result_imagenes->num_rows > 0) {
             margin-right: 10px;
             border: 2px solid #eee;
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
         .likes-count {
             font-weight: bold;
             color: #2c3e50;
             margin-left: 5px;
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
         .likes-container {
             display: flex;
             align-items: center;
@@ -147,19 +140,11 @@ if ($result_imagenes->num_rows > 0) {
             cursor: pointer;
             transition: all 0.3s;
         }
-<<<<<<< HEAD
 
         .likes-container:hover {
             background: #e9ecef;
         }
 
-=======
-        
-        .likes-container:hover {
-            background: #e9ecef;
-        }
-        
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
         .login-required-alert {
             position: fixed;
             bottom: 20px;
@@ -170,7 +155,6 @@ if ($result_imagenes->num_rows > 0) {
         }
 
         @keyframes slideIn {
-<<<<<<< HEAD
             from {
                 transform: translateX(100%);
                 opacity: 0;
@@ -180,10 +164,6 @@ if ($result_imagenes->num_rows > 0) {
                 transform: translateX(0);
                 opacity: 1;
             }
-=======
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
         }
 
         @media (max-width: 768px) {
@@ -224,55 +204,10 @@ if ($result_imagenes->num_rows > 0) {
         }
     </style>
 </head>
+
 <body>
-<<<<<<< HEAD
     <?php include 'php/nav.php'; ?>
 
-=======
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="assets/logo.png" alt="Logo PixFly" style="height: 50px;">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="votacion.php">Votación</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="ganadores.php">Ganadores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contacto.php">Contacto</a>
-                    </li>
-                    <?php if (isset($_SESSION['user_id'])): ?>
-                        <li class="nav-item ms-lg-2">
-                            <a class="btn btn-outline-primary" href="perfil.php">
-                                Mi Perfil
-                            </a>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item ms-lg-2">
-                            <a class="btn btn-registrarse" href="InicioSesion/registro.php">Registrarse</a>
-                        </li>
-                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-                            <a class="btn btn-iniciosesion" href="InicioSesion/inicioSesion.php">
-                                Iniciar Sesión <i class="bi bi-box-arrow-in-right"></i>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
-    </nav>
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
 
     <section class="hero-section">
         <div class="hero-content">
@@ -284,11 +219,7 @@ if ($result_imagenes->num_rows > 0) {
 
     <section class="container py-5" id="fotos">
         <h2 class="text-center categoria-titulo">Fotografías en concurso</h2>
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
         <div class="row">
             <?php if (!empty($imagenes)): ?>
                 <?php foreach ($imagenes as $imagen): ?>
@@ -309,15 +240,9 @@ if ($result_imagenes->num_rows > 0) {
                                             class="user-avatar">
                                         <span><?php echo htmlspecialchars($imagen['usuario_nombre']); ?></span>
                                     </div>
-<<<<<<< HEAD
 
                                     <div class="likes-container" onclick="mostrarLoginRequired()">
                                         <i class="bi bi-heart-fill text-danger"></i>
-=======
-                                    
-                                    <div class="likes-container" onclick="mostrarLoginRequired()">
-                                        <i class="bi bi-heart-fill text-danger"></i> 
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
                                         <span class="likes-count" data-imagen-id="<?php echo $imagen['imagen_id']; ?>">
                                             <?php echo $imagen['likes']; ?>
                                         </span>
@@ -395,11 +320,7 @@ if ($result_imagenes->num_rows > 0) {
             // Eliminar notificaciones anteriores
             const oldAlerts = document.querySelectorAll('.login-required-alert');
             oldAlerts.forEach(alert => alert.remove());
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
             // Crear nueva notificación
             const alertDiv = document.createElement('div');
             alertDiv.className = 'alert alert-warning login-required-alert alert-dismissible fade show';
@@ -414,15 +335,9 @@ if ($result_imagenes->num_rows > 0) {
                     <a href="InicioSesion/inicioSesion.php" class="btn btn-sm btn-primary">Iniciar Sesión</a>
                 </div>
             `;
-<<<<<<< HEAD
 
             document.body.appendChild(alertDiv);
 
-=======
-            
-            document.body.appendChild(alertDiv);
-            
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
             // Eliminar automáticamente después de 5 segundos
             setTimeout(() => {
                 alertDiv.remove();
@@ -434,11 +349,7 @@ if ($result_imagenes->num_rows > 0) {
             try {
                 const response = await fetch('php/obtener_likes.php');
                 const data = await response.json();
-<<<<<<< HEAD
 
-=======
-                
->>>>>>> a6a454e509466c7c9148bd80b4cf40c5e9be3c16
                 if (data.success) {
                     // Actualizar todos los contadores de likes
                     data.likes.forEach(imagen => {

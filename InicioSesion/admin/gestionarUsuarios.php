@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $nombre = $conn->real_escape_string($_POST['nombre']);
         $correo = $conn->real_escape_string($_POST['correo']);
         $admin = intval($_POST['admin']);
-        
+
         $query = "UPDATE Usuarios SET nombre = ?, correo = ?, admin = ? WHERE id = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ssii", $nombre, $correo, $admin, $id);
@@ -54,19 +54,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $correo = $conn->real_escape_string($_POST['correo']);
         $contrasena = password_hash($_POST['contrasena'], PASSWORD_DEFAULT);
         $admin = intval($_POST['admin']);
-        
+
         // Verificar si el correo ya existe
         $check_query = "SELECT id FROM Usuarios WHERE correo = ?";
         $check_stmt = $conn->prepare($check_query);
         $check_stmt->bind_param("s", $correo);
         $check_stmt->execute();
         $check_stmt->store_result();
-        
+
         if ($check_stmt->num_rows > 0) {
             header("Location: gestionarUsuarios.php?error=1");
             exit();
         }
-        
+
         $query = "INSERT INTO Usuarios (nombre, correo, contrasena, admin) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("sssi", $nombre, $correo, $contrasena, $admin);
@@ -81,6 +81,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -93,19 +94,21 @@ $conn->close();
         .action-buttons .btn {
             margin-right: 5px;
         }
+
         .action-buttons .btn:last-child {
             margin-right: 0;
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="dashboard.php">
                 <img src="../../assets/logo.png" alt="Logo Rally Fotográfico" class="logo" style="height: 50px;">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -137,25 +140,35 @@ $conn->close();
 
     <div class="container mt-5">
         <h1 class="mb-4">Gestión de Usuarios</h1>
-        
+
         <?php if (isset($_GET['success'])): ?>
             <div class="alert alert-success">
-                <?php 
-                switch($_GET['success']) {
-                    case 1: echo 'Usuario eliminado correctamente'; break;
-                    case 2: echo 'Rol de usuario actualizado'; break;
-                    case 3: echo 'Usuario actualizado correctamente'; break;
-                    case 4: echo 'Usuario creado correctamente'; break;
+                <?php
+                switch ($_GET['success']) {
+                    case 1:
+                        echo 'Usuario eliminado correctamente';
+                        break;
+                    case 2:
+                        echo 'Rol de usuario actualizado';
+                        break;
+                    case 3:
+                        echo 'Usuario actualizado correctamente';
+                        break;
+                    case 4:
+                        echo 'Usuario creado correctamente';
+                        break;
                 }
                 ?>
             </div>
         <?php endif; ?>
-        
+
         <?php if (isset($_GET['error'])): ?>
             <div class="alert alert-danger">
-                <?php 
-                switch($_GET['error']) {
-                    case 1: echo 'El correo electrónico ya está registrado'; break;
+                <?php
+                switch ($_GET['error']) {
+                    case 1:
+                        echo 'El correo electrónico ya está registrado';
+                        break;
                 }
                 ?>
             </div>
@@ -183,35 +196,35 @@ $conn->close();
                         </thead>
                         <tbody>
                             <?php foreach ($usuarios as $usuario): ?>
-                            <tr>
-                                <td><?php echo $usuario['id']; ?></td>
-                                <td><?php echo htmlspecialchars($usuario['nombre']); ?></td>
-                                <td><?php echo htmlspecialchars($usuario['correo']); ?></td>
-                                <td><?php echo date('d/m/Y', strtotime($usuario['fecha_registro'])); ?></td>
-                                <td>
-                                    <form method="POST" class="d-inline">
-                                        <input type="hidden" name="id" value="<?php echo $usuario['id']; ?>">
-                                        <select name="admin" class="form-select form-select-sm" onchange="this.form.submit()">
-                                            <option value="0" <?php echo $usuario['admin'] == 0 ? 'selected' : ''; ?>>Usuario</option>
-                                            <option value="1" <?php echo $usuario['admin'] == 1 ? 'selected' : ''; ?>>Administrador</option>
-                                        </select>
-                                        <input type="hidden" name="cambiar_rol" value="1">
-                                    </form>
-                                </td>
-                                <td class="action-buttons">
-                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editarUsuarioModal" 
+                                <tr>
+                                    <td><?php echo $usuario['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($usuario['nombre']); ?></td>
+                                    <td><?php echo htmlspecialchars($usuario['correo']); ?></td>
+                                    <td><?php echo date('d/m/Y', strtotime($usuario['fecha_registro'])); ?></td>
+                                    <td>
+                                        <form method="POST" class="d-inline">
+                                            <input type="hidden" name="id" value="<?php echo $usuario['id']; ?>">
+                                            <select name="admin" class="form-select form-select-sm" onchange="this.form.submit()">
+                                                <option value="0" <?php echo $usuario['admin'] == 0 ? 'selected' : ''; ?>>Usuario</option>
+                                                <option value="1" <?php echo $usuario['admin'] == 1 ? 'selected' : ''; ?>>Administrador</option>
+                                            </select>
+                                            <input type="hidden" name="cambiar_rol" value="1">
+                                        </form>
+                                    </td>
+                                    <td class="action-buttons">
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editarUsuarioModal"
                                             onclick="cargarDatosModal(<?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars($usuario['nombre'], ENT_QUOTES); ?>', '<?php echo htmlspecialchars($usuario['correo'], ENT_QUOTES); ?>', <?php echo $usuario['admin']; ?>)">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <form method="POST" class="d-inline">
-                                        <input type="hidden" name="id" value="<?php echo $usuario['id']; ?>">
-                                        <button type="submit" name="eliminar_usuario" class="btn btn-sm btn-danger" 
-                                                onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
-                                            <i class="bi bi-trash"></i>
+                                            <i class="bi bi-pencil"></i>
                                         </button>
-                                    </form>
-                                </td>
-                            </tr>
+                                        <form method="POST" class="d-inline">
+                                            <input type="hidden" name="id" value="<?php echo $usuario['id']; ?>">
+                                            <button type="submit" name="eliminar_usuario" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -231,22 +244,22 @@ $conn->close();
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="crear_usuario" value="1">
-                        
+
                         <div class="mb-3">
                             <label for="nombreNuevo" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="nombreNuevo" name="nombre" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="correoNuevo" class="form-label">Correo electrónico</label>
                             <input type="email" class="form-control" id="correoNuevo" name="correo" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="contrasenaNuevo" class="form-label">Contraseña</label>
                             <input type="password" class="form-control" id="contrasenaNuevo" name="contrasena" required minlength="6">
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="adminNuevo" class="form-label">Rol</label>
                             <select class="form-select" id="adminNuevo" name="admin" required>
@@ -276,17 +289,17 @@ $conn->close();
                     <div class="modal-body">
                         <input type="hidden" name="id" id="usuarioId">
                         <input type="hidden" name="editar_usuario" value="1">
-                        
+
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="nombre" name="nombre" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="correo" class="form-label">Correo electrónico</label>
                             <input type="email" class="form-control" id="correo" name="correo" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="admin" class="form-label">Rol</label>
                             <select class="form-select" id="admin" name="admin" required>
@@ -314,5 +327,22 @@ $conn->close();
             document.getElementById('admin').value = admin;
         }
     </script>
+    <script>
+        // Verificar si debemos mostrar el modal de creación
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const showModal = urlParams.get('showModal');
+
+            if (showModal === 'create') {
+                // Crear una instancia del modal y mostrarlo
+                const crearUsuarioModal = new bootstrap.Modal(document.getElementById('crearUsuarioModal'));
+                crearUsuarioModal.show();
+
+                // Limpiar el parámetro de la URL sin recargar la página
+                history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+    </script>
 </body>
+
 </html>
