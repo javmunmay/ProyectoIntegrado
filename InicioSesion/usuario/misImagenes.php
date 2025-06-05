@@ -615,7 +615,7 @@ $conn->close();
         });
 
         // Filtro de orden mejorado
-        document.getElementById('filtroOrden').addEventListener('change', function() {
+        /*document.getElementById('filtroOrden').addEventListener('change', function() {
             const orden = this.value;
             const secciones = [
                 'contenedor-imagenes', 
@@ -668,7 +668,7 @@ $conn->close();
                 // Reordenar las cards en el DOM
                 cards.forEach(card => row.appendChild(card));
             });
-        });
+        });*/
     </script>
 </body>
 </html>

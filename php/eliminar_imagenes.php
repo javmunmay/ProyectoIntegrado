@@ -32,6 +32,6 @@ if ($stmt->affected_rows > 0) {
 $stmt->close();
 $conn->close();
 
-header("Location: ../InicioSesion/usuario//miPerfil.php");
+header("Location: ../InicioSesion/usuario/miPerfil.php");
 exit();
 ?>

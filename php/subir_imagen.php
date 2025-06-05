@@ -117,20 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $puede_subir) {
     }
 }
 
-// Obtener todas las imágenes del usuario para el modal de eliminación si es necesario
-$imagenes_usuario = [];
-if (!$puede_subir && $max_imagenes > 0) {
-    $sql_imagenes = "SELECT id, ruta, titulo FROM imagenes 
-                    WHERE usuario_id = ? AND estado IN ('activo', 'pendiente') 
-                    ORDER BY fecha_subida DESC";
-    $stmt = $conn->prepare($sql_imagenes);
-    $stmt->bind_param("i", $usuario_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $imagenes_usuario = $result->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-}
-
 $conn->close();
 ?>
 
@@ -197,51 +183,6 @@ $conn->close();
 
         .quota-badge .bi {
             margin-right: 8px;
-        }
-
-        /* Estilos para el modal de advertencia */
-        .modal-advertencia .modal-header {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .imagen-eliminar {
-            position: relative;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            transition: all 0.3s;
-        }
-
-        .imagen-eliminar img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 3px;
-        }
-
-        .imagen-eliminar .form-check {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
-        .imagen-eliminar .titulo {
-            margin-top: 5px;
-            font-weight: 500;
-            text-align: center;
-        }
-
-        .contador-eliminar {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #dc3545;
-        }
-
-        .imagen-seleccionada {
-            border-color: #dc3545;
-            background-color: #fff5f5;
         }
 
         .btn-subir-deshabilitado {
@@ -419,54 +360,6 @@ $conn->close();
     <?php include 'footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Mostrar modal de advertencia si se excede el límite
-        <?php if (!$puede_subir && $max_imagenes > 0): ?>
-            document.addEventListener('DOMContentLoaded', function() {
-                var advertenciaModal = new bootstrap.Modal(document.getElementById('advertenciaModal'));
-                advertenciaModal.show();
-
-                // Variables de control
-                const checkboxes = document.querySelectorAll('.checkbox-eliminar');
-                const contador = document.querySelector('.contador-eliminar');
-                const btnEliminar = document.getElementById('btnEliminarSeleccionadas');
-                const imagenesAEliminar = <?php echo abs($imagenes_restantes); ?>;
-
-                // Función para actualizar el estado
-                function actualizarEstado() {
-                    const seleccionadas = document.querySelectorAll('.checkbox-eliminar:checked').length;
-                    const restantes = Math.max(0, imagenesAEliminar - seleccionadas);
-
-                    contador.textContent = restantes;
-                    btnEliminar.disabled = restantes > 0;
-
-                    // Resaltar imágenes seleccionadas
-                    checkboxes.forEach(checkbox => {
-                        const card = checkbox.closest('.imagen-eliminar');
-                        if (checkbox.checked) {
-                            card.classList.add('imagen-seleccionada');
-                        } else {
-                            card.classList.remove('imagen-seleccionada');
-                        }
-                    });
-                }
-
-                // Event listeners
-                checkboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', actualizarEstado);
-                });
-
-                // Validar antes de enviar el formulario
-                document.getElementById('formEliminarImagenes').addEventListener('submit', function(e) {
-                    const seleccionadas = document.querySelectorAll('.checkbox-eliminar:checked').length;
-                    if (seleccionadas < imagenesAEliminar) {
-                        e.preventDefault();
-                        alert(`Debes seleccionar al menos ${imagenesAEliminar} imágenes para eliminar.`);
-                    }
-                });
-            });
-        <?php endif; ?>
-    </script>
 </body>
 
 </html>
